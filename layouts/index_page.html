@@ -1,0 +1,23 @@
+<% pages = sorted_articles%>
+<% pages.each do |article| %>
+  <indextitle>
+  <% if article[:indeximage] %>
+ <% pic_path = File.dirname(article.path) + '/' + article[:indeximage] %>
+ <IMG SRC="<%= relative_path_to(pic_path) %>"/>
+ <% end %>
+
+<%= link_to(article[:title], article) %>
+
+<H2 class="itemdate"><%= article[:created_at] %></H2>
+
+</indextitle>
+  <summary><%= article[:summary] %></summary>
+
+<% end %>
+
+<indexmore>
+<%= 
+  myitem = @items.find { |i| i.identifier == '/all_articles/' }
+  link_to('All older articles...', myitem)
+%>
+</indexmore>

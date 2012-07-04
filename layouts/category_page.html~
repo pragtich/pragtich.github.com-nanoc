@@ -1,0 +1,23 @@
+<%
+  cat_articles = sorted_articles.select {|a| a[:category] == "#{@my_category}"}
+
+%>
+
+<%= cat_articles.count
+%>
+
+<%
+sorted_articles.each do |a| 
+
+%>
+<indextitle>
+<%= puts a[:category]
+%>
+<%=
+a[:category]
+"#{@my_category}"
+%>
+</indextitle>
+<%
+end
+%>
