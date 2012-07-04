@@ -3,8 +3,8 @@
   <id>http://members.home.nl/pragtich/</id>
   <title>Joris Pragt's blog feed</title>
   <updated>2012-07-03T22:00:00Z</updated>
-  <link href="http://members.home.nl/pragtich/" rel="alternate"/>
-  <link href="http://members.home.nl/pragtich/atom.xml" rel="self"/>
+  <link rel="alternate" href="http://members.home.nl/pragtich/"/>
+  <link rel="self" href="http://members.home.nl/pragtich/atom.xml"/>
   <author>
     <name>Joris Pragt</name>
     <uri>http://members.home.nl/pragtich</uri>
@@ -14,7 +14,7 @@
     <title type="html">Using Nanoc to fill Github Pages</title>
     <published>2012-07-03T22:00:00Z</published>
     <updated>2012-07-03T22:00:00Z</updated>
-    <link href="http://members.home.nl/pragtich/technology/Nanoc-Github-Pages.html" rel="alternate"/>
+    <link rel="alternate" href="http://members.home.nl/pragtich/technology/Nanoc-Github-Pages.html"/>
     <content type="html">&lt;p&gt;Started out with an already-existing nanoc folder.&lt;/p&gt;
 
 &lt;p&gt;I Installed git for mac using the standard installer supplied on
@@ -109,7 +109,7 @@ I have a satisfactory build.&lt;/p&gt;
     <title type="html">Getting network access in the garden</title>
     <published>2012-06-21T22:00:00Z</published>
     <updated>2012-06-21T22:00:00Z</updated>
-    <link href="http://members.home.nl/pragtich/kippycam/network-layout.html" rel="alternate"/>
+    <link rel="alternate" href="http://members.home.nl/pragtich/kippycam/network-layout.html"/>
     <content type="html">&lt;h1 id="the-problem"&gt;The problem&lt;/h1&gt;
 
 &lt;p&gt;The garden is quite long and goes around a bend. The house has an extension towards the back that blocks most lines of sight between the garden and the main house. Also, the distance from the services entry point and the shed where the chickens live, runs in the tens of meters. Here&amp;rsquo;s an overview of the situation:&lt;/p&gt;
@@ -182,7 +182,7 @@ Also disable security first. This cost me an afternoon, because &lt;code&gt;psk2
     <title type="html">The Kippencam --- starting a new project</title>
     <published>2012-06-03T22:00:00Z</published>
     <updated>2012-06-03T22:00:00Z</updated>
-    <link href="http://members.home.nl/pragtich/kippycam/Starting project Chicken Webcam.html" rel="alternate"/>
+    <link rel="alternate" href="http://members.home.nl/pragtich/kippycam/Starting project Chicken Webcam.html"/>
     <content type="html">&lt;p&gt;I have started a new project: I want to make a webcam in the chicken coop. The poor chickens are out there all day, out of sight of the house. And when we&amp;rsquo;re away, it would be good to be able to check on them now and then, and make sure that they&amp;rsquo;re not getting up to any mischief. Wouldn&amp;rsquo;t it be cool to be able to snap pictures when they&amp;rsquo;re up to no good (like eating that mouse they found, or jumping over the fence, again&amp;hellip;.)? And it would be a great step towards all kinds of cool automation projects, starting with automatic door closing at night.&lt;/p&gt;
 
 &lt;h1 id="requirements"&gt;Requirements&lt;/h1&gt;
@@ -273,7 +273,7 @@ Also disable security first. This cost me an afternoon, because &lt;code&gt;psk2
     <title type="html">Things to do on this blog</title>
     <published>2012-06-03T22:00:00Z</published>
     <updated>2012-06-03T22:00:00Z</updated>
-    <link href="http://members.home.nl/pragtich/blog/TODO_website.html" rel="alternate"/>
+    <link rel="alternate" href="http://members.home.nl/pragtich/blog/TODO_website.html"/>
     <content type="html">&lt;h1 id="some-things-that-i-still-intend-to-do-with-this-site"&gt;Some things that I still intend to do with this site&lt;/h1&gt;
 
 &lt;ul&gt;
@@ -300,7 +300,7 @@ editing the startup script) and link in the network-layout page&lt;/li&gt;
     <title type="html">Listing life goals with 43things</title>
     <published>2011-11-21T23:00:00Z</published>
     <updated>2011-11-21T23:00:00Z</updated>
-    <link href="http://members.home.nl/pragtich/blog/2011/43things.html" rel="alternate"/>
+    <link rel="alternate" href="http://members.home.nl/pragtich/blog/2011/43things.html"/>
     <content type="html">&lt;p&gt;I have been having a nagging sense that I have way too many dreams and am not doing much about most of them. It&amp;rsquo;s always been taking the next step, and following the clear path forward. Most of this is because of my &amp;lsquo;in the box&amp;rsquo; thinking, I think. I did not grow up with the talent of seeing big opportunities, of beleiving that the imaginable &lt;em&gt;can actually be realized&lt;/em&gt;. At times this has been a great burden on things, but recognition has led to increasing understanding, and it&amp;rsquo;s getting easier and easier to actually &lt;em&gt;follow the dream&lt;/em&gt;.&lt;/p&gt;
 
 &lt;p&gt;Strangely, this does not at all go for travelling. When I travel, I can be ambitious, set the weirdest goals and totally accept whatever comes along. The same goes for photography, which to me feels a lot similar to travelling. It is imperative to set a goal, a challenging one, but it is just as imperative to not allow the goal to blind you for the path you are on. Only with a goal, do you escape your preconceptions, patterns and habits.&lt;/p&gt;
