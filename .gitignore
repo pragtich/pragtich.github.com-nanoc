@@ -3,7 +3,8 @@
 # Default location for output, needs to match output_dir's value found in config.yaml
 #
 # Commented this out for now: need output in feed to get github pages to work?
-#output/
+# readded it: the source and master repos should not copy or delete these files. nanoc-git will do the copying for me
+output/
 
 # Temporary file directory
 tmp/
