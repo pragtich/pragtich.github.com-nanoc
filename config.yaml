@@ -4,11 +4,11 @@ author_name: 'Joris Pragt'
 author_uri: 'http://members.home.nl/pragtich'
 
 # Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
-deplay:
-	default:
-		dst_remote: pages
-		dst_branch: master
-		src_branch: source
+deploy:
+  default:
+    dst_remote: pages
+    dst_branch: master
+    src_branch: source
 
 # A list of file extensions that nanoc will consider to be textual rather than
 # binary. If an item with an extension not in this list is found,  the file
