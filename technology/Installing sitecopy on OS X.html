@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Pragtich: Installing sitecopy on OS X Snow Leopard and using it with Nanoc</title>
+<link rel="stylesheet" type="text/css" href="../stylesheet.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="http://members.home.nl/pragtich/atom.xml">
+</head>
+<body>
+
+    <article><!-- If there's no item title; we print no header, even if
+           there's a date. --><header><hgroup><h1 class="itemtitle">Installing sitecopy on OS X Snow Leopard and using it with Nanoc</h1>
+
+          
+          <h2 class="itemdate">November 12, 2011</h2>
+          
+
+
+
+        </hgroup></header><summary>
+             I use Sitecopy to upload my Nanoc site to the server. This is how I managed to do it….</summary><bodytext><p>In order to sync my nanoc site to my provider’s server, I have installed sitecopy. Sitecopy requires one of the ports packages. I chose fink, but Darwinports should also work I guess.</p>
+
+<p>First, I downloaded the Xcode and iOS developer software from Apple (registration required as an Apple developer, but free). This installed without issue.</p>
+
+<p>Then, I followed the instructions on the <a href="http://www.finkproject.org/download/srcdist.php">Fink website</a>. The instructions are quite clear I think. I tried to fill in as many local servers as possible while running <code>./bootstrap</code>. It would be a shame to transfer everything over the Atlantic cables, right?</p>
+
+<p>What doe surprise me, is that many packages were installed, which I actually already have, many already built into OS X. One that jumped out to me, was python. I can only assume that this is done in order to have all libraries in control of Fink. I just really hope having some programs around twice, does not cause conflicts. fingers crossed…</p>
+
+<h1 id="now-for-the-real-stuff">Now for the real stuff</h1>
+
+<p>Once sitecopy was running, it actually ran very quickly. I copied an example rakefile <a href="http://www.remerson.plus.com/articles/nanoc-rake">From here</a> and followed the directory structure suggested by it:</p>
+
+<pre><code>nanoc/
+  site/
+    content/
+    layouts/
+    sitecopy/
+      sitecopyrc
+</code></pre>
+
+<p>So, that is: no dotfiles, all files visible to the filesystem. Of course, this is not the default for sitecopy, so we specify the sitecopy rc file locations in the rakefile.</p>
+
+<p>Then, I created the sitecopyrc as follows:</p>
+
+<pre><code>site my.pretty.name
+server ftp.server.url
+remote /
+local ~/nanoc/pragtich/trunk/output/
+username myFTPusernae
+password thepassword
+protocol ftp
+</code></pre>
+
+<p>Where the folder after <code>local</code> is the nanoc <code>output</code> folder.</p>
+
+<p>I then used the initialization from the example rakefile:
+    sitecopy -r sitecopy/sitecopyrc -p sitecopy -i my.pretty.name
+And crated a ‘compile and upload’ rake addition to the <code>Rakefile</code>:</p>
+
+<pre><code>desc "compile and upload."
+task :co do
+  system 'nanoc co &amp;&amp; sitecopy  -r sitecopy/sitecopyrc -p sitecopy -u my.pretty.name'
+end
+</code></pre>
+
+<p>So now, each time I edit something in my page, I only have to go…</p>
+
+<p>rake co</p>
+
+<p>…and the entire thing is recompiled and synchronized to the server. </p>
+
+<h1 id="mission-accomplished">Mission accomplished!</h1>
+ 
+</bodytext><footer></footer></article><titleframe><titlebar><div id="largetitle"> <a href="../">Pragtich</a>
+</div>
+
+ <div id="secnav">
+
+ </div>
+ <div id="artnav">
+ </div> 
+ </titlebar></titleframe><nav><h2>Categories</h2>
+      <ul>
+<li>
+<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
+
+
+
+   <li>
+<a href="../all_Life.html">Life</a> </li>
+
+
+
+   <li>
+<a href="../all_Kippycam.html">Kippycam</a> </li>
+
+
+
+      </ul>
+<h2>About</h2>
+      <ul>
+<li><a href="../about/">About me</a></li>
+      </ul></nav>
+</body>
+</html>
