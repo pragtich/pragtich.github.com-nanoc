@@ -1,0 +1,371 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Pragtich: Making a personal website using Nanoc</title>
+<link rel="stylesheet" type="text/css" href="../stylesheet.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="http://members.home.nl/pragtich/atom.xml">
+</head>
+<body>
+
+    <article><!-- If there's no item title; we print no header, even if
+           there's a date. --><header><hgroup><img src="Nanoc_index.jpg"><h1 class="itemtitle">Making a personal website using Nanoc</h1>
+
+          
+          <h2 class="itemdate">November 12, 2011</h2>
+          
+
+
+
+        </hgroup></header><summary>
+             How I used Nanoc to create this personal webpage…</summary><bodytext><p>I have previously played around with different systems for creating a personal webpage. Working in HTML quickly frustrated me because it is in essence illegible. Also, it made no sense to me to have to repeat all the layout and navigation stuff in each page.</p>
+
+<p>My first real attempt at a personal page already had the design that is close to what is here now. I made it using Apache Cocoon, and the abstraction level really appealed to me. However, in practical use it turned out to be way too heavy on the server. The once-supercoputer server I was using (a SGI Indigo) could not handle the java. I ended up using a web spider to convert everything into static pages, not really a satisfactory approach.</p>
+
+<p>Now, years later, i am playing with Nanoc. It is one of a range of static webpage generation tools that have sprouted since the Ruby programming language has become popular. </p>
+
+<p>Nanoc is reasonably well documented (the objects very well, the use a bit less detailed), and there is a community site that includes several examples of web sites which are a great help. To set up my site, I used two main sources: The Nanoc website and the Schof.org site by Mark Schofield. Especially the practical example of schof.org has been a great help.</p>
+
+<p><img src="nanoc-ss.jpg" alt="Screenshot of nanoc running"></p>
+
+<h1 id="an-rss-feed-for-the-site">An RSS feed for the site</h1>
+
+<p>Of course, a blog should have a RSS feed. Even though you have no readers yet… One never knows when it will be useful.</p>
+
+<p>So, I am trying to get the Blogging helper RSS stuff to work. The [[documentation][http://nanoc.stoneship.org/docs/api/3.1/Nanoc3/Helpers/Blogging.html#atom_feed-instance_method]] shows that we need to set up some stuff. I did just that, although I must say I really dislike the <code>excerpt</code> tag, because of its American English brutality. I will try to come up with a way to use <code>summary</code> instead.</p>
+
+<pre><code>base_url: 'http://http://members.home.nl/pragtich'
+</code></pre>
+
+<p>Created a <code>content/atom.xml</code> with the contents:</p>
+
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;feed xmlns="http://www.w3.org/2005/Atom"&gt;
+</code></pre>
+<id>http://members.home.nl/pragtich/</id><title>Making a personal website using Nanoc</title>
+<updated>2012-06-21T22:00:00Z</updated><link href="http://members.home.nl/pragtich/" rel="alternate">
+<link href="http://members.home.nl/pragtich/technology/Nanoc.html" rel="self">
+<author><name>Joris Pragt</name><uri>http://members.home.nl/pragtich</uri></author><entry><id>tag:members.home.nl,2012-06-22:/pragtich/kippycam/network-layout.html</id><title type="html">Getting network access in the garden</title>
+<published>2012-06-21T22:00:00Z</published><updated>2012-06-21T22:00:00Z</updated><link href="http://members.home.nl/pragtich/kippycam/network-layout.html" rel="alternate">
+<content type="html">&lt;h1 id=”the-problem”&gt;The problem&lt;/h1&gt;
+
+&lt;p&gt;The garden is quite long and goes around a bend. The house has an extension towards the back that blocks most lines of sight between the garden and the main house. Also, the distance from the services entry point and the shed where the chickens live, runs in the tens of meters. Here&amp;rsquo;s an overview of the situation:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=”gardenlayout.jpg” alt=”Layout of the garden” /&gt;&lt;/p&gt;
+
+&lt;p&gt;The best way would be to dig a pipe through the garden and wire with ethernet. But this would involve digging up 20 meters of paving, and 20 meters of grass. Although it needs to be done some day (to get water and electricity in the garden, for one thing), now is not the time. So &amp;mdash; wireless is the way to go!&lt;/p&gt;
+
+&lt;h1 id=”layout”&gt;Layout&lt;/h1&gt;
+
+&lt;p&gt;To get a wifi signal at the shed, the existing infrastructure in the house is insufficient. It only reaches roughly 10 meters into the garden. Too many walls, too many trees and leaves. &lt;/p&gt;
+
+&lt;p&gt;An extra access  point is needed. In the first place I will create a wireless repeater, because this has worked before. Later, I may relocate the repeater to a place where I can reach it with Ethernet: that would be a more elegant solution in the long run.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;TODO&lt;/strong&gt;: Research &lt;a href=”http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html”&gt;Railroad&lt;/a&gt; for creating really nice plots.&lt;/p&gt;
+
+&lt;p&gt;The ouline is as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Main Router  ==&amp;gt;	Repeater	==&amp;gt;		Webcam server
+Airport		 	TL-WR703N			TL-WR703N
+DHCP server		relay wlan-wlan			relay wlan-lan
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=”openwrt-configuration”&gt;OpenWRT configuration&lt;/h1&gt;
+
+&lt;h2 id=”repeater”&gt;Repeater&lt;/h2&gt;
+
+&lt;p&gt;I used the &lt;code&gt;luci&lt;/code&gt; webinterface to configure relaying. Setting this up goes something like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;opkg update
+opkg install luci luci-proto-relay
+  	# this auto-installs many dependencies, including relayd and uhttpd
+  	/etc/init.d/uhttpd enable
+  	/etc/init.d/uhttpd start
+  	/etc/init.d/relayd enable		# This is required in trunk versions
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, &lt;code&gt;luci&lt;/code&gt; should be up and running by sending the browser to the router&amp;rsquo;s IP address (most likely &lt;code&gt;192.168.1.1&lt;/code&gt;). &lt;/p&gt;
+
+&lt;p&gt;A reasonably clear guide to configuring relaying through &lt;code&gt;luci&lt;/code&gt; is given on &lt;a href=”http://trac.gateworks.com/wiki/relayd”&gt;this page at gateworks.com&lt;/a&gt;. Only trouble is, that this example is for relaying between &lt;code&gt;lan&lt;/code&gt; and &lt;code&gt;wwan&lt;/code&gt;. I started ambitiously, trying to relay to both &lt;code&gt;lan&lt;/code&gt; and a new &lt;code&gt;wifi AP&lt;/code&gt;, but this stranded in the complications of it. Start easy.
+Also disable security first. This cost me an afternoon, because &lt;code&gt;psk2&lt;/code&gt; and the &lt;code&gt;auto&lt;/code&gt; cypher setting were not playing nicely with OS X.&lt;/p&gt;
+
+&lt;p&gt;TODO: Add my own nice pictures of how wifi relaying works.&lt;/p&gt;
+
+&lt;p&gt;Another place to check for instructions is &lt;a href=”https://forum.openwrt.org/viewtopic.php?pid=163262#p163262”&gt;In the forums&lt;/a&gt;, but be careful. For one, the &lt;code&gt;trunk&lt;/code&gt; releases need an additional &lt;code&gt;/etc/init.d/relayd enable&lt;/code&gt;. Also, some of the &lt;code&gt;wireless&lt;/code&gt; settings are outdated. The essence is good.&lt;/p&gt;
+
+&lt;p&gt;Something very confusing is the IP address choice for the interface that is not directly connected to the &amp;lsquo;live&amp;rsquo; network. So the &amp;lsquo;access point&amp;rsquo; network in this case. It gets a static address by definition, but this address is largely ignored. Actually, the relayd passes all traffic from the outside network to the internal network. This includes DHCP requests, which also get passed on and get answered by the Main Router. So in fact all clients on both sides of the relay use IP addresses from the Main Router&amp;rsquo;s subnet. Setting the IP address of the &amp;lsquo;inside&amp;rsquo; network to a different subnet helps in case the &amp;lsquo;outside&amp;rsquo; network is unavailable or does not provide DHCP. Then, we need this &amp;lsquo;inside&amp;rsquo; subnet in order to gain access to the router.&lt;/p&gt;
+
+&lt;h2 id=”webcam-server”&gt;Webcam server&lt;/h2&gt;
+
+&lt;p&gt;The webcam server follows &lt;a href=”http://trac.gateworks.com/wiki/relayd”&gt;the instructions at gateworks.com&lt;/a&gt; mostly literally. I kept the &lt;code&gt;lan&lt;/code&gt; IP at &lt;code&gt;192.168.1.1&lt;/code&gt;, simply because there was no real reason to change it. Relay is overkill here, but I chose it because it allows any potential clients on the &lt;code&gt;LAN&lt;/code&gt; interface (wired clients) to join in the network as if nothing was in between. &lt;/p&gt;
+
+&lt;p&gt;TODO: Add description of mjpg-server in additional page and link here&lt;/p&gt;
+
+&lt;h1 id=”physical-network”&gt;Physical network&lt;/h1&gt;
+
+&lt;p&gt;The wireless repeater helps bridging the distance between the house and the shed, but it does rely on &amp;lsquo;line of sight&amp;rsquo;. And even with a clear line of sight (which I do not have, there are tree leaves and a roof partially in the way), the distance is still significant. I took several steps that I intend to document separately:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Convert the TL-WR703N routers to add external antenna connectors.&lt;/li&gt;
+  &lt;li&gt;Construct &lt;code&gt;cantennas&lt;/code&gt; to have better gain and a more efficient (narrower) beam.&lt;/li&gt;
+  &lt;li&gt;Place the antennas where there is optimal line of sight&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;At present, this is enough to cover my needs with limited bandwidth, but acceptable reliability. After researching a bit, cantennas seem to be over-hyped. Maybe I will build yagi or other high gain antennas at a later date. For now, the cans are working.&lt;/p&gt;
+</content></entry><entry><id>tag:members.home.nl,2012-06-04:/pragtich/kippycam/Starting project Chicken Webcam.html</id><title type="html">The Kippencam — starting a new project</title>
+<published>2012-06-03T22:00:00Z</published><updated>2012-06-03T22:00:00Z</updated><link href="http://members.home.nl/pragtich/kippycam/Starting%20project%20Chicken%20Webcam.html" rel="alternate">
+<content type="html">&lt;p&gt;I have started a new project: I want to make a webcam in the chicken coop. The poor chickens are out there all day, out of sight of the house. And when we&amp;rsquo;re away, it would be good to be able to check on them now and then, and make sure that they&amp;rsquo;re not getting up to any mischief. Wouldn&amp;rsquo;t it be cool to be able to snap pictures when they&amp;rsquo;re up to no good (like eating that mouse they found, or jumping over the fence, again&amp;hellip;.)? And it would be a great step towards all kinds of cool automation projects, starting with automatic door closing at night.&lt;/p&gt;
+
+&lt;h1 id=”requirements”&gt;Requirements&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;To be self-powered: no running power lines through the garden&lt;/li&gt;
+  &lt;li&gt;Wireless connection to the house: no running ethernet cables either&lt;/li&gt;
+  &lt;li&gt;At least one webcam, preferably HDTV quality, preferably extension to 3 cameras to be possible in the future&lt;/li&gt;
+  &lt;li&gt;Reasonably self-managing and low-maintenance&lt;/li&gt;
+  &lt;li&gt;Low cost: we&amp;rsquo;re getting married this year&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=”inspiration”&gt;Inspiration&lt;/h1&gt;
+
+&lt;p&gt;The main idea for this project came from &amp;ldquo;&lt;a href=”http://www.instructables.com/id/How-to-set-up-a-solar-powered-webcam-server-using-/”&gt;How to set up a solar powered webcam server using NanosG20 running Debian&lt;/a&gt;&amp;rdquo; by Janisalnis on instructables. &lt;/p&gt;
+
+&lt;p&gt;&lt;img src=”janisalnis.jpg” alt=”Picture of Janisalnis’ setup” title=”This is how his project looked when he wrote about it” /&gt;&lt;/p&gt;
+
+&lt;p&gt;Building from this idea, janisalnis already makes the recommendation that modern routers are &lt;a href=”http://www.instructables.com/id/How-to-set-up-home-data-server-using-OpenWRT-on-Li/”&gt;a much smarter way to go&lt;/a&gt;. And on &lt;a href=”http://barbara320.gotdns.com/”&gt;his homepage&lt;/a&gt; there are many examples of the results of his great projects. There, he links &lt;a href=”http://www.slideshare.net/JanisAlnis/home-automation-12979616”&gt;a presentation that really drew my attention&lt;/a&gt;. He is a really creative guy!&lt;/p&gt;
+
+&lt;p&gt;On one slide, he refers to the TP-LINK WR703N, a small router with less than 1W power consumption, yet quite a powerful CPU and USB 2.0! He already refers to a list of possibilities, like HD webcams, USB audio and Arduino linking. Cool stuff! Shockingly enough, these powerful machines sell on ebay for less than EUR20 !!&lt;/p&gt;
+
+&lt;p&gt;And I have played with OpenWRT before, so this is starting to look like a great thing. The first two TL-WR703N&amp;rsquo;s have been ordered, cannot wait for them to get here from Hong Kong!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;UPDATE&lt;/em&gt;: I later learned that there is a slightly larger, but largely similar router that can be bought in Europe for a bit more money (but without the long wait): the TL-MR3020. I already had my orders for the smaller one in, but maybe it can be an option for later.&lt;/p&gt;
+
+&lt;h1 id=”research”&gt;Research&lt;/h1&gt;
+
+&lt;h2 id=”some-reading-on-the-tl-wr703n”&gt;Some reading on the TL-WR703N&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=”http://wiki.openwrt.org/toh/tp-link/tl-wr703n”&gt;OpenWRT wiki with all kinds of hardware details&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”http://wiki.openwrt.org/toh/tp-link/tl-mr3020”&gt;Another wiki page with the related and very similar router MR3020&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”https://forum.openwrt.org/viewtopic.php?id=36471”&gt;A forum discussion that shows how to do I2C with the WR703N&lt;/a&gt;. This means that we can control all kinds of hardware without messy Arduino links. I am definitely going to try this.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”http://www.instructables.com/member/janisalnis/”&gt;Loads of instructables presentations by janisalnis that include a plethora of step-by-step guides on everything from hardware to software.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”http://embeddedtimes.blogspot.nl/2011/09/tp-link-tl-wr703n-tiny-linux-capable.html”&gt;A great introduction into the fun of the TL-WR703N by the Embedded Times.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c”&gt;A slightly messy piece in the OpenWRT wiki on I2C&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”http://laakkonen.dy.fi/projektit/tl-wr703n/”&gt;A Finnish site that mentions the external antenna: This is something I will need to do.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”https://forum.openwrt.org/viewtopic.php?id=34580”&gt;Forum entry that details the external antenna method&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”http://wiki.villagetelco.org/index.php?title=Building_a_Serial_Port_for_TL-WR703N”&gt;If I manage to screw up the firmware, we may need this to recover (serial port)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;On &lt;a href=”http://www.hackup.net”&gt;hackup.net&lt;/a&gt;, there are some nice articles about using OpenWRT for controlling hardware. &lt;a href=”http://www.hackup.net/2012/01/openwrt-and-scripting-languages-part-1/#more-358”&gt;This article details one way to use a USB stick for storage, and installing Ruby (without serial support)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”https://forum.openwrt.org/viewtopic.php?pid=156142”&gt;A great writeup on adding extra internal usb ports&lt;/a&gt;. I will probably just go with an external hub. Why squeeze everything into a small space for this project?&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”http://wiki.acemonstertoys.org/Tp-link_router”&gt;A detailed list of stuff on hardware control using the WR703N, including Arduino connection and cross-compiling&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”https://forum.openwrt.org/viewtopic.php?pid=125196#p125196”&gt;A writeup of getting usb audio to work (cool)&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=”wireless-connection”&gt;Wireless connection&lt;/h2&gt;
+
+&lt;p&gt;The chicken coop is located in the garden behind my house. This could be ~50 meters from the current location of the main wireless router. Also, the signal needs to pass through several brick walls. All in all, there is no chance that we will have a connection using any simple method. Indeed, even my MacBook (which has a great antenna) does not get a connection in most of the garden. &lt;/p&gt;
+
+&lt;p&gt;So how to get this to work? I will probably add a cantenna to the WR703 in the garden to get good reception and either move the main wireless router to a better location (the attic?) or set up a repeater somewhere in the house, possibly also with a cantenna. This will take some experimentation.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=”solar-powering”&gt;Solar powering&lt;/h2&gt;
+
+&lt;p&gt;For the start of the project, I will go with direct solar powering from the panels. No storage. Once the principle has been proven, I will be charging a battery. I did some research on Open Source solar charge controller projects with the idea of making my own charger. While there are some very nice designs around, I really prefer to go with a proven technology. I want the development of the camera to be the fun part, not the screwing with a battery charger. Ultimate efficiency is also not a parameter for me, so I will probably go with either one of these 2 options:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Steca SOLSUM 6.6F (&lt;a href=”http://www.conrad.nl/ce/nl/product/110678?WT.mc_id=mpfeed&amp;amp;insert=8T”&gt;from Conrad probably&lt;/a&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=”http://steca.de/data/media/26/2628_231x315_SolsumF_72dpi_315px.jpg” alt=”SOLSUM” /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;MorningStar SHS6 (&lt;a href=”http://hobby.marktplaats.nl/elektronica-componenten/544588648-steca-en-morningstar-laadregelaars-accu-zonnepaneel.html?return=eJwljEsKwzAMRO8SSJb%2BNF0UB1PSm5jYxSb%2BiEihpaV3r0JW8540jDPafJNRExp9vZkOg9uWOEUiMFKuDUIVxW0rQXaOUNQsz4qACPd3tnrwaKn149yPD5%2FOzMT5ScCIT48smhGOq2Io%2FJjrXsKWFtb1xYot417YGh4jlwFgt2ogtLqbfn%2FEGzUB&amp;amp;df=1&amp;amp;fta=eNpFkEluwzAMRe%2BihdcaPVDwFXoFg4rsVKgcC6GcCA1y98pG0e4eOP0HInTwIuiB7fc4PTASswSdBFbiKBpPY97A%2BgA2ZvgOydLiCYRNGbhdE9z2db6Hi%2F16Am2R9tVuFEA2Ke0jbzKN4ringSW8zsyGukqggAV%2FBgnRAlPOaY%2B6LxUUN0NXpOi9QrdU6BwXvS6St9pw1deKM4tCc4CuI0MF7YWY64wY3CCxLX8HJfetMgordOai2v%2BIM7x65C2hpynOt2v%2BPPxkbQzAVizToVwt%2FelcP4JPZj9%2B8cEsAofX%2B%2F0DyKNhYA%3D%3D&amp;amp;fta_ind=12&amp;amp;fs=1”&gt;probably from Sunnyside on Marktplaats&lt;/a&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;And realistically, at around EUR 20 a piece, there is not a lot to lose.&lt;/p&gt;
+
+&lt;p&gt;Solar panel prices have dropped a lot recently. The cheap made-in-China panels are dropping close to the EUR 1 per Watt-peak mark at the moment. Of course, I have learned from reading, that the cheap suppliers can be quite optimistic regarding their specified Watt-peak values. So in fact the more expensive panels from &amp;lsquo;real&amp;rsquo; manufacturers are supposed to be worth the extra cash. For me, a factor was the availability of reasonably priced small panels on the &lt;a href=”http://www.ebay.de”&gt;Ebay&lt;/a&gt; was good. I purchased 2x 30W panels from &lt;a href=”http://myworld.ebay.de/enjoysolarshop/”&gt;Enjoy Solar in Bremen&lt;/a&gt;, and will see how they perform. &lt;strong&gt;NOTE:&lt;/strong&gt; There seem to be many sellers on ebay that do get very good reviews, but also rack up significant negative comments. Be sure to check the negative comments for a seller before you buy. I nearly fell for a promising-looking seller, which clearly does not take after-sales care as seriously as any (German!) seller should&amp;hellip;&lt;/p&gt;
+
+&lt;h2 id=”openwrt”&gt;OpenWRT&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;[How to use an external USB stick as root filesystem][openwrt-eftroot]. I&amp;rsquo;m not sure how this could affect flash wear: at the moment I will use a cheap memory stick and just see what happens.&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”http://wiki.openwrt.org/doc/howto/usb.storage”&gt;How to enable USB storage, including how to format the partitions for efficiency.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”http://www.minipwner.com/index.php/minipwner-build”&gt;A very concise list of instructions to get a WR703N up and going&lt;/a&gt;. Probably not going to use, because it avoids USB stick usage, and why would I?&lt;/li&gt;
+  &lt;li&gt;&lt;a href=”http://www.instructables.com/files/orig/F0M/V4MW/H2MYLKL9/F0MV4MWH2MYLKL9.txt”&gt;Janisalnis&amp;rsquo; short description of installing OpenWRT onto a USB stick: a useful start.&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+</content></entry><entry><id>tag:members.home.nl,2012-06-04:/pragtich/blog/TODO_website.html</id><title type="html">Things to do on this blog</title>
+<published>2012-06-03T22:00:00Z</published><updated>2012-06-03T22:00:00Z</updated><link href="http://members.home.nl/pragtich/blog/TODO_website.html" rel="alternate">
+<content type="html">&lt;h1 id=”some-things-that-i-still-intend-to-do-with-this-site”&gt;Some things that I still intend to do with this site&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ADD A picture of my configuration screens in &lt;code&gt;luci&lt;/code&gt; to the layout
+page.&lt;/li&gt;
+  &lt;li&gt;Add a description page of installing mjpg-streamer (especially
+editing the startup script) and link in the network-layout page&lt;/li&gt;
+  &lt;li&gt;Add photo of line of sight to network-layout&lt;/li&gt;
+  &lt;li&gt;Get a proper domain hosting instead of &lt;a href=”http://members.home.nl/pragtich”&gt;my old athome.nl site&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Add &amp;ldquo;title&amp;rdquo; stuff so that a Markdown image gets a caption&lt;/li&gt;
+  &lt;li&gt;Clean up the design &lt;/li&gt;
+  &lt;li&gt;Make a new design with moe modern and cleaner look&lt;/li&gt;
+  &lt;li&gt;Devise a more structured way of working with images, flowing them in the text etc.&lt;/li&gt;
+  &lt;li&gt;Make a design that actually numbers &amp;lt;ol&amp;gt; and not &amp;lt;ul&amp;gt;&lt;/li&gt;
+  &lt;li&gt;Make sure that titles in the title list also get passed through rubypants&lt;/li&gt;
+  &lt;li&gt;Research &lt;a href=”http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html”&gt;Railroad&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content></entry><entry><id>tag:members.home.nl,2011-11-22:/pragtich/blog/2011/43things.html</id><title type="html">Listing life goals with 43things</title>
+<published>2011-11-21T23:00:00Z</published><updated>2011-11-21T23:00:00Z</updated><link href="http://members.home.nl/pragtich/blog/2011/43things.html" rel="alternate">
+<content type="html">&lt;p&gt;I have been having a nagging sense that I have way too many dreams and am not doing much about most of them. It&amp;rsquo;s always been taking the next step, and following the clear path forward. Most of this is because of my &amp;lsquo;in the box&amp;rsquo; thinking, I think. I did not grow up with the talent of seeing big opportunities, of beleiving that the imaginable &lt;em&gt;can actually be realized&lt;/em&gt;. At times this has been a great burden on things, but recognition has led to increasing understanding, and it&amp;rsquo;s getting easier and easier to actually &lt;em&gt;follow the dream&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Strangely, this does not at all go for travelling. When I travel, I can be ambitious, set the weirdest goals and totally accept whatever comes along. The same goes for photography, which to me feels a lot similar to travelling. It is imperative to set a goal, a challenging one, but it is just as imperative to not allow the goal to blind you for the path you are on. Only with a goal, do you escape your preconceptions, patterns and habits.&lt;/p&gt;
+
+&lt;p&gt;In recent years, I have done several larger and more compact things, which were clear examples of this thinking. Things that I did, knowing that they would turn out to deliver, if not the expected result, &lt;em&gt;an experience&lt;/em&gt;. It strikes me, that many of these actions included what you could describe as &lt;em&gt;&amp;lsquo;dreams&amp;rsquo;&lt;/em&gt; or &lt;em&gt;&amp;lsquo;ambitions&amp;rsquo;&lt;/em&gt;. So, this is an attempt to formalize this thinking, and to visualize my opprtunities for the future. Let&amp;rsquo;s write a &lt;em&gt;bucket list&lt;/em&gt;, a list of dreams, ambitions and goals!&lt;/p&gt;
+
+&lt;h1 id=”what-i-did-recently”&gt;What I did recently:&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Learned gliding&lt;/strong&gt;
+Although I am not doing it any more, this was a huge learning experience. Not only did I manage to solo a glider during an entire summer, I met a completely new group of people, and got confronted with &lt;em&gt;learning&lt;/em&gt;. Not studying (I&amp;rsquo;m good at that trick), bot actual &lt;em&gt;learning&lt;/em&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Took a month of vacation to tour the Southwest and hike the national parks&lt;/strong&gt;
+A great adventure and an unexpectedly deep impression. Surpises around every corner.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Proposed to Arnolda&lt;/strong&gt;
+We&amp;rsquo;re getting married. At the moment I think it probably still scares us both, but it&amp;rsquo;s going to be a brilliant thing.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Flew a hot air balloon&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=”so-how-to-go-forward”&gt;So how to go forward?&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;I opened &lt;a href=”http://www.43things.com/person/pragtich”&gt;an account on 43things.com.&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;I started adding some goals off the top of my head.&lt;/li&gt;
+  &lt;li&gt;I intend to update the blog with my experiences, new additions, completions and steps made towards my goals.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=”what-is-in-the-list-now43things”&gt;What is &lt;a href=”http://www.43things.com/person/pragtich”&gt;in the list now?&lt;/a&gt;:&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Complete my Design for Six Sigma black belt projects&lt;/strong&gt;
+This was a course I started at my previous employer. I was super enthousiastic, and really think this stuff is made for me. A great combination of practical and theoretical, of project management and project execution. But it does require submitting 2 project to get the certificate. And that&amp;rsquo;s where I&amp;rsquo;m stuck. I guess the professor was right when he said that it&amp;rsquo;s not as easy as it looks. So I will start afresh, coose a very simple task, and &lt;em&gt;just do it&lt;/em&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Build an aeroplane&lt;/strong&gt;
+Something I have been wanting to do ever since I saw &lt;a href=”http://en.wikipedia.org/wiki/A_Plane_Is_Born”&gt;A plane is born&lt;/a&gt;. Actually &lt;em&gt;making&lt;/em&gt; something is rarer than you would think, for engineers. I would have to learn great deals, and find a good mentor. Don&amp;rsquo;t even think getting a licence first would be necessary. This would be a real adventure. &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Fly around the USA/Australia in a light plane.&lt;/strong&gt; Flying is just great. This goal would involve getting a license, becoming proficient at flying, and probably finding a guided tour of some sort. What could be better than exploring a great continent in a fast vehicle, and getting the great scenes that you do from the air?!&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Marry Arnolda&lt;/strong&gt;. Mentioned last, but definitely not least. After more than 12 years, it felt like our relationship was missing the final detail. To be able to really call her &amp;lsquo;wife&amp;rsquo; (I have been doing this for years regardsless) and have her carry my name. This will be an adventure in itself, and will require both of us to face old fears and reservations. &lt;em&gt;Adventure!&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=”analysis”&gt;Analysis&lt;/h1&gt;
+
+&lt;p&gt;&amp;hellip; is what i do. &lt;/p&gt;
+
+&lt;p&gt;I see one overriding theme in this short list: &lt;em&gt;adventure&lt;/em&gt;. I like adventure, apparently.&lt;/p&gt;
+
+&lt;p&gt;Other themes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A lot of ambition, big goals&lt;/li&gt;
+  &lt;li&gt;The desire to learn&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=”http://en.wikipedia.org/wiki/Midlife_crisis”&gt;Midlife crisis?&lt;/a&gt;&lt;/p&gt;
+
+</content></entry><entry><id>tag:members.home.nl,2011-11-14:/pragtich/technology/Installing Emacs Template mode.html</id><title type="html">Easy new page creating using Emacs and Template.el</title>
+<published>2011-11-13T23:00:00Z</published><updated>2011-11-13T23:00:00Z</updated><link href="http://members.home.nl/pragtich/technology/Installing%20Emacs%20Template%20mode.html" rel="alternate">
+<content type="html">&lt;p&gt;installing Emacs Template mode in Aquamacs. Based on &lt;a href=”http://emacs-template.sourceforge.net/details.html”&gt;This web site&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Downloaded and put the template.el file into &lt;code&gt;~/.xemacs/lisp&lt;/code&gt;. 
+Visit the file and `  M-x byte-compile-file RET template.el RET`. Loads of errors.&lt;/p&gt;
+
+&lt;p&gt;Put into Emacs settings (Library in Aquamacs):
+    (require &amp;lsquo;template)
+    (template-initialize)
+    M-C-x&lt;/p&gt;
+
+&lt;p&gt;Copied example templates to ~/.templates.&lt;/p&gt;
+
+&lt;p&gt;Restarted Emacs&lt;/p&gt;
+
+&lt;p&gt;Read the &lt;a href=”http://emacs-template.sourceforge.net/details.html”&gt;manual&lt;/a&gt;.
+* &lt;code&gt;C-x t&lt;/code&gt; Creates a file with template
+* &lt;code&gt;template-new-file&lt;/code&gt; Should do the same
+* I want to try and disable it from &lt;code&gt;C-x C-f&lt;/code&gt; &amp;ndash; that would only be confusing&lt;/p&gt;
+
+&lt;p&gt;Created the following empty markdown article with Nanoc header in &lt;code&gt;~/.templates&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;— 
+title: (&amp;gt;&amp;gt;&amp;gt;TITLE&amp;lt;&amp;lt;&amp;lt;)
+kind: article
+category: Computer stuff
+created_at: (&amp;gt;&amp;gt;&amp;gt;DATE&amp;lt;&amp;lt;&amp;lt;)
+summary: (&amp;gt;&amp;gt;&amp;gt;SUMMARY&amp;lt;&amp;lt;&amp;lt;)
+—
+
+(&amp;gt;&amp;gt;&amp;gt;POINT&amp;lt;&amp;lt;&amp;lt;)
+
+&amp;gt;&amp;gt;&amp;gt;TEMPLATE-DEFINITION-SECTION&amp;lt;&amp;lt;&amp;lt;
+(“SUMMARY” “Summary?” “” “” “– no summary –”)
+(“TITLE” “Title?” “” “” “”)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, to submit a now article, I can do: &lt;code&gt;C-x t&lt;/code&gt;, type the new folder and filename with the &lt;code&gt;.md&lt;/code&gt; extension, and type &lt;code&gt;RET&lt;/code&gt;. Further filling in the prompts for template (&lt;code&gt;RET&lt;/code&gt;), summary and title is a breeze, and then I have the cursor placed at exactly the right point for starting to blog.&lt;/p&gt;
+
+&lt;p&gt;Great stuff.&lt;/p&gt;
+</content></entry><p>&lt;/feed&gt;</p>
+
+<p>And created <code>content/atom.yaml</code> with:</p>
+
+<pre><code>title: Joris Pragt's blog feed
+author_name: Joris Pragt
+author_uri: http://members.home.nl/pragtich
+is_hidden: true
+</code></pre>
+
+<p>Edited <code>Rules</code> to add:</p>
+
+<pre><code>compile '/atom/' do
+  filter :erb
+end
+
+route '/atom/' do
+  '/atom.xml'
+end
+</code></pre>
+
+<p>Maruku threw some errors. Switched to Kramdown and all is well. </p>
+
+<p>I was confused for a while, because no orange icon was showing. Turns out that Firefox has removed the RSS feed icon from the toolbar. You can add it with <code>customize</code>, but even then it is oly black and gray. Not such a clear message anymore, compared to the old way.</p>
+ 
+</bodytext><footer></footer></article><titleframe><titlebar><div id="largetitle"> <a href="../">Pragtich</a>
+</div>
+
+ <div id="secnav">
+
+ </div>
+ <div id="artnav">
+ </div> 
+ </titlebar></titleframe><nav><h2>Categories</h2>
+      <ul>
+<li>
+<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
+
+
+
+   <li>
+<a href="../all_Life.html">Life</a> </li>
+
+
+
+   <li>
+<a href="../all_Kippycam.html">Kippycam</a> </li>
+
+
+
+      </ul>
+<h2>About</h2>
+      <ul>
+<li><a href="../about/">About me</a></li>
+      </ul></nav>
+</body>
+</html>
