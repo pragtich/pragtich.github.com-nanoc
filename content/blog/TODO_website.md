@@ -20,5 +20,10 @@ summary: What I still intend to do
 * Devise a more structured way of working with images, flowing them in the text etc.
 * Make a design that actually numbers <ol> and not <ul>
 * Make sure that titles in the title list also get passed through rubypants
-* Research [Railroad](http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html)
+* Research
+  [Railroad](http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html
+* Figure out a way to Rake the github pushes
+
+
+
 

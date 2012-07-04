@@ -57,3 +57,24 @@ So now, each time I edit something in my page, I only have to go...
 
 Mission accomplished!
 =======
+
+Update
+=====
+
+When I started using `git`, I needed to add a line to the
+`sitecopyrc`. I added several of the disturbing dotfiles (which my
+server was not allowing me to upload) to the `exclude` list. The
+`sitecopy/sitecopyrc` now looks something like:
+
+    site my.pretty.name
+    server ftp.server.url
+    remote /
+    local ~/nanoc/pragtich/output/
+    username myFTPusernae
+    password thepassword
+    protocol ftp
+	exclude .DS_Store
+	exclude .git
+	
+This saves a lot of error messages, which eventually led to a failing sitecopy.
+    
