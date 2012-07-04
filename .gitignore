@@ -1,2 +1,15 @@
-# Ignoring .nojekyll so that it will be kept in the repository and not accidentally deleted if I nuke the output folder
-.nojekyll
+# For projects using nanoc (http://nanoc.stoneship.org/)
+
+
+# Mac stuff
+.DS_Store
+
+
+# Default location for output, needs to match output_dir's value found in config.yaml
+#
+# Commented this out for now: need output in feed to get github pages to work?
+# readded it: the source and master repos should not copy or delete these files. nanoc-git will do the copying for me
+output/
+
+# Temporary file directory
+tmp/
