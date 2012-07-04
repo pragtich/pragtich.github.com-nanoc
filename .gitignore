@@ -1,5 +1,10 @@
 # For projects using nanoc (http://nanoc.stoneship.org/)
 
+
+# Mac stuff
+.DS_Store
+
+
 # Default location for output, needs to match output_dir's value found in config.yaml
 #
 # Commented this out for now: need output in feed to get github pages to work?
