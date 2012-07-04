@@ -73,6 +73,26 @@ end
 <p>…and the entire thing is recompiled and synchronized to the server. </p>
 
 <h1 id="mission-accomplished">Mission accomplished!</h1>
+
+<h1 id="update">Update</h1>
+
+<p>When I started using <code>git</code>, I needed to add a line to the
+<code>sitecopyrc</code>. I added several of the disturbing dotfiles (which my
+server was not allowing me to upload) to the <code>exclude</code> list. The
+<code>sitecopy/sitecopyrc</code> now looks something like:</p>
+
+<pre><code>site my.pretty.name
+server ftp.server.url
+remote /
+local ~/nanoc/pragtich/output/
+username myFTPusernae
+password thepassword
+protocol ftp
+exclude .DS_Store
+exclude .git
+</code></pre>
+
+<p>This saves a lot of error messages, which eventually led to a failing sitecopy.</p>
  
 </bodytext><footer></footer></article><titleframe><titlebar><div id="largetitle"> <a href="../">Pragtich</a>
 </div>

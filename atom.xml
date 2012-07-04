@@ -2,13 +2,109 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>http://members.home.nl/pragtich/</id>
   <title>Joris Pragt's blog feed</title>
-  <updated>2012-06-21T22:00:00Z</updated>
+  <updated>2012-07-03T22:00:00Z</updated>
   <link href="http://members.home.nl/pragtich/" rel="alternate"/>
   <link href="http://members.home.nl/pragtich/atom.xml" rel="self"/>
   <author>
     <name>Joris Pragt</name>
     <uri>http://members.home.nl/pragtich</uri>
   </author>
+  <entry>
+    <id>tag:members.home.nl,2012-07-04:/pragtich/technology/Nanoc-Github-Pages.html</id>
+    <title type="html">Using Nanoc to fill Github Pages</title>
+    <published>2012-07-03T22:00:00Z</published>
+    <updated>2012-07-03T22:00:00Z</updated>
+    <link href="http://members.home.nl/pragtich/technology/Nanoc-Github-Pages.html" rel="alternate"/>
+    <content type="html">&lt;p&gt;Started out with an already-existing nanoc folder.&lt;/p&gt;
+
+&lt;p&gt;I Installed git for mac using the standard installer supplied on
+git-scm.com (version 1.7.11.1) and created an account on github.&lt;/p&gt;
+
+&lt;p&gt;Created a repository called &lt;username&gt;.github.com&lt;/username&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href="http://schmurfy.github.com/2011/05/06/create_your_github_user_page_with_nanoc.html"&gt;Followed (approximately) this link&lt;/a&gt;
+although I made a few changes.&lt;/p&gt;
+
+&lt;p&gt;First of all, I already had a checkin, so could skip the first code
+box. I did rename the &lt;code&gt;master&lt;/code&gt; branch to &lt;code&gt;source&lt;/code&gt; and add a second remote:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git branch -m master source
+git remote add pages https://github.com/&amp;lt;user&amp;gt;/&amp;lt;user&amp;gt;.github.com.git
+git push -u pages source
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The output sounds promising:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Counting objects: 102, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (95/95), done.
+Writing objects: 100% (102/102), 237.00 KiB, done.
+Total 102 (delta 19), reused 0 (delta 0)
+To https://github.com/pragtich/pragtich.github.com.git
+ * [new branch]      source -&amp;gt; source
+Branch source set up to track remote branch source from pages.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;source&lt;/code&gt; branch now holds the entire page source (including
+any output).&lt;/p&gt;
+
+&lt;p&gt;Now I followed the cloning instructions quite rigidly (because I do
+not really understand them yet).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# fetch a working copy of your repository
+  $ git clone https://github.com/&amp;lt;user&amp;gt;/&amp;lt;user&amp;gt;.github.com.git output
+  $ cd output
+# create the isolated branch
+  $ git symbolic-ref HEAD refs/heads/master
+  $ rm .git/index
+  $ git clean -fdx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then recreate the output files:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd ..
+nanoc compile
+git commit -a
+git push pages
+cd output/
+git add *
+git commit
+git push origin master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;git push origin master&lt;/code&gt; part was tricky to figure out to me. It
+pushes the output folder&amp;rsquo;s content to it&amp;rsquo;s set remote origin (which
+came from the &lt;code&gt;clone&lt;/code&gt;, I assume. Adding the &lt;code&gt;master&lt;/code&gt; determines that
+the files are going into the &lt;code&gt;master&lt;/code&gt; branch (which is the leading
+branch for the GitHub Pages).&lt;/p&gt;
+
+&lt;p&gt;Finally, I did:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; touch .nojekyll
+ git add .nojekyll
+ git commit
+ 
+ vi .gitignore       #add .nojekyll to this file
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This should put a .nojekyll file into the repository, that will not
+get clobbered when I nuke the output/ folder (I hope).&lt;/p&gt;
+
+&lt;p&gt;So now, the workflow is:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Update files in the &lt;code&gt;content/&lt;/code&gt; folder&lt;/li&gt;
+  &lt;li&gt;Compile and upload to test server (I use a rake file)&lt;/li&gt;
+  &lt;li&gt;Verify results&lt;/li&gt;
+  &lt;li&gt;In the source folder: &lt;code&gt;git add *; git commit; git push pages&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;In the output folder: &lt;code&gt;git add *; git commit; git push origin
+master&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;TODO&lt;/strong&gt;: Add a rakefile to auto-push both the source and the output once
+I have a satisfactory build.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:members.home.nl,2012-06-22:/pragtich/kippycam/network-layout.html</id>
     <title type="html">Getting network access in the garden</title>
@@ -194,7 +290,9 @@ editing the startup script) and link in the network-layout page&lt;/li&gt;
   &lt;li&gt;Devise a more structured way of working with images, flowing them in the text etc.&lt;/li&gt;
   &lt;li&gt;Make a design that actually numbers &amp;lt;ol&amp;gt; and not &amp;lt;ul&amp;gt;&lt;/li&gt;
   &lt;li&gt;Make sure that titles in the title list also get passed through rubypants&lt;/li&gt;
-  &lt;li&gt;Research &lt;a href="http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html"&gt;Railroad&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Research
+[Railroad](http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html&lt;/li&gt;
+  &lt;li&gt;Figure out a way to Rake the github pushes&lt;/li&gt;
 &lt;/ul&gt;
 </content>
   </entry>
@@ -255,53 +353,6 @@ Something I have been wanting to do ever since I saw &lt;a href="http://en.wikip
 
 &lt;p&gt;&lt;a href="http://en.wikipedia.org/wiki/Midlife_crisis"&gt;Midlife crisis?&lt;/a&gt;&lt;/p&gt;
 
-</content>
-  </entry>
-  <entry>
-    <id>tag:members.home.nl,2011-11-14:/pragtich/technology/Installing Emacs Template mode.html</id>
-    <title type="html">Easy new page creating using Emacs and Template.el</title>
-    <published>2011-11-13T23:00:00Z</published>
-    <updated>2011-11-13T23:00:00Z</updated>
-    <link href="http://members.home.nl/pragtich/technology/Installing Emacs Template mode.html" rel="alternate"/>
-    <content type="html">&lt;p&gt;installing Emacs Template mode in Aquamacs. Based on &lt;a href="http://emacs-template.sourceforge.net/details.html"&gt;This web site&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Downloaded and put the template.el file into &lt;code&gt;~/.xemacs/lisp&lt;/code&gt;. 
-Visit the file and `  M-x byte-compile-file RET template.el RET`. Loads of errors.&lt;/p&gt;
-
-&lt;p&gt;Put into Emacs settings (Library in Aquamacs):
-    (require &amp;lsquo;template)
-    (template-initialize)
-    M-C-x&lt;/p&gt;
-
-&lt;p&gt;Copied example templates to ~/.templates.&lt;/p&gt;
-
-&lt;p&gt;Restarted Emacs&lt;/p&gt;
-
-&lt;p&gt;Read the &lt;a href="http://emacs-template.sourceforge.net/details.html"&gt;manual&lt;/a&gt;.
-* &lt;code&gt;C-x t&lt;/code&gt; Creates a file with template
-* &lt;code&gt;template-new-file&lt;/code&gt; Should do the same
-* I want to try and disable it from &lt;code&gt;C-x C-f&lt;/code&gt; &amp;ndash; that would only be confusing&lt;/p&gt;
-
-&lt;p&gt;Created the following empty markdown article with Nanoc header in &lt;code&gt;~/.templates&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;--- 
-title: (&amp;gt;&amp;gt;&amp;gt;TITLE&amp;lt;&amp;lt;&amp;lt;)
-kind: article
-category: Computer stuff
-created_at: (&amp;gt;&amp;gt;&amp;gt;DATE&amp;lt;&amp;lt;&amp;lt;)
-summary: (&amp;gt;&amp;gt;&amp;gt;SUMMARY&amp;lt;&amp;lt;&amp;lt;)
----
-
-(&amp;gt;&amp;gt;&amp;gt;POINT&amp;lt;&amp;lt;&amp;lt;)
-
-&amp;gt;&amp;gt;&amp;gt;TEMPLATE-DEFINITION-SECTION&amp;lt;&amp;lt;&amp;lt;
-("SUMMARY" "Summary?" "" "" "-- no summary --")
-("TITLE" "Title?" "" "" "")
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now, to submit a now article, I can do: &lt;code&gt;C-x t&lt;/code&gt;, type the new folder and filename with the &lt;code&gt;.md&lt;/code&gt; extension, and type &lt;code&gt;RET&lt;/code&gt;. Further filling in the prompts for template (&lt;code&gt;RET&lt;/code&gt;), summary and title is a breeze, and then I have the cursor placed at exactly the right point for starting to blog.&lt;/p&gt;
-
-&lt;p&gt;Great stuff.&lt;/p&gt;
 </content>
   </entry>
 </feed>
