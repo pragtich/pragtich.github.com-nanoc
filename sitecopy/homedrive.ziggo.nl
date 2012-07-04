@@ -21,11 +21,11 @@
 <item><type><type-file/></type><filename>technology/Nanoc%5findex.jpg</filename>
 <protection>644</protection><size>4473</size><modtime>1341394144</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>technology/Nanoc.html</filename>
-<protection>644</protection><size>34404</size><modtime>1341398626</modtime><ascii><false/></ascii></item>
+<protection>644</protection><size>34389</size><modtime>1341398829</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>technology/nanoc-ss.jpg</filename>
 <protection>644</protection><size>48750</size><modtime>1341394144</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>technology/Nanoc-Github-Pages.html</filename>
-<protection>644</protection><size>4458</size><modtime>1341398625</modtime><ascii><false/></ascii></item>
+<protection>644</protection><size>4442</size><modtime>1341398828</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>technology/Installing%20sitecopy%20on%20OS%20X.html</filename>
 <protection>644</protection><size>4700</size><modtime>1341398498</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>technology/Installing%20Emacs%20Template%20mode.html</filename>
@@ -35,7 +35,7 @@
 <item><type><type-file/></type><filename>index.html</filename>
 <protection>644</protection><size>3290</size><modtime>1341398085</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>atom.xml</filename>
-<protection>644</protection><size>29973</size><modtime>1341398626</modtime><ascii><false/></ascii></item>
+<protection>644</protection><size>29958</size><modtime>1341398829</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>all%5fLife.html</filename>
 <protection>644</protection><size>1622</size><modtime>1341394145</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>all%5fKippycam.html</filename>
