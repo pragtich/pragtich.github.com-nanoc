@@ -86,3 +86,8 @@ So now, the workflow is:
 **TODO**: Add a rakefile to auto-push both the source and the output once
 I have a satisfactory build.
 
+
+Pushing using nanoc-git
+===================
+
+I am playing with nanoc-git. Will update later how this works
