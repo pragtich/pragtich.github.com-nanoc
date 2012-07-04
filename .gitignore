@@ -1,0 +1,2 @@
+# Ignoring .nojekyll so that it will be kept in the repository and not accidentally deleted if I nuke the output folder
+.nojekyll
