@@ -4,6 +4,10 @@ rescue LoadError
   require 'rubygems'
   require 'nanoc3/tasks'
 end
+
+# Required gem for nanoc-git: pushing to github
+require 'nanoc-git/tasks'
+
 desc "Initialise sitecopy."
 task :init do
   system 'sitecopy -r sitecopy/sitecopyrc -p sitecopy -i homedrive.ziggo.nl'
