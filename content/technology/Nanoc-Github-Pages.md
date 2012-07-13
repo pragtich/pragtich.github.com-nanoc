@@ -90,4 +90,70 @@ I have a satisfactory build.
 Pushing using nanoc-git
 ===================
 
-I am playing with nanoc-git. Will update later how this works
+I am playing with nanoc-git. I found it through a Google search. It's
+maker claims it to be alpha-level software. Let's see. It lives
+[here](https://github.com/cspicker/nanoc-git).
+
+The script does rebuild the output folder implicitly. So it breaks the
+prototyping build thing that I have described above. Maybe I'll try to
+rewrite it to allow some kind of prototyping, or maybe I will stick
+with the plan before. I will see. Good thing I'm keeping this blog,
+because I tend to forget each syntax before I get to use it again.
+
+For sake of documentation, I did the following:
+
+* Updated `config.yaml`:
+
+		# Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
+		deploy:
+		  default:
+			dst_remote: pages
+			dst_branch: master
+			src_branch: source
+
+* Installed nanoc-git:
+
+         gem install nanoc-git
+	
+* Edited `Rakefile`
+
+        require 'nanoc-git/tasks'
+	
+Then, to execute: `rake deploy:git' should 
+
+1. Clean the nanoc site
+2. Check out the source (`source`) from `git`
+3. Compile the site using `nanoc`
+4. Check out the destination (`master`) from `git`
+5. Copy all the files from the `output/` folder to the root of
+`master`
+6. Commit in `git`
+7. Push to the remote `master`
+8. Check the source back out
+
+A possible workflow could be:
+
+    # Edit the file 
+	git add <file>
+	git commit 
+	rake co  #this is my prototyping (sitecopy) rake
+	
+	# Check: ok?
+	
+	rake deploy:git
+
+or another option:
+
+    # Edit the file 
+	rake co  #this is my prototyping (sitecopy) rake
+	
+	# Check: ok?
+
+	git add <file>
+	git commit 
+	
+	rake deploy:git
+
+
+
+	
