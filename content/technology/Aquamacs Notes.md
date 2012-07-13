@@ -8,12 +8,12 @@ summary: Because I keep forgetting all the little details, I am writing them dow
 Aquamacs is a great text editor for OS X. It does, however, have its
 idiosyncrises. So, here I am keeping notes on what worked for me.
 
-* Documentation
+# Documentation
 
 First of all, Google is your friend. But there is also some
 [good documentation on the EmacsWiki site][aquamacs-faq].
 
-* Configuration file
+# Configuration file
 
 The Aquamacs does not use the standard `.emacs` locations. Instead,
 the stuff is hidden in the library. For details, check
@@ -25,12 +25,12 @@ the 'customization' tool.
 
 [aquamacs-faq]:http://www.emacswiki.org/emacs/AquamacsFAQ
 
-* Emacsclient
+# Emacsclient 
 
 In using Aquamacs, I wanted to start using it as the default
 editor. Some research was needed.
 
-** Setup
+## Setup
 
 I edited `.bash_profile` and added the following`;
 
@@ -52,6 +52,8 @@ To get the server to automatically load, I used the customization
 interface (Aquamacs -> Preferences, Interfacing to external
 utilities, Server) to enable 'Server Mode'. That way, any time
 Aquamacs starts up, it will be listening.
+
+## Using
 
 Ending an editing session that was started this way, goes as follows:
 
