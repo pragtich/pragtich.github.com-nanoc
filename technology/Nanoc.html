@@ -139,7 +139,82 @@ I have a satisfactory build.&lt;/p&gt;
 
 &lt;h1 id=”pushing-using-nanoc-git”&gt;Pushing using nanoc-git&lt;/h1&gt;
 
-&lt;p&gt;I am playing with nanoc-git. Will update later how this works&lt;/p&gt;
+&lt;p&gt;I am playing with nanoc-git. I found it through a Google search. It&amp;rsquo;s
+maker claims it to be alpha-level software. Let&amp;rsquo;s see. It lives
+&lt;a href=”https://github.com/cspicker/nanoc-git”&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The script does rebuild the output folder implicitly. So it breaks the
+prototyping build thing that I have described above. Maybe I&amp;rsquo;ll try to
+rewrite it to allow some kind of prototyping, or maybe I will stick
+with the plan before. I will see. Good thing I&amp;rsquo;m keeping this blog,
+because I tend to forget each syntax before I get to use it again.&lt;/p&gt;
+
+&lt;p&gt;For sake of documentation, I did the following:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Updated &lt;code&gt;config.yaml&lt;/code&gt;:&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  # Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
+  deploy:
+    default:
+      dst_remote: pages
+      dst_branch: master
+      src_branch: source
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Installed nanoc-git:&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;   gem install nanoc-git
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Edited &lt;code&gt;Rakefile&lt;/code&gt;&lt;/p&gt;
+
+    &lt;pre&gt;&lt;code&gt;  require ‘nanoc-git/tasks’
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Then, to execute: `rake deploy:git&amp;rsquo; should &lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Clean the nanoc site&lt;/li&gt;
+  &lt;li&gt;Check out the source (&lt;code&gt;source&lt;/code&gt;) from &lt;code&gt;git&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Compile the site using &lt;code&gt;nanoc&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Check out the destination (&lt;code&gt;master&lt;/code&gt;) from &lt;code&gt;git&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Copy all the files from the &lt;code&gt;output/&lt;/code&gt; folder to the root of
+&lt;code&gt;master&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Commit in &lt;code&gt;git&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Push to the remote &lt;code&gt;master&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Check the source back out&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;A possible workflow could be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Edit the file 
+git add &amp;lt;file&amp;gt;
+git commit 
+rake co  #this is my prototyping (sitecopy) rake
+
+# Check: ok?
+
+rake deploy:git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;or another option:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Edit the file 
+rake co  #this is my prototyping (sitecopy) rake
+
+# Check: ok?
+
+git add &amp;lt;file&amp;gt;
+git commit 
+
+rake deploy:git
+&lt;/code&gt;&lt;/pre&gt;
 </content></entry><entry><id>tag:members.home.nl,2012-06-22:/pragtich/kippycam/network-layout.html</id><title type="html">Getting network access in the garden</title>
 <published>2012-06-21T22:00:00Z</published><updated>2012-06-21T22:00:00Z</updated><link rel="alternate" href="http://members.home.nl/pragtich/kippycam/network-layout.html">
 <content type="html">&lt;h1 id=”the-problem”&gt;The problem&lt;/h1&gt;

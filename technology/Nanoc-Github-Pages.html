@@ -112,7 +112,86 @@ I have a satisfactory build.</p>
 
 <h1 id="pushing-using-nanoc-git">Pushing using nanoc-git</h1>
 
-<p>I am playing with nanoc-git. Will update later how this works</p>
+<p>I am playing with nanoc-git. I found it through a Google search. It’s
+maker claims it to be alpha-level software. Let’s see. It lives
+<a href="https://github.com/cspicker/nanoc-git">here</a>.</p>
+
+<p>The script does rebuild the output folder implicitly. So it breaks the
+prototyping build thing that I have described above. Maybe I’ll try to
+rewrite it to allow some kind of prototyping, or maybe I will stick
+with the plan before. I will see. Good thing I’m keeping this blog,
+because I tend to forget each syntax before I get to use it again.</p>
+
+<p>For sake of documentation, I did the following:</p>
+
+<ul>
+<li>
+    <p>Updated <code>config.yaml</code>:</p>
+
+    <pre><code>  # Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
+  deploy:
+    default:
+      dst_remote: pages
+      dst_branch: master
+      src_branch: source
+</code></pre>
+  </li>
+  <li>
+    <p>Installed nanoc-git:</p>
+
+    <pre><code>   gem install nanoc-git
+</code></pre>
+  </li>
+  <li>
+    <p>Edited <code>Rakefile</code></p>
+
+    <pre><code>  require 'nanoc-git/tasks'
+</code></pre>
+  </li>
+</ul>
+<p>Then, to execute: `rake deploy:git’ should </p>
+
+<ol>
+<li>Clean the nanoc site</li>
+  <li>Check out the source (<code>source</code>) from <code>git</code>
+</li>
+  <li>Compile the site using <code>nanoc</code>
+</li>
+  <li>Check out the destination (<code>master</code>) from <code>git</code>
+</li>
+  <li>Copy all the files from the <code>output/</code> folder to the root of
+<code>master</code>
+</li>
+  <li>Commit in <code>git</code>
+</li>
+  <li>Push to the remote <code>master</code>
+</li>
+  <li>Check the source back out</li>
+</ol>
+<p>A possible workflow could be:</p>
+
+<pre><code># Edit the file 
+git add &lt;file&gt;
+git commit 
+rake co  #this is my prototyping (sitecopy) rake
+
+# Check: ok?
+
+rake deploy:git
+</code></pre>
+
+<p>or another option:</p>
+
+<pre><code># Edit the file 
+rake co  #this is my prototyping (sitecopy) rake
+
+# Check: ok?
+
+git add &lt;file&gt;
+git commit 
+
+rake deploy:git
+</code></pre>
  
 </bodytext><footer></footer></article><titleframe><titlebar><div id="largetitle"> <a href="../">Pragtich</a>
 </div>
