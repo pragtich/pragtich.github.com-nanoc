@@ -5,6 +5,7 @@ rescue LoadError
   require 'nanoc3/tasks'
 end
 
+
 # Required gem for nanoc-git: pushing to github
 require 'nanoc-git/tasks'
 
