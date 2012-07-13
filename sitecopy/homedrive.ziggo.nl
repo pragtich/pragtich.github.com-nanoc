@@ -21,7 +21,7 @@
 <item><type><type-file/></type><filename>technology/Nanoc%5findex.jpg</filename>
 <protection>644</protection><size>4473</size><modtime>1342179155</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>technology/Nanoc.html</filename>
-<protection>644</protection><size>33927</size><modtime>1342179155</modtime><ascii><false/></ascii></item>
+<protection>644</protection><size>33981</size><modtime>1342179587</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>technology/nanoc-ss.jpg</filename>
 <protection>644</protection><size>48750</size><modtime>1342179155</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>technology/Nanoc-Github-Pages.html</filename>
@@ -31,13 +31,13 @@
 <item><type><type-file/></type><filename>technology/Installing%20Emacs%20Template%20mode.html</filename>
 <protection>644</protection><size>3122</size><modtime>1342176792</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>technology/Aquamacs%20Notes.html</filename>
-<protection>644</protection><size>3626</size><modtime>1342179155</modtime><ascii><false/></ascii></item>
+<protection>644</protection><size>3693</size><modtime>1342179587</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>stylesheet.css</filename>
 <protection>644</protection><size>3567</size><modtime>1342179155</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>index.html</filename>
 <protection>644</protection><size>3523</size><modtime>1342179154</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>atom.xml</filename>
-<protection>644</protection><size>29502</size><modtime>1342179155</modtime><ascii><false/></ascii></item>
+<protection>644</protection><size>29536</size><modtime>1342179587</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>all%5fLife.html</filename>
 <protection>644</protection><size>1622</size><modtime>1342176792</modtime><ascii><false/></ascii></item>
 <item><type><type-file/></type><filename>all%5fKippycam.html</filename>

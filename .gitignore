@@ -13,3 +13,6 @@ output/
 
 # Temporary file directory
 tmp/
+
+# Sitecopy's status files
+sitecopy/homedrive.ziggo.nl
