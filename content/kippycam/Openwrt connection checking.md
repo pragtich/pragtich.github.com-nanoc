@@ -1,7 +1,7 @@
 --- 
 title: Keeping Openwrt online using DHCP
 kind: article
-category: Computer stuff
+category: Kippycam
 created_at: 13 Jul 2012
 summary: When Openwrt loses its connection, it does not very gracefully reconnect when using proto dhcp. This is how I solved this
 ---
