@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Pragtich: Keeping Openwrt online using DHCP</title>
+<link rel="stylesheet" type="text/css" href="../stylesheet.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="http://members.home.nl/pragtich/atom.xml">
+</head>
+<body>
+
+    <article><!-- If there's no item title; we print no header, even if
+           there's a date. --><header><hgroup><h1 class="itemtitle">Keeping Openwrt online using DHCP</h1>
+
+          
+          <h2 class="itemdate">13 Jul 2012</h2>
+          
+
+
+
+        </hgroup></header><summary>
+             When Openwrt loses its connection, it does not very gracefully reconnect when using proto dhcp. This is how I solved this…</summary><bodytext><p>I noticed, when
+<a href="network-layout.html">installing the WiFi network bridge to the garden shed</a>,
+that the DHCP client does not reconnect when the connection has been
+lost. It just sits there (don’t know when it would reconnect, maybe
+when the lease expires?) unconnected. For my purpose, that’s not very
+satisfying, as I need the connection to be robust. </p>
+
+<p>Since I had worked with <code>monit</code> before, I figured this would be a
+great way to periodically check the state of the connection and
+re-enable it when it has dropped out. At a later date, <code>monit</code> could
+also turn out to be helpful in making sure that all other services on
+the router remain healthy. </p>
+
+<h1 id="installing--configuring">Installing &amp; configuring</h1>
+
+<pre><code>opkg update
+# I am getting the packages from my local copy of the trunk, just
+to have it all be consistent. That probably is only critical for
+the kernel modules packages, but let's do it for sake of
+simplicity
+
+opkg install monit
+
+vi /etc/monitrc
+</code></pre>
+
+<p>I added some sensible settings from the template that is in
+<code>/etc/monitrc</code>, mainly to start as a daemon, put the work files in
+<code>/tmp</code> and set the frequency of the checks. And the check for a
+connection:</p>
+
+<pre><code>check host kiprouter with address 10.0.0.4                                     
+    if failed icmp type echo count 3 with timeout 3 seconds then
+	exec "/etc/init.d/network restart"
+</code></pre>
+
+<p>Then to enable and start monit:</p>
+
+<pre><code>/etc/init.d/monit enable
+/etc/init.d/monit start
+</code></pre>
+
+<p>Testing results later…</p>
+ 
+</bodytext><footer></footer></article><titleframe><titlebar><div id="largetitle"> <a href="../">Pragtich</a>
+</div>
+
+ <div id="secnav">
+
+ </div>
+ <div id="artnav">
+ </div> 
+ </titlebar></titleframe><nav><h2>Categories</h2>
+      <ul>
+<li>
+<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
+
+
+
+   <li>
+<a href="../all_Life.html">Life</a> </li>
+
+
+
+   <li>
+<a href="../all_Kippycam.html">Kippycam</a> </li>
+
+
+
+      </ul>
+<h2>About</h2>
+      <ul>
+<li><a href="../about/">About me</a></li>
+      </ul></nav>
+</body>
+</html>

@@ -73,6 +73,57 @@ other applications like GNUS or VCS. Maybe I will too, some day.&lt;/p&gt;
 </content>
   </entry>
   <entry>
+    <id>tag:members.home.nl,2012-07-13:/pragtich/kippycam/Openwrt connection checking.html</id>
+    <title type="html">Keeping Openwrt online using DHCP</title>
+    <published>2012-07-12T22:00:00Z</published>
+    <updated>2012-07-12T22:00:00Z</updated>
+    <link rel="alternate" href="http://members.home.nl/pragtich/kippycam/Openwrt connection checking.html"/>
+    <content type="html">&lt;p&gt;I noticed, when
+&lt;a href="network-layout.html"&gt;installing the WiFi network bridge to the garden shed&lt;/a&gt;,
+that the DHCP client does not reconnect when the connection has been
+lost. It just sits there (don&amp;rsquo;t know when it would reconnect, maybe
+when the lease expires?) unconnected. For my purpose, that&amp;rsquo;s not very
+satisfying, as I need the connection to be robust. &lt;/p&gt;
+
+&lt;p&gt;Since I had worked with &lt;code&gt;monit&lt;/code&gt; before, I figured this would be a
+great way to periodically check the state of the connection and
+re-enable it when it has dropped out. At a later date, &lt;code&gt;monit&lt;/code&gt; could
+also turn out to be helpful in making sure that all other services on
+the router remain healthy. &lt;/p&gt;
+
+&lt;h1 id="installing--configuring"&gt;Installing &amp;amp; configuring&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;opkg update
+# I am getting the packages from my local copy of the trunk, just
+to have it all be consistent. That probably is only critical for
+the kernel modules packages, but let's do it for sake of
+simplicity
+
+opkg install monit
+
+vi /etc/monitrc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I added some sensible settings from the template that is in
+&lt;code&gt;/etc/monitrc&lt;/code&gt;, mainly to start as a daemon, put the work files in
+&lt;code&gt;/tmp&lt;/code&gt; and set the frequency of the checks. And the check for a
+connection:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;check host kiprouter with address 10.0.0.4                                     
+    if failed icmp type echo count 3 with timeout 3 seconds then
+	exec "/etc/init.d/network restart"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then to enable and start monit:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/etc/init.d/monit enable
+/etc/init.d/monit start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Testing results later&amp;hellip;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <id>tag:members.home.nl,2012-07-04:/pragtich/technology/Nanoc-Github-Pages.html</id>
     <title type="html">Using Nanoc to fill Github Pages</title>
     <published>2012-07-03T22:00:00Z</published>
@@ -408,33 +459,6 @@ Also disable security first. This cost me an afternoon, because &lt;code&gt;psk2
   &lt;li&gt;&lt;a href="http://www.instructables.com/files/orig/F0M/V4MW/H2MYLKL9/F0MV4MWH2MYLKL9.txt"&gt;Janisalnis&amp;rsquo; short description of installing OpenWRT onto a USB stick: a useful start.&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-</content>
-  </entry>
-  <entry>
-    <id>tag:members.home.nl,2012-06-04:/pragtich/blog/TODO_website.html</id>
-    <title type="html">Things to do on this blog</title>
-    <published>2012-06-03T22:00:00Z</published>
-    <updated>2012-06-03T22:00:00Z</updated>
-    <link rel="alternate" href="http://members.home.nl/pragtich/blog/TODO_website.html"/>
-    <content type="html">&lt;h1 id="some-things-that-i-still-intend-to-do-with-this-site"&gt;Some things that I still intend to do with this site&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ADD A picture of my configuration screens in &lt;code&gt;luci&lt;/code&gt; to the layout
-page.&lt;/li&gt;
-  &lt;li&gt;Add a description page of installing mjpg-streamer (especially
-editing the startup script) and link in the network-layout page&lt;/li&gt;
-  &lt;li&gt;Add photo of line of sight to network-layout&lt;/li&gt;
-  &lt;li&gt;Get a proper domain hosting instead of &lt;a href="http://members.home.nl/pragtich"&gt;my old athome.nl site&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Add &amp;ldquo;title&amp;rdquo; stuff so that a Markdown image gets a caption&lt;/li&gt;
-  &lt;li&gt;Clean up the design &lt;/li&gt;
-  &lt;li&gt;Make a new design with moe modern and cleaner look&lt;/li&gt;
-  &lt;li&gt;Devise a more structured way of working with images, flowing them in the text etc.&lt;/li&gt;
-  &lt;li&gt;Make a design that actually numbers &amp;lt;ol&amp;gt; and not &amp;lt;ul&amp;gt;&lt;/li&gt;
-  &lt;li&gt;Make sure that titles in the title list also get passed through rubypants&lt;/li&gt;
-  &lt;li&gt;Research
-[Railroad](http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html&lt;/li&gt;
-  &lt;li&gt;Figure out a way to Rake the github pushes&lt;/li&gt;
-&lt;/ul&gt;
 </content>
   </entry>
 </feed>
