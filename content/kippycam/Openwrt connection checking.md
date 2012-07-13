@@ -21,6 +21,7 @@ the router remain healthy.
 # Installing & configuring #
 
     opkg update
+	
 	# I am getting the packages from my local copy of the trunk, just
 	to have it all be consistent. That probably is only critical for
 	the kernel modules packages, but let's do it for sake of
