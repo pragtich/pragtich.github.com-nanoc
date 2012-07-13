@@ -2,13 +2,76 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>http://members.home.nl/pragtich/</id>
   <title>Joris Pragt's blog feed</title>
-  <updated>2012-07-03T22:00:00Z</updated>
+  <updated>2012-07-12T22:00:00Z</updated>
   <link rel="alternate" href="http://members.home.nl/pragtich/"/>
   <link rel="self" href="http://members.home.nl/pragtich/atom.xml"/>
   <author>
     <name>Joris Pragt</name>
     <uri>http://members.home.nl/pragtich</uri>
   </author>
+  <entry>
+    <id>tag:members.home.nl,2012-07-13:/pragtich/technology/Aquamacs Notes.html</id>
+    <title type="html">Some notes on using Aquamacs</title>
+    <published>2012-07-12T22:00:00Z</published>
+    <updated>2012-07-12T22:00:00Z</updated>
+    <link rel="alternate" href="http://members.home.nl/pragtich/technology/Aquamacs Notes.html"/>
+    <content type="html">&lt;p&gt;Aquamacs is a great text editor for OS X. It does, however, have its
+idiosyncrises. So, here I am keeping notes on what worked for me.&lt;/p&gt;
+
+&lt;h1 id="documentation"&gt;Documentation&lt;/h1&gt;
+
+&lt;p&gt;First of all, Google is your friend. But there is also some
+&lt;a href="http://www.emacswiki.org/emacs/AquamacsFAQ"&gt;good documentation on the EmacsWiki site&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h1 id="configuration-file"&gt;Configuration file&lt;/h1&gt;
+
+&lt;p&gt;The Aquamacs does not use the standard &lt;code&gt;.emacs&lt;/code&gt; locations. Instead,
+the stuff is hidden in the library. For details, check
+&lt;a href="http://www.emacswiki.org/emacs/AquamacsFAQ"&gt;the Aquamacs FAQ&lt;/a&gt;. I tend to edit the files in
+&lt;code&gt;~/Library/Preferences/Aquamacs Emacs/&lt;/code&gt; by hand, especially &lt;code&gt;customizations.el&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;To be honest, this exasperates me so much, that I have learned to use
+the &amp;lsquo;customization&amp;rsquo; tool.&lt;/p&gt;
+
+&lt;h1 id="emacsclient"&gt;Emacsclient&lt;/h1&gt;
+
+&lt;p&gt;In using Aquamacs, I wanted to start using it as the default
+editor. Some research was needed.&lt;/p&gt;
+
+&lt;h2 id="setup"&gt;Setup&lt;/h2&gt;
+
+&lt;p&gt;I edited &lt;code&gt;.bash_profile&lt;/code&gt; and added the following`;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# editor setup
+export EDITOR='/Applications/Aquamacs.app/Contents/MacOS/bin/emacsclient'
+export ALTERNATE_EDITOR=vi
+alias e=$EDITOR
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Probably I should research how to use ALTERNATE_EDITOR to startup
+Aquamacs, but I want to be sure that I am actually on a windowing
+station to do that &amp;ndash; too lazy at the moment. Maybe later. As it is
+now, Aquamacs will be used when it&amp;rsquo;s running (like when I&amp;rsquo;m working on
+this website), and vi will be used otherwise. &lt;/p&gt;
+
+&lt;p&gt;It also sets up a shorthand editing alias &lt;code&gt;e&lt;/code&gt; for my convenience.&lt;/p&gt;
+
+&lt;p&gt;To get the server to automatically load, I used the customization
+interface (Aquamacs -&amp;gt; Preferences, Interfacing to external
+utilities, Server) to enable &amp;lsquo;Server Mode&amp;rsquo;. That way, any time
+Aquamacs starts up, it will be listening.&lt;/p&gt;
+
+&lt;h2 id="using"&gt;Using&lt;/h2&gt;
+
+&lt;p&gt;Ending an editing session that was started this way, goes as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;C-x #
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Many people rebind this key to something like &lt;code&gt;C-c c&lt;/code&gt; to better match
+other applications like GNUS or VCS. Maybe I will too, some day.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:members.home.nl,2012-07-04:/pragtich/technology/Nanoc-Github-Pages.html</id>
     <title type="html">Using Nanoc to fill Github Pages</title>
@@ -372,65 +435,6 @@ editing the startup script) and link in the network-layout page&lt;/li&gt;
 [Railroad](http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html&lt;/li&gt;
   &lt;li&gt;Figure out a way to Rake the github pushes&lt;/li&gt;
 &lt;/ul&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:members.home.nl,2011-11-22:/pragtich/blog/2011/43things.html</id>
-    <title type="html">Listing life goals with 43things</title>
-    <published>2011-11-21T23:00:00Z</published>
-    <updated>2011-11-21T23:00:00Z</updated>
-    <link rel="alternate" href="http://members.home.nl/pragtich/blog/2011/43things.html"/>
-    <content type="html">&lt;p&gt;I have been having a nagging sense that I have way too many dreams and am not doing much about most of them. It&amp;rsquo;s always been taking the next step, and following the clear path forward. Most of this is because of my &amp;lsquo;in the box&amp;rsquo; thinking, I think. I did not grow up with the talent of seeing big opportunities, of beleiving that the imaginable &lt;em&gt;can actually be realized&lt;/em&gt;. At times this has been a great burden on things, but recognition has led to increasing understanding, and it&amp;rsquo;s getting easier and easier to actually &lt;em&gt;follow the dream&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;Strangely, this does not at all go for travelling. When I travel, I can be ambitious, set the weirdest goals and totally accept whatever comes along. The same goes for photography, which to me feels a lot similar to travelling. It is imperative to set a goal, a challenging one, but it is just as imperative to not allow the goal to blind you for the path you are on. Only with a goal, do you escape your preconceptions, patterns and habits.&lt;/p&gt;
-
-&lt;p&gt;In recent years, I have done several larger and more compact things, which were clear examples of this thinking. Things that I did, knowing that they would turn out to deliver, if not the expected result, &lt;em&gt;an experience&lt;/em&gt;. It strikes me, that many of these actions included what you could describe as &lt;em&gt;&amp;lsquo;dreams&amp;rsquo;&lt;/em&gt; or &lt;em&gt;&amp;lsquo;ambitions&amp;rsquo;&lt;/em&gt;. So, this is an attempt to formalize this thinking, and to visualize my opprtunities for the future. Let&amp;rsquo;s write a &lt;em&gt;bucket list&lt;/em&gt;, a list of dreams, ambitions and goals!&lt;/p&gt;
-
-&lt;h1 id="what-i-did-recently"&gt;What I did recently:&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Learned gliding&lt;/strong&gt;
-Although I am not doing it any more, this was a huge learning experience. Not only did I manage to solo a glider during an entire summer, I met a completely new group of people, and got confronted with &lt;em&gt;learning&lt;/em&gt;. Not studying (I&amp;rsquo;m good at that trick), bot actual &lt;em&gt;learning&lt;/em&gt;.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Took a month of vacation to tour the Southwest and hike the national parks&lt;/strong&gt;
-A great adventure and an unexpectedly deep impression. Surpises around every corner.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Proposed to Arnolda&lt;/strong&gt;
-We&amp;rsquo;re getting married. At the moment I think it probably still scares us both, but it&amp;rsquo;s going to be a brilliant thing.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Flew a hot air balloon&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id="so-how-to-go-forward"&gt;So how to go forward?&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;I opened &lt;a href="http://www.43things.com/person/pragtich"&gt;an account on 43things.com.&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;I started adding some goals off the top of my head.&lt;/li&gt;
-  &lt;li&gt;I intend to update the blog with my experiences, new additions, completions and steps made towards my goals.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id="what-is-in-the-list-now43things"&gt;What is &lt;a href="http://www.43things.com/person/pragtich"&gt;in the list now?&lt;/a&gt;:&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Complete my Design for Six Sigma black belt projects&lt;/strong&gt;
-This was a course I started at my previous employer. I was super enthousiastic, and really think this stuff is made for me. A great combination of practical and theoretical, of project management and project execution. But it does require submitting 2 project to get the certificate. And that&amp;rsquo;s where I&amp;rsquo;m stuck. I guess the professor was right when he said that it&amp;rsquo;s not as easy as it looks. So I will start afresh, coose a very simple task, and &lt;em&gt;just do it&lt;/em&gt;.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Build an aeroplane&lt;/strong&gt;
-Something I have been wanting to do ever since I saw &lt;a href="http://en.wikipedia.org/wiki/A_Plane_Is_Born"&gt;A plane is born&lt;/a&gt;. Actually &lt;em&gt;making&lt;/em&gt; something is rarer than you would think, for engineers. I would have to learn great deals, and find a good mentor. Don&amp;rsquo;t even think getting a licence first would be necessary. This would be a real adventure. &lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Fly around the USA/Australia in a light plane.&lt;/strong&gt; Flying is just great. This goal would involve getting a license, becoming proficient at flying, and probably finding a guided tour of some sort. What could be better than exploring a great continent in a fast vehicle, and getting the great scenes that you do from the air?!&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Marry Arnolda&lt;/strong&gt;. Mentioned last, but definitely not least. After more than 12 years, it felt like our relationship was missing the final detail. To be able to really call her &amp;lsquo;wife&amp;rsquo; (I have been doing this for years regardsless) and have her carry my name. This will be an adventure in itself, and will require both of us to face old fears and reservations. &lt;em&gt;Adventure!&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id="analysis"&gt;Analysis&lt;/h1&gt;
-
-&lt;p&gt;&amp;hellip; is what i do. &lt;/p&gt;
-
-&lt;p&gt;I see one overriding theme in this short list: &lt;em&gt;adventure&lt;/em&gt;. I like adventure, apparently.&lt;/p&gt;
-
-&lt;p&gt;Other themes:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;A lot of ambition, big goals&lt;/li&gt;
-  &lt;li&gt;The desire to learn&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href="http://en.wikipedia.org/wiki/Midlife_crisis"&gt;Midlife crisis?&lt;/a&gt;&lt;/p&gt;
-
 </content>
   </entry>
 </feed>

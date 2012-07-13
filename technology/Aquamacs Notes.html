@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Pragtich: Some notes on using Aquamacs</title>
+<link rel="stylesheet" type="text/css" href="../stylesheet.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="http://members.home.nl/pragtich/atom.xml">
+</head>
+<body>
+
+    <article><!-- If there's no item title; we print no header, even if
+           there's a date. --><header><hgroup><h1 class="itemtitle">Some notes on using Aquamacs</h1>
+
+          
+          <h2 class="itemdate">13 Jul 2012</h2>
+          
+
+
+
+        </hgroup></header><summary>
+             Because I keep forgetting all the little details, I am writing them down….</summary><bodytext><p>Aquamacs is a great text editor for OS X. It does, however, have its
+idiosyncrises. So, here I am keeping notes on what worked for me.</p>
+
+<h1 id="documentation">Documentation</h1>
+
+<p>First of all, Google is your friend. But there is also some
+<a href="http://www.emacswiki.org/emacs/AquamacsFAQ">good documentation on the EmacsWiki site</a>.</p>
+
+<h1 id="configuration-file">Configuration file</h1>
+
+<p>The Aquamacs does not use the standard <code>.emacs</code> locations. Instead,
+the stuff is hidden in the library. For details, check
+<a href="http://www.emacswiki.org/emacs/AquamacsFAQ">the Aquamacs FAQ</a>. I tend to edit the files in
+<code>~/Library/Preferences/Aquamacs Emacs/</code> by hand, especially <code>customizations.el</code>.</p>
+
+<p>To be honest, this exasperates me so much, that I have learned to use
+the ‘customization’ tool.</p>
+
+<h1 id="emacsclient">Emacsclient</h1>
+
+<p>In using Aquamacs, I wanted to start using it as the default
+editor. Some research was needed.</p>
+
+<h2 id="setup">Setup</h2>
+
+<p>I edited <code>.bash_profile</code> and added the following`;</p>
+
+<pre><code># editor setup
+export EDITOR='/Applications/Aquamacs.app/Contents/MacOS/bin/emacsclient'
+export ALTERNATE_EDITOR=vi
+alias e=$EDITOR
+</code></pre>
+
+<p>Probably I should research how to use ALTERNATE_EDITOR to startup
+Aquamacs, but I want to be sure that I am actually on a windowing
+station to do that – too lazy at the moment. Maybe later. As it is
+now, Aquamacs will be used when it’s running (like when I’m working on
+this website), and vi will be used otherwise. </p>
+
+<p>It also sets up a shorthand editing alias <code>e</code> for my convenience.</p>
+
+<p>To get the server to automatically load, I used the customization
+interface (Aquamacs -&gt; Preferences, Interfacing to external
+utilities, Server) to enable ‘Server Mode’. That way, any time
+Aquamacs starts up, it will be listening.</p>
+
+<h2 id="using">Using</h2>
+
+<p>Ending an editing session that was started this way, goes as follows:</p>
+
+<pre><code>C-x #
+</code></pre>
+
+<p>Many people rebind this key to something like <code>C-c c</code> to better match
+other applications like GNUS or VCS. Maybe I will too, some day.</p>
+ 
+</bodytext><footer></footer></article><titleframe><titlebar><div id="largetitle"> <a href="../">Pragtich</a>
+</div>
+
+ <div id="secnav">
+
+ </div>
+ <div id="artnav">
+ </div> 
+ </titlebar></titleframe><nav><h2>Categories</h2>
+      <ul>
+<li>
+<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
+
+
+
+   <li>
+<a href="../all_Life.html">Life</a> </li>
+
+
+
+   <li>
+<a href="../all_Kippycam.html">Kippycam</a> </li>
+
+
+
+      </ul>
+<h2>About</h2>
+      <ul>
+<li><a href="../about/">About me</a></li>
+      </ul></nav>
+</body>
+</html>
