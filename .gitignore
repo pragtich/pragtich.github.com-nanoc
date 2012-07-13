@@ -13,3 +13,6 @@ output/
 
 # Temporary file directory
 tmp/
+
+# Sitecopy folder
+sitecopy/
