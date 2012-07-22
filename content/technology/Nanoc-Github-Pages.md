@@ -157,3 +157,22 @@ or another option:
 
 
 	
+# Getting a domain name #
+
+I registered `pragti.ch` at [nic.ch](http://nic.ch) and organized a
+free DNS service to do the DNS hosting. Then, tried to set up the
+CNAME following
+[the documentation at Github](https://help.github.com/articles/setting-up-a-custom-domain-with-pages).
+
+    git checkout master
+	vi CNAME
+	# just one line: 
+	# pragti.ch
+	
+	git add CNAME
+	git commit
+	git push pages
+	git checkout source
+	
+Did not work immediately, but many times DNS can take some time to
+update. Let's wait and see.
