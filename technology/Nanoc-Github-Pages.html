@@ -192,6 +192,27 @@ git commit
 
 rake deploy:git
 </code></pre>
+
+<h1 id="getting-a-domain-name">Getting a domain name</h1>
+
+<p>I registered <code>pragti.ch</code> at <a href="http://nic.ch">nic.ch</a> and organized a
+free DNS service to do the DNS hosting. Then, tried to set up the
+CNAME following
+<a href="https://help.github.com/articles/setting-up-a-custom-domain-with-pages">the documentation at Github</a>.</p>
+
+<pre><code>git checkout master
+vi CNAME
+# just one line: 
+# pragti.ch
+
+git add CNAME
+git commit
+git push pages
+git checkout source
+</code></pre>
+
+<p>Did not work immediately, but many times DNS can take some time to
+update. Let’s wait and see.</p>
  
 </bodytext><footer></footer></article><titleframe><titlebar><div id="largetitle"> <a href="../">Pragtich</a>
 </div>

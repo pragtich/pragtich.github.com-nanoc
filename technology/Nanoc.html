@@ -45,9 +45,81 @@
 <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt; &lt;feed xmlns="http://www.w3.org/2005/Atom"&gt;
 </code></pre>
 <id>http://members.home.nl/pragtich/</id><title>Making a personal website using Nanoc</title>
-<updated>2012-07-12T22:00:00Z</updated><link rel="alternate" href="http://members.home.nl/pragtich/">
+<updated>2012-07-18T22:00:00Z</updated><link rel="alternate" href="http://members.home.nl/pragtich/">
 <link rel="self" href="http://members.home.nl/pragtich/technology/Nanoc.html">
-<author><name>Joris Pragt</name><uri>http://members.home.nl/pragtich</uri></author><entry><id>tag:members.home.nl,2012-07-13:/pragtich/technology/Aquamacs Notes.html</id><title type="html">Some notes on using Aquamacs</title>
+<author><name>Joris Pragt</name><uri>http://members.home.nl/pragtich</uri></author><entry><id>tag:members.home.nl,2012-07-19:/pragtich/technology/Compiling gstreamer for C920 webcam.html</id><title type="html">Compiling a modified GStreamer for the C920 webcam</title>
+<published>2012-07-18T22:00:00Z</published><updated>2012-07-18T22:00:00Z</updated><link rel="alternate" href="http://members.home.nl/pragtich/technology/Compiling%20gstreamer%20for%20C920%20webcam.html">
+<content type="html">&lt;h1 id=”satisfying-build-requirements”&gt;Satisfying build requirements&lt;/h1&gt;
+&lt;p&gt;## Packages&lt;/p&gt;
+
+&lt;p&gt;Basically, a matter of &lt;code&gt;make prereq&lt;/code&gt; and &lt;code&gt;sudo fink install xxx&lt;/code&gt; until
+all dependencies were met.&lt;/p&gt;
+
+&lt;h2 id=”filesystem”&gt;Filesystem&lt;/h2&gt;
+
+&lt;p&gt;The OpenWRT buildroot needs a case-sensitive filesystem and tells you
+that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Build dependency: OpenWrt can only be built on a case-sensitive
+filesystem
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The default OS X system is not case sensitive. There is a simple
+solution: create a separate disk image. As I found
+&lt;a href=”https://forum.openwrt.org/viewtopic.php?id=20914”&gt;here&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hdiutil create -size 2048m -fs HFSX -volname openwrt openwrt
+Doubleclick the dmg
+cd /Volumes/openwrt/
+tar cf - ~/openwrt | tar xfp -
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also, I found the following tips that may be necessary (?) in the same
+forum topic:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;A couple notes on using MacOS X as a build environment that I’ve found so far:
+
+Package names for “port” that you may need:
+* gmake
+* gawk
+* gtar
+* coreutils
+* findutils
+* getopt
+* wget
+
+(There may be others, I can’t easily do a “clean install” on Mac)
+
+$ export PATH=”/opt/local/bin:$PATH”   # so that the GNU versions get picked up
+
+
+
+You may need to
+
+$ chmod +x scripts/md5sum    # appears to be “fixed” in current trunk
+
+
+As suggested by marca, update XTools and re-symlink (gcov not required, AFAIK, but consistency is good)
+
+/usr/bin/g++ -&amp;gt; g++-4.2
+/usr/bin/gcc -&amp;gt; gcc-4.2
+/usr/bin/gcov -&amp;gt; gcov-4.2
+
+
+If you want to build the documentation, MacTeX will do it – http://www.tug.org/mactex/
+(though there is no BSD-make wrapper in that directory, so gmake in the docs directory)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=”compiling”&gt;Compiling&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;make menuconfig
+
+# selected ar7xx, minimal profile, toolchain and sdk
+
+make tools/install
+make toolchain/install
+&lt;/code&gt;&lt;/pre&gt;
+</content></entry><entry><id>tag:members.home.nl,2012-07-13:/pragtich/technology/Aquamacs Notes.html</id><title type="html">Some notes on using Aquamacs</title>
 <published>2012-07-12T22:00:00Z</published><updated>2012-07-12T22:00:00Z</updated><link rel="alternate" href="http://members.home.nl/pragtich/technology/Aquamacs%20Notes.html">
 <content type="html">&lt;p&gt;Aquamacs is a great text editor for OS X. It does, however, have its
 idiosyncrises. So, here I am keeping notes on what worked for me.&lt;/p&gt;
@@ -318,6 +390,27 @@ git commit
 
 rake deploy:git
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=”getting-a-domain-name”&gt;Getting a domain name&lt;/h1&gt;
+
+&lt;p&gt;I registered &lt;code&gt;pragti.ch&lt;/code&gt; at &lt;a href=”http://nic.ch”&gt;nic.ch&lt;/a&gt; and organized a
+free DNS service to do the DNS hosting. Then, tried to set up the
+CNAME following
+&lt;a href=”https://help.github.com/articles/setting-up-a-custom-domain-with-pages”&gt;the documentation at Github&lt;/a&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout master
+vi CNAME
+# just one line: 
+# pragti.ch
+
+git add CNAME
+git commit
+git push pages
+git checkout source
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Did not work immediately, but many times DNS can take some time to
+update. Let&amp;rsquo;s wait and see.&lt;/p&gt;
 </content></entry><entry><id>tag:members.home.nl,2012-06-22:/pragtich/kippycam/network-layout.html</id><title type="html">Getting network access in the garden</title>
 <published>2012-06-21T22:00:00Z</published><updated>2012-06-21T22:00:00Z</updated><link rel="alternate" href="http://members.home.nl/pragtich/kippycam/network-layout.html">
 <content type="html">&lt;h1 id=”the-problem”&gt;The problem&lt;/h1&gt;
@@ -385,91 +478,6 @@ Also disable security first. This cost me an afternoon, because &lt;code&gt;psk2
 &lt;/ol&gt;
 
 &lt;p&gt;At present, this is enough to cover my needs with limited bandwidth, but acceptable reliability. After researching a bit, cantennas seem to be over-hyped. Maybe I will build yagi or other high gain antennas at a later date. For now, the cans are working.&lt;/p&gt;
-</content></entry><entry><id>tag:members.home.nl,2012-06-04:/pragtich/kippycam/Starting project Chicken Webcam.html</id><title type="html">The Kippencam — starting a new project</title>
-<published>2012-06-03T22:00:00Z</published><updated>2012-06-03T22:00:00Z</updated><link rel="alternate" href="http://members.home.nl/pragtich/kippycam/Starting%20project%20Chicken%20Webcam.html">
-<content type="html">&lt;p&gt;I have started a new project: I want to make a webcam in the chicken coop. The poor chickens are out there all day, out of sight of the house. And when we&amp;rsquo;re away, it would be good to be able to check on them now and then, and make sure that they&amp;rsquo;re not getting up to any mischief. Wouldn&amp;rsquo;t it be cool to be able to snap pictures when they&amp;rsquo;re up to no good (like eating that mouse they found, or jumping over the fence, again&amp;hellip;.)? And it would be a great step towards all kinds of cool automation projects, starting with automatic door closing at night.&lt;/p&gt;
-
-&lt;h1 id=”requirements”&gt;Requirements&lt;/h1&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;To be self-powered: no running power lines through the garden&lt;/li&gt;
-  &lt;li&gt;Wireless connection to the house: no running ethernet cables either&lt;/li&gt;
-  &lt;li&gt;At least one webcam, preferably HDTV quality, preferably extension to 3 cameras to be possible in the future&lt;/li&gt;
-  &lt;li&gt;Reasonably self-managing and low-maintenance&lt;/li&gt;
-  &lt;li&gt;Low cost: we&amp;rsquo;re getting married this year&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=”inspiration”&gt;Inspiration&lt;/h1&gt;
-
-&lt;p&gt;The main idea for this project came from &amp;ldquo;&lt;a href=”http://www.instructables.com/id/How-to-set-up-a-solar-powered-webcam-server-using-/”&gt;How to set up a solar powered webcam server using NanosG20 running Debian&lt;/a&gt;&amp;rdquo; by Janisalnis on instructables. &lt;/p&gt;
-
-&lt;p&gt;&lt;img src=”janisalnis.jpg” alt=”Picture of Janisalnis’ setup” title=”This is how his project looked when he wrote about it” /&gt;&lt;/p&gt;
-
-&lt;p&gt;Building from this idea, janisalnis already makes the recommendation that modern routers are &lt;a href=”http://www.instructables.com/id/How-to-set-up-home-data-server-using-OpenWRT-on-Li/”&gt;a much smarter way to go&lt;/a&gt;. And on &lt;a href=”http://barbara320.gotdns.com/”&gt;his homepage&lt;/a&gt; there are many examples of the results of his great projects. There, he links &lt;a href=”http://www.slideshare.net/JanisAlnis/home-automation-12979616”&gt;a presentation that really drew my attention&lt;/a&gt;. He is a really creative guy!&lt;/p&gt;
-
-&lt;p&gt;On one slide, he refers to the TP-LINK WR703N, a small router with less than 1W power consumption, yet quite a powerful CPU and USB 2.0! He already refers to a list of possibilities, like HD webcams, USB audio and Arduino linking. Cool stuff! Shockingly enough, these powerful machines sell on ebay for less than EUR20 !!&lt;/p&gt;
-
-&lt;p&gt;And I have played with OpenWRT before, so this is starting to look like a great thing. The first two TL-WR703N&amp;rsquo;s have been ordered, cannot wait for them to get here from Hong Kong!&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;UPDATE&lt;/em&gt;: I later learned that there is a slightly larger, but largely similar router that can be bought in Europe for a bit more money (but without the long wait): the TL-MR3020. I already had my orders for the smaller one in, but maybe it can be an option for later.&lt;/p&gt;
-
-&lt;h1 id=”research”&gt;Research&lt;/h1&gt;
-
-&lt;h2 id=”some-reading-on-the-tl-wr703n”&gt;Some reading on the TL-WR703N&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;a href=”http://wiki.openwrt.org/toh/tp-link/tl-wr703n”&gt;OpenWRT wiki with all kinds of hardware details&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”http://wiki.openwrt.org/toh/tp-link/tl-mr3020”&gt;Another wiki page with the related and very similar router MR3020&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”https://forum.openwrt.org/viewtopic.php?id=36471”&gt;A forum discussion that shows how to do I2C with the WR703N&lt;/a&gt;. This means that we can control all kinds of hardware without messy Arduino links. I am definitely going to try this.&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”http://www.instructables.com/member/janisalnis/”&gt;Loads of instructables presentations by janisalnis that include a plethora of step-by-step guides on everything from hardware to software.&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”http://embeddedtimes.blogspot.nl/2011/09/tp-link-tl-wr703n-tiny-linux-capable.html”&gt;A great introduction into the fun of the TL-WR703N by the Embedded Times.&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c”&gt;A slightly messy piece in the OpenWRT wiki on I2C&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”http://laakkonen.dy.fi/projektit/tl-wr703n/”&gt;A Finnish site that mentions the external antenna: This is something I will need to do.&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”https://forum.openwrt.org/viewtopic.php?id=34580”&gt;Forum entry that details the external antenna method&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”http://wiki.villagetelco.org/index.php?title=Building_a_Serial_Port_for_TL-WR703N”&gt;If I manage to screw up the firmware, we may need this to recover (serial port)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;On &lt;a href=”http://www.hackup.net”&gt;hackup.net&lt;/a&gt;, there are some nice articles about using OpenWRT for controlling hardware. &lt;a href=”http://www.hackup.net/2012/01/openwrt-and-scripting-languages-part-1/#more-358”&gt;This article details one way to use a USB stick for storage, and installing Ruby (without serial support)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”https://forum.openwrt.org/viewtopic.php?pid=156142”&gt;A great writeup on adding extra internal usb ports&lt;/a&gt;. I will probably just go with an external hub. Why squeeze everything into a small space for this project?&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”http://wiki.acemonstertoys.org/Tp-link_router”&gt;A detailed list of stuff on hardware control using the WR703N, including Arduino connection and cross-compiling&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”https://forum.openwrt.org/viewtopic.php?pid=125196#p125196”&gt;A writeup of getting usb audio to work (cool)&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=”wireless-connection”&gt;Wireless connection&lt;/h2&gt;
-
-&lt;p&gt;The chicken coop is located in the garden behind my house. This could be ~50 meters from the current location of the main wireless router. Also, the signal needs to pass through several brick walls. All in all, there is no chance that we will have a connection using any simple method. Indeed, even my MacBook (which has a great antenna) does not get a connection in most of the garden. &lt;/p&gt;
-
-&lt;p&gt;So how to get this to work? I will probably add a cantenna to the WR703 in the garden to get good reception and either move the main wireless router to a better location (the attic?) or set up a repeater somewhere in the house, possibly also with a cantenna. This will take some experimentation.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=”solar-powering”&gt;Solar powering&lt;/h2&gt;
-
-&lt;p&gt;For the start of the project, I will go with direct solar powering from the panels. No storage. Once the principle has been proven, I will be charging a battery. I did some research on Open Source solar charge controller projects with the idea of making my own charger. While there are some very nice designs around, I really prefer to go with a proven technology. I want the development of the camera to be the fun part, not the screwing with a battery charger. Ultimate efficiency is also not a parameter for me, so I will probably go with either one of these 2 options:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Steca SOLSUM 6.6F (&lt;a href=”http://www.conrad.nl/ce/nl/product/110678?WT.mc_id=mpfeed&amp;amp;insert=8T”&gt;from Conrad probably&lt;/a&gt;)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;img src=”http://steca.de/data/media/26/2628_231x315_SolsumF_72dpi_315px.jpg” alt=”SOLSUM” /&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;MorningStar SHS6 (&lt;a href=”http://hobby.marktplaats.nl/elektronica-componenten/544588648-steca-en-morningstar-laadregelaars-accu-zonnepaneel.html?return=eJwljEsKwzAMRO8SSJb%2BNF0UB1PSm5jYxSb%2BiEihpaV3r0JW8540jDPafJNRExp9vZkOg9uWOEUiMFKuDUIVxW0rQXaOUNQsz4qACPd3tnrwaKn149yPD5%2FOzMT5ScCIT48smhGOq2Io%2FJjrXsKWFtb1xYot417YGh4jlwFgt2ogtLqbfn%2FEGzUB&amp;amp;df=1&amp;amp;fta=eNpFkEluwzAMRe%2BihdcaPVDwFXoFg4rsVKgcC6GcCA1y98pG0e4eOP0HInTwIuiB7fc4PTASswSdBFbiKBpPY97A%2BgA2ZvgOydLiCYRNGbhdE9z2db6Hi%2F16Am2R9tVuFEA2Ke0jbzKN4ringSW8zsyGukqggAV%2FBgnRAlPOaY%2B6LxUUN0NXpOi9QrdU6BwXvS6St9pw1deKM4tCc4CuI0MF7YWY64wY3CCxLX8HJfetMgordOai2v%2BIM7x65C2hpynOt2v%2BPPxkbQzAVizToVwt%2FelcP4JPZj9%2B8cEsAofX%2B%2F0DyKNhYA%3D%3D&amp;amp;fta_ind=12&amp;amp;fs=1”&gt;probably from Sunnyside on Marktplaats&lt;/a&gt;)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;And realistically, at around EUR 20 a piece, there is not a lot to lose.&lt;/p&gt;
-
-&lt;p&gt;Solar panel prices have dropped a lot recently. The cheap made-in-China panels are dropping close to the EUR 1 per Watt-peak mark at the moment. Of course, I have learned from reading, that the cheap suppliers can be quite optimistic regarding their specified Watt-peak values. So in fact the more expensive panels from &amp;lsquo;real&amp;rsquo; manufacturers are supposed to be worth the extra cash. For me, a factor was the availability of reasonably priced small panels on the &lt;a href=”http://www.ebay.de”&gt;Ebay&lt;/a&gt; was good. I purchased 2x 30W panels from &lt;a href=”http://myworld.ebay.de/enjoysolarshop/”&gt;Enjoy Solar in Bremen&lt;/a&gt;, and will see how they perform. &lt;strong&gt;NOTE:&lt;/strong&gt; There seem to be many sellers on ebay that do get very good reviews, but also rack up significant negative comments. Be sure to check the negative comments for a seller before you buy. I nearly fell for a promising-looking seller, which clearly does not take after-sales care as seriously as any (German!) seller should&amp;hellip;&lt;/p&gt;
-
-&lt;h2 id=”openwrt”&gt;OpenWRT&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;[How to use an external USB stick as root filesystem][openwrt-eftroot]. I&amp;rsquo;m not sure how this could affect flash wear: at the moment I will use a cheap memory stick and just see what happens.&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”http://wiki.openwrt.org/doc/howto/usb.storage”&gt;How to enable USB storage, including how to format the partitions for efficiency.&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”http://www.minipwner.com/index.php/minipwner-build”&gt;A very concise list of instructions to get a WR703N up and going&lt;/a&gt;. Probably not going to use, because it avoids USB stick usage, and why would I?&lt;/li&gt;
-  &lt;li&gt;&lt;a href=”http://www.instructables.com/files/orig/F0M/V4MW/H2MYLKL9/F0MV4MWH2MYLKL9.txt”&gt;Janisalnis&amp;rsquo; short description of installing OpenWRT onto a USB stick: a useful start.&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
 </content></entry><p>&lt;/feed&gt;</p>
 
 <p>And created <code>content/atom.yaml</code> with:</p>
