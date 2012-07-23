@@ -3,6 +3,9 @@ base_url: 'http://members.home.nl/pragtich'
 author_name: 'Joris Pragt'
 author_uri: 'http://members.home.nl/pragtich'
 
+# Index page definitions
+index_count: 10
+
 # Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
 deploy:
   default:

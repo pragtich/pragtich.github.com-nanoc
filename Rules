@@ -18,7 +18,6 @@
 # I want them to be 80 x 80 pixels in size
 # They can be included by putting an index_picture: filename into the YAML (header) of the content
 
-
 ## Preprocessing.
 # This should gather all articles for the index page and create it's item.
 # I also want it to gather categories for the nav bar, eventually
@@ -26,32 +25,22 @@
 preprocess do
   def create_index
 
-  # Fetch list of articles
-	 # articles_all = items.select { |i| i[:kind] == 'article' }.
-  	 # 	sort_by { |a| Time.parse(a[:created_at]) }
-      #articles_all=sorted_articles
-	  articles_index = sorted_articles.slice(0..3)
+	  articles_index = sorted_articles.slice(0..@config[:index_count]-1)
 
   # Create main index page
 
-	articles_index.each_with_index do |subarticle, i|
   	  @items << Nanoc3::Item.new(
-        "<%= render 'index_page', :item_id => #{i} %>",
-    	{ :title => "Index of articles" },
-    	"/"
-  	  )
-    end
+                                 "<%= render 'index_page'%>",
+                                 {:myarts => articles_index, :title => "Index of articles (1..#{@config[:index_count]})"},
+                                 "/"
+ 	  )
 
   # Create index overflow
-
-	sorted_articles.each_with_index do |subarticle, i|
   	  @items << Nanoc3::Item.new(
-        "<%= render 'index_page', :item_id => #{i} %>",
-    	{ :title => "Complete index of all articles" },
+        "<%= render 'index_page' %>",
+    	{:myarts => sorted_articles, :title => "Complete index of all articles" },
     	"/all_articles/"
   	  )
-    end
-
   end
 
   def create_categories
@@ -62,19 +51,12 @@ preprocess do
 	end
 
 	$cats.each do |name, cat|
-#      @items << Nanoc3::Item.new(
-#         "<%= render( 'category_page', :title => 'tiet-ul' ) %>",
-#
-#   	  { :title => "Complete index of all #{name} articles" } ,
-#    	  "/all_#{name}/"  )
 	      items << Nanoc3::Item.new(
                                 "<%= render 'category_page', :my_category => \"#{name}\" %>",
                                 { :title => "#{name}"},
                                 "/all_#{name}/"
       )
-
     end
-
   end
 
   def cleanup_items
