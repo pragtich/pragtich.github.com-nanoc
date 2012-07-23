@@ -27,9 +27,10 @@ preprocess do
   def create_index
 
   # Fetch list of articles
-	  articles_all = items.select { |i| i[:kind] == 'article' }.
-  	  	sort_by { |a| Time.parse(a[:created_at]) }
-	  articles_index = articles_all.slice(0..3)
+	 # articles_all = items.select { |i| i[:kind] == 'article' }.
+  	 # 	sort_by { |a| Time.parse(a[:created_at]) }
+      #articles_all=sorted_articles
+	  articles_index = sorted_articles.slice(0..3)
 
   # Create main index page
 
@@ -43,7 +44,7 @@ preprocess do
 
   # Create index overflow
 
-	articles_all.each_with_index do |subarticle, i|
+	sorted_articles.each_with_index do |subarticle, i|
   	  @items << Nanoc3::Item.new(
         "<%= render 'index_page', :item_id => #{i} %>",
     	{ :title => "Complete index of all articles" },
@@ -55,12 +56,9 @@ preprocess do
 
   def create_categories
 
-    articles_all = items.select { |i| i[:kind] == 'article'}
-	articles_all.each do |article|
-
+    #articles_all = items.select { |i| i[:kind] == 'article'}
+	sorted_articles.each do |article|
 	  $cats[article[:category]] << article
-
-
 	end
 
 	$cats.each do |name, cat|
