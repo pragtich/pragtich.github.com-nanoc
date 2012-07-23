@@ -24,6 +24,7 @@ solution: create a separate disk image. As I found
 [here](https://forum.openwrt.org/viewtopic.php?id=20914):
 
     hdiutil create -size 2048m -fs HFSX -volname openwrt openwrt
+	# Later I had to do a resize: I needed ~ 8GB
 	Doubleclick the dmg
 	cd /Volumes/openwrt/
 	tar cf - ~/openwrt | tar xfp -
@@ -69,5 +70,30 @@ forum topic:
 	
 	# selected ar7xx, minimal profile, toolchain and sdk
 	
-	make tools/install
-	make toolchain/install
+	make V=99
+
+In the first tries, I errored out due to the disk image being too
+small. I the end I resized it to 8GB and it worked:
+
+    hdiutil resize -size 8G openwrt.dmg
+	
+# Getting the feeds
+    
+	scripts/feeds update -a
+	scripts/feeds install gstreamer
+	scripts/feeds install gst-plugins-good
+	scripts/feeds install gst-plugins-bad
+	scripts/feeds install gst-pluging-ugly
+	
+	
+No problem!
+
+# Compiling the feeds
+
+    make menuconfig
+	sudo ln -s /usr/bin/true /bin/true    # Somewhere there's a direct
+	path to true
+
+	# select the packages that I want
+    make V=99 package/gstreamer/compile
+	# et cetera for the plugins

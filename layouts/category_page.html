@@ -16,7 +16,7 @@ cat_articles.each do |art|
  <IMG SRC="<%= relative_path_to(pic_path) %>"/>
  <% end %>
 <%=
-  link_to(art[:title], art)
+    link_to(art[:title], art)
 %>
 <H2 class="itemdate"><%= art[:created_at] %></H2>
 
