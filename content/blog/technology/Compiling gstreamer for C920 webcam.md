@@ -5,9 +5,12 @@ category: Computer stuff
 created_at: 19 Jul 2012
 summary: The Logitech C920 offers H264 encoding onboard. But not many programs can make use of it. I am trying to compile a patched GStreamer module that allows streaming of H264 directly from the C920 camera.
 ---
-# Status #
 
-** Take care: this page is full of mess. It does not work **
+# Careful: work in progress #
+
+** Careful here: I am logging what I did, but it is not working at
+  all **
+
 
 # Satisfying build requirements #
 
