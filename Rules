@@ -112,6 +112,7 @@ compile '/blog/*' do
   end
 end
 
+layout '/switchboard/', :haml, :format => :html5
 
 compile '*' do
   if item.binary?
