@@ -2,8 +2,12 @@ $backcolor: #bbbbbb
 $fgcolor: #ffffff
 $radius: 6px
 
-body
- background-color: $backcolor
+html
+ height: 100%
+
+ body
+  background-color: $backcolor
+  height: 100%
 
 .title
  font-family: Verdana, Arial, Helvetica, sans-serif
@@ -15,7 +19,7 @@ body
 @mixin box-props($width)
  width: $width
  background: $fgcolor
- height: 400px
+ height: 100%
  margin: 20px percentage(( 1 - 0.9) / 6)
  padding: 0
  float: left
