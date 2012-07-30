@@ -141,6 +141,9 @@ end
 route '/stylesheet/' do
   '/stylesheet.css'
 end
+route '/sb-stylesheet/' do
+  '/sb-stylesheet.css'
+end
 
 route '/' do
   item.identifier + 'index.html'
