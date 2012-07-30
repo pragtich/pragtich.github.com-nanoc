@@ -114,7 +114,8 @@ end
 
 layout '/switchboard/', :haml, :format => :html5
 
-compile '*' do
+# Match the index page to make my switchboard.
+compile '/' do
   if item.binary?
     # don’t filter binary items
   else 
@@ -126,6 +127,25 @@ compile '*' do
        	    filter :haml
     end
     layout 'switchboard'
+    filter :rubypants
+	filter :relativize_paths, :type => :html 
+    
+  end
+end
+
+# The default processor for anything that did not match before
+compile '*' do
+  if item.binary?
+    # don’t filter binary items
+  else 
+    filter :erb
+    case item[:extension]
+        when 'md'
+       	    filter :kramdown
+        when 'haml'
+       	    filter :haml
+    end
+    layout 'default'
     filter :rubypants
 	filter :relativize_paths, :type => :html 
     
