@@ -95,8 +95,8 @@ compile '/atom/' do
   filter :erb
 end
 
-
-compile '*' do
+# Blog folder: this compile rule started as a copy of the '*' rule
+compile '/blog/*' do
   if item.binary?
     # don’t filter binary items
   else 
@@ -111,6 +111,27 @@ compile '*' do
     
   end
 end
+
+
+compile '*' do
+  if item.binary?
+    # don’t filter binary items
+  else 
+    filter :erb
+    case item[:extension]
+        when 'md'
+       	    filter :kramdown
+        when 'haml'
+       	    filter :haml
+    end
+    layout 'switchboard'
+    filter :rubypants
+	filter :relativize_paths, :type => :html 
+    
+  end
+end
+
+
 
 
 route '/atom/' do
