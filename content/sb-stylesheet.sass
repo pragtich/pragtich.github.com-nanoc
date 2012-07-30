@@ -1,6 +1,6 @@
 $backcolor: #bbbbbb
 $fgcolor: #ffffff
-$radius: 10px
+$radius: 6px
 
 body
  background-color: $backcolor
@@ -16,8 +16,8 @@ body
  width: $width
  background: $fgcolor
  height: 400px
- margin: 20px 20px
- padding: 10px
+ margin: 20px percentage(( 1 - 0.9) / 6)
+ padding: 0
  float: left
  text-align: center
  -webkit-border-radius: $radius
@@ -26,9 +26,10 @@ body
 
 .switchboard
  #left
-  @include box-props(15%)
+  clear: left
+  @include box-props(20%)
  #middle
-  @include box-props(50%)
+  @include box-props(60%)
  #right
   @include box-props(10%)
 
