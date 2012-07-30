@@ -1,6 +1,12 @@
 $backcolor: #bbbbbb
 $fgcolor: #ffffff
 $radius: 6px
+$height: 80%
+$top: 10%
+$box1: 20%
+$box2: 60%
+$box3: 10%
+$boxmargin: percentage((100% - $box1 - $box2 -$box3) / 400%)
 
 html
  height: 100%
@@ -10,6 +16,7 @@ body
  background-color: $backcolor
  height: 100%
  margin: 0
+
 
 .title
  font-family: Verdana, Arial, Helvetica, sans-serif
@@ -21,26 +28,34 @@ body
 @mixin box-props($width)
  width: $width
  background: $fgcolor
- height: 100%
- margin: 0 percentage(( 1 - 0.9) / 6)
+
  padding: 0
- float: left
+ position: fixed
+ height: $height
+ top: $top
  text-align: center
  -webkit-border-radius: $radius
  -moz-border-radius: $radius
  border-radius: $radius
 
 .switchboard
- height: 80%
+ height: 100%
  margin: 10% 0
  padding: 0
  #left
   clear: left
-  @include box-props(20%)
+  @include box-props($box1)
+  left: $boxmargin
  #middle
-  @include box-props(60%)
+  @include box-props($box2)
+  left: $box1 + 2 * $boxmargin
  #right
-  @include box-props(10%)
+  @include box-props($box3)
+  left: $box1 + $box2 + 3* $boxmargin
+
+img
+ max-width: 100%
+
 
 .footer
  .text-align: left
