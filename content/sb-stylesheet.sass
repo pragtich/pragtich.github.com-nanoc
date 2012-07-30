@@ -1,0 +1,36 @@
+$backcolor: #bbbbbb
+$fgcolor: #ffffff
+$radius: 10px
+
+body
+ background-color: $backcolor
+
+.title
+ font-family: Verdana, Arial, Helvetica, sans-serif
+ font-size: 45px
+ text-decoration: none
+ color: #000000
+ line-height: 75px
+
+@mixin box-props($width)
+ width: $width
+ background: $fgcolor
+ height: 400px
+ margin: 20px 20px
+ padding: 10px
+ float: left
+ text-align: center
+ -webkit-border-radius: $radius
+ -moz-border-radius: $radius
+ border-radius: $radius
+
+.switchboard
+ #left
+  @include box-props(15%)
+ #middle
+  @include box-props(50%)
+ #right
+  @include box-props(10%)
+
+.footer
+ .text-align: left

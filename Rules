@@ -83,6 +83,9 @@ compile '/stylesheet/' do
   #nothing
 end
 
+compile '/sb-stylesheet/' do
+  filter :sass
+end
 
 compile '/blog/all_*/' do 
 		filter :erb
