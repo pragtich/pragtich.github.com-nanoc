@@ -70,7 +70,8 @@ attempt to keep the signal wires apart:
 5. SDA (GPIO 29, 3.3V)
 6. 3.3V
 
-**No Pull-ups yet, so these need to be put on the client side.**
+**No Pull-ups yet, so these need to be put on the client side, or
+  built in later.**
 
 ## Installing on Openwrt##
 The OpenWRT wiki has loads of (some more outdated than other) stuff on
@@ -211,7 +212,44 @@ Success?
 
 I made a breadboard with the `PCF8574` IO expander from Texas
 Instruments (also available from NXP, but TI gives free samples). It
-takes the 
+takes the 3.3V power from the router, pulls up and has 8 LEDs from
+3.3V to the pins of the `PCF8574`. Maybe I'll write an update about
+the breadboard later, but it's mainly just the datasheet
+application. Later I switched to 5V and added level shifting MOSFETs,
+again, maybe some day I'll write it up.
+
+    # i2cdetect 0
+	WARNING! This program can confuse your I2C bus, cause data loss and worse!
+	I will probe file /dev/i2c-0.
+	I will probe address range 0x03-0x77.
+	Continue? [Y/n] 
+		 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+	00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+	10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+	20: 20 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+	30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+	40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+	50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+	60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+	70: -- -- -- -- -- -- -- -- 
 	
+It works!
+
+    # echo pcf8574 0x20 > /sys/bus/i2c/devices/i2c-0/new_device
+	# dmesg | tail
+	[  153.590000] Custom GPIO-based I2C driver version 0.1.1
+	[  153.590000] i2c-gpio i2c-gpio.0: using pins 29 (SDA) and 7 (SCL)
+	[  651.600000] gpiochip_add: registered GPIOs 56 to 63 on device: pcf8574
+	[  651.600000] pcf857x 0-0020: 
+	[  651.610000] i2c i2c-0: new_device: Instantiated device pcf8574 at 0x20
+
+Sounds good: we have a chip at the correct address, and 8 new GPIOs
+were created (numberd 56 through 63). Careful though: the `PCF8574`
+does not get detected in any way. So only the `i2cdetect` output
+really confirms that something is there. So let's test the GPIOs for
+confirmation.
+
+
+
 [openwrt-703n-gpio]:https://forum.openwrt.org/viewtopic.php?id=36471
 [openwrt-downloads]:http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages/
