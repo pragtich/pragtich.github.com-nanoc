@@ -1,7 +1,7 @@
 --- 
 title: Adding an I2C interface to the TL-WR703N
 kind: article
-category: Computer stuff
+category: Kippycam
 created_at: 15 Aug 2012
 summary: "I had the wireless router to show the webcam images for the 'kippycam'. Some discussions in the openwrt forms showed, that there are several spare GPIO pins on its chip. So: there is a chance to do all kinds of hardware control. This rekindled some childhood enthusiasm for electronics that I had nearly forgotten. So, how did I add hardware control (specifically, the I2C interface) to the TL-WR703N?"
 ---
@@ -59,6 +59,9 @@ connector)
 
 ...although the micro usb wires may be the other way around...
 
+![The finished product](I2C-soldered.jpg)
+![The finished product, some more detail](I2C-soldered-detail.jpg)
+
 Then I cut a hole into the top of the housing and glued a 2x3 boxed
 header onto the lid of the router. I chose the following pin-out in an
 attempt to keep the signal wires apart:
@@ -69,6 +72,10 @@ attempt to keep the signal wires apart:
 4. GND
 5. SDA (GPIO 29, 3.3V)
 6. 3.3V
+
+That's how it looks:
+
+![The finished product, outside](I2C-done.jpg)
 
 **No Pull-ups yet, so these need to be put on the client side, or
   built in later.**
@@ -208,7 +215,7 @@ But does it work?
 	
 Success?
 
-## The hardware IO test##
+## The first IO test##
 
 I made a breadboard with the `PCF8574` IO expander from Texas
 Instruments (also available from NXP, but TI gives free samples). It
@@ -246,10 +253,89 @@ It works!
 Sounds good: we have a chip at the correct address, and 8 new GPIOs
 were created (numberd 56 through 63). Careful though: the `PCF8574`
 does not get detected in any way. So only the `i2cdetect` output
-really confirms that something is there. So let's test the GPIOs for
+really confirms that something is there on the bus and responding. So let's test the GPIOs for
 confirmation.
 
+## Actually blinking LEDs ##
 
+Let's try to set one of the pins manually:
+
+	# cd /sys/class/gpio
+	# echo 57 > export
+	# echo out>gpio57/direction
+	# echo 0 > gpio57/value 
+
+Upon setting `output`, the LED lights up. Success!
+
+The output chip is open drain-ish (quasi bidirectional) and could
+probably have
+been connected with the LEDs oriented to light with the pin set to
+`1`. The chip then controls the current through an internal current
+source. I did it the other way around, with the cathode connected to
+the output pin. So now, we are able to control each output pin
+individually from userspacs, just by writing to the filesystem. Much,
+much more than I had ever dreamed. Even shell scripts can work with
+the outputs and inputs. Wicked.
+
+
+The next step: blinking. I was lazy and googled for a bash script that
+blinks. And found it [on this blog][blink-bash]. Tweaked it a little
+bit, which was easy because it's so well written. I added an argument
+for the GPIO pin to use, to try all 8 pins. This is what I ended up with:
+
+	#!/bin/bash
+
+	# blink_arg.bash -- must run as root!
+	#       
+	# Blink GPIO pin on and off
+
+	LEDPIN=${1-57}
+	OFF=1
+	ON=0
+	# Make sure we have root access
+	if [ $EUID -ne 0 ]; then
+			echo "You must be root to run this. Try 'sudo $0'"
+			exit
+	fi
+
+	# Clean up procedure--turn off the LED, unexport the GPIO, and exit
+	cleanup()
+	{
+			PIN=$1
+			echo $OFF > /sys/class/gpio/gpio$PIN/value      # turn off
+			echo $PIN > /sys/class/gpio/unexport
+			echo Interrupted.
+			exit
+	}
+
+	# Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL
+	echo $LEDPIN > /sys/class/gpio/export
+	echo out > /sys/class/gpio/gpio$LEDPIN/direction
+	trap 'cleanup $LEDPIN' 1 2 15
+
+	while true
+	do
+			echo $ON > /sys/class/gpio/gpio$LEDPIN/value    # turn on
+			sleep 1
+			echo $OFF > /sys/class/gpio/gpio$LEDPIN/value   # turn off
+			sleep 1
+	done
+
+And it works as expected. So now for some fun (we did not get all this
+linux power for nothing!). 
+
+	 # ./blink_arg.bash 56&
+	 # ./blink_arg.bash 57&
+	 # ./blink_arg.bash 58&
+	 # # ... etcetera ...
+
+So using all the cool multitasking goodness to do nothing special at
+all. How does that look?
+
+## Input ##
+
+The next step is to use the input function. That will be the next update.
 
 [openwrt-703n-gpio]:https://forum.openwrt.org/viewtopic.php?id=36471
 [openwrt-downloads]:http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages/
+[blink-bash]:http://netduinoplusfun.wordpress.com/2012/07/16/blink-a-light-with-raspberry-pi/

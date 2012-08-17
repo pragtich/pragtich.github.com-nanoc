@@ -23,6 +23,7 @@ summary: What I still intend to do
 * Research
   [Railroad](http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html
 * Figure out a way to Rake the github pushes
+* Make images work with a full size image clickable through the thumbnail
 
 
 
