@@ -20,3 +20,6 @@ tmp/
 # Sitecopy's status files
 sitecopy/
 #sitecopy/homedrive.ziggo.nl
+
+# Emacs temporary files
+.\#*
