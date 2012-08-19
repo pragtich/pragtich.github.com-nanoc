@@ -16,7 +16,7 @@
 
 ## Index images help to spice stuff up
 # I want them to be 80 x 80 pixels in size
-# They can be included by putting an index_picture: filename into the YAML (header) of the content
+# They can be included by putting an indeximage: filename into the YAML (header) of the content
 
 ## Preprocessing.
 # This should gather all articles for the index page and create it's item.

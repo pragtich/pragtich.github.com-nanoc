@@ -3,7 +3,14 @@ title: Adding an I2C interface to the TL-WR703N
 kind: article
 category: Kippycam
 created_at: 15 Aug 2012
-summary: "I had the wireless router to show the webcam images for the 'kippycam'. Some discussions in the openwrt forms showed, that there are several spare GPIO pins on its chip. So: there is a chance to do all kinds of hardware control. This rekindled some childhood enthusiasm for electronics that I had nearly forgotten. So, how did I add hardware control (specifically, the I2C interface) to the TL-WR703N?"
+indeximage: index-i2c.jpg
+summary: "I had the wireless router to show the webcam images for the
+'kippycam'. Some discussions in the openwrt forms showed, that there
+are several spare GPIO pins on its chip. So: there is a chance to do
+all kinds of hardware control. This rekindled some childhood
+enthusiasm for electronics that I had nearly forgotten. So, how did I
+add hardware control (specifically, the I2C interface) to the
+TL-WR703N?"
 ---
 # The goal #
 
