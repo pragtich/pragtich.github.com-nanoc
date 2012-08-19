@@ -1,0 +1,400 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Pragtich: Adding an I2C interface to the TL-WR703N</title>
+<link rel="stylesheet" type="text/css" href="../stylesheet.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="http://members.home.nl/pragtich/atom.xml">
+</head>
+<body>
+
+    <article><!-- If there's no item title; we print no header, even if
+           there's a date. --><header><hgroup><img src="index-i2c.jpg"><h1 class="itemtitle">Adding an I2C interface to the TL-WR703N</h1>
+
+          
+          <h2 class="itemdate">15 Aug 2012</h2>
+          
+
+
+
+        </hgroup></header><summary>
+             I had the wireless router to show the webcam images for the ‘kippycam’. Some discussions in the openwrt forms showed, that there are several spare GPIO pins on its chip. So: there is a chance to do all kinds of hardware control. This rekindled some childhood enthusiasm for electronics that I had nearly forgotten. So, how did I add hardware control (specifically, the I2C interface) to the TL-WR703N?…</summary><bodytext><h1 id="the-goal">The goal</h1>
+
+<p>To enable the creative use of the wireless router in the garden to do
+all kinds of fun stuff. My first insane ideas are things like:</p>
+
+<ul>
+<li>Closing the chicken coop door (determined by remote control or
+automatically)</li>
+  <li>Making a feed dispenser, so that the chickens may be tempted to be
+close to the camera</li>
+  <li>Counting and logging the egg laying productivity (and the chickens’
+noise?)</li>
+  <li>Monitoring the solar panels and battery charge status.</li>
+</ul>
+<p>That’s just the start…</p>
+
+<h1 id="approach">Approach</h1>
+
+<p>Because of the <a href="https://forum.openwrt.org/viewtopic.php?id=36471">promising reports for at least 2 GPIO pins in the
+TL-WR703N</a>, I was looking for an interface that supports powerful
+actions, with the minimum of wires. In the end, I chose I2C because a
+cursory web search showed all kinds of cool chips that support it, and
+because of the low complexity. SPI needs addressing, that I was not
+sure I coud deliver, and 1-wire is only suited to a very limited array
+of devices. Serial communication could have worked, but this is not
+very robust against jitter (and we will be bit-banging) and demands a
+lot from each client. So: I2C it is!</p>
+
+<h1 id="proof-of-principle">Proof of principle</h1>
+
+<h2 id="adding-i2c-interface">Adding I2C interface</h2>
+
+<p>All the background information that I used came from the kind people
+that generated their knowledge
+<a href="https://forum.openwrt.org/viewtopic.php?id=36471">to the Openwrt forums</a>. I pretty much copied that
+what they did before. A few points are critical:</p>
+
+<ol>
+<li>The parts are really really small. Take a lot of care, use a very
+sharp iron and use magnification.</li>
+  <li>The traces in the router are easily peeled off. Do not apply
+vertical forces and make sure to releive any forces on the wires.</li>
+</ol>
+<p>These were the steps:</p>
+
+<ol>
+<li>Remove R15 and R17.</li>
+  <li>Solder very thin wires to each pad (the side not towards the USB
+connector)</li>
+  <li>Solder a +3.3V wire to the square field marked <code>LED2 +</code>
+</li>
+  <li>Solder a ground wire to the micro-USB connector (reset button side)</li>
+  <li>Solder a +5V wire to the other side of the micro-USB connector
+(Ethernet side)</li>
+  <li>Glue the wires to the PCB using 2-component epoxy adhesive.</li>
+</ol>
+<p>…although the micro usb wires may be the other way around…</p>
+
+<p><img src="I2C-soldered.jpg" alt="The finished product" title="After completing the soldering"><img src="I2C-soldered-detail.jpg" alt="The finished product, some more detail" title="Some more detail"></p>
+
+<p>Then I cut a hole into the top of the housing and glued a 2x3 boxed
+header onto the lid of the router. I chose the following pin-out in an
+attempt to keep the signal wires apart:</p>
+
+<ol>
+<li>5V</li>
+  <li>NC</li>
+  <li>SCL (GPIO7, 3.3V)</li>
+  <li>GND</li>
+  <li>SDA (GPIO 29, 3.3V)</li>
+  <li>3.3V</li>
+</ol>
+<p>That’s how it looks:</p>
+
+<p><img src="I2C-done.jpg" alt="The finished product, outside" title="The end product, closed and tidy."></p>
+
+<p><strong>No Pull-ups yet, so these need to be put on the client side, or
+  built in later.</strong></p>
+
+<h2 id="installing-on-openwrt">Installing on Openwrt</h2>
+<p>The OpenWRT wiki has loads of (some more outdated than other) stuff on
+I2C
+<a href="http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c">at this link</a>. Let’s
+start with the basics:</p>
+
+<pre><code>&gt; Opkg update
+&gt; opkg install i2c-tools
+&gt;	opkg install kmod-i2c-gpio-custom
+
+Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
+Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
+Collected errors:
+ * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-i2c-gpio-custom:
+ * 	kmod-i2c-algo-bit * 
+ * opkg_install_cmd: Cannot install package kmod-i2c-gpio-custom.
+</code></pre>
+
+<p>So we are missing kmod-i2c-algo-bit. A quick check on the
+<a href="http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages/">downloads page for trunk</a> shows it missing there,
+too. But I really need it. </p>
+
+<p>**So now what? **</p>
+
+<p>Left over from
+<a href="Compiling%20gstreamer%0Afor%20C920%20webcam.html">my experiments with compiling OpenWRT on OS X</a> was a local compile directory that actually
+successfully compiles. So I went in there and did a <code>make
+menuconfig</code>. When I installed all the I2C stuff, it automatically
+enables the <code>i2c-gpio-custom</code> module. And after <code>make</code>, it also
+compiles the matchin object file. But no <code>.ipk</code> to match. Where did it
+go…?</p>
+
+<p>After a bit of searching it was
+found. <code>build_dir/linuxxxx/modles.builtin</code> tells exactly where it
+went: into the kernel (built-in, not as a module). Actually, loads
+went into the kernel built-in. Here’s a list:</p>
+
+<pre><code>kernel/fs/jffs2/jffs2.ko
+kernel/fs/overlayfs/overlayfs.ko
+kernel/fs/squashfs/squashfs.ko
+kernel/crypto/crypto.ko
+kernel/block/deadline-iosched.ko
+kernel/drivers/base/firmware_class.ko
+kernel/drivers/gpio/gpio-nxp-74hc153.ko
+kernel/drivers/gpio/gpio-pcf857x.ko
+kernel/drivers/i2c/i2c-core.ko
+kernel/drivers/i2c/algos/i2c-algo-bit.ko
+kernel/drivers/i2c/busses/i2c-gpio.ko
+kernel/drivers/mtd/mtd.ko
+kernel/drivers/mtd/redboot.ko
+kernel/drivers/mtd/myloader.ko
+kernel/drivers/mtd/tplinkpart.ko
+kernel/drivers/mtd/wrt160nl_part.ko
+kernel/drivers/mtd/mtdchar.ko
+kernel/drivers/mtd/mtd_blkdevs.ko
+kernel/drivers/mtd/mtdblock.ko
+kernel/drivers/mtd/chips/chipreg.ko
+kernel/drivers/mtd/chips/cfi_probe.ko
+kernel/drivers/mtd/chips/cfi_util.ko
+kernel/drivers/mtd/chips/cfi_cmdset_0002.ko
+kernel/drivers/mtd/chips/gen_probe.ko
+kernel/drivers/mtd/chips/jedec_probe.ko
+kernel/drivers/mtd/devices/m25p80.ko
+kernel/drivers/mtd/maps/map_funcs.ko
+kernel/drivers/mtd/maps/physmap.ko
+kernel/drivers/net/mii.ko
+kernel/drivers/net/dsa/mv88e6060.ko
+kernel/drivers/net/ethernet/atheros/ag71xx/ag71xx.ko
+kernel/drivers/net/phy/libphy.ko
+kernel/drivers/net/phy/swconfig.ko
+kernel/drivers/net/phy/marvell.ko
+kernel/drivers/net/phy/ip17xx.ko
+kernel/drivers/net/phy/ar8216.ko
+kernel/drivers/net/phy/rtl8306.ko
+kernel/drivers/net/phy/rtl8366_smi.ko
+kernel/drivers/net/phy/rtl8366s.ko
+kernel/drivers/net/phy/rtl8366rb.ko
+kernel/drivers/net/phy/rtl8367.ko
+kernel/drivers/net/phy/micrel.ko
+kernel/drivers/spi/spi-ap83.ko
+kernel/drivers/spi/spi-ath79.ko
+kernel/drivers/spi/spi-bitbang.ko
+kernel/drivers/tty/serial/serial_core.ko
+kernel/drivers/tty/serial/8250/8250.ko
+kernel/net/802/p8022.ko
+kernel/net/802/psnap.ko
+kernel/net/802/stp.ko
+kernel/net/8021q/vlan_core.ko
+kernel/net/8021q/8021q.ko
+kernel/net/bridge/bridge.ko
+kernel/net/dsa/dsa_core.ko
+kernel/net/ipv4/tcp_cubic.ko
+kernel/net/llc/llc.ko
+kernel/net/packet/af_packet.ko
+kernel/net/unix/unix.ko
+kernel/lib/bitrev.ko
+kernel/lib/crc32.ko
+kernel/lib/lzma/lzma_compress.ko
+kernel/lib/lzma/lzma_decompress.ko
+kernel/lib/xz/xz_dec.ko
+</code></pre>
+
+<p>So, something is wonky with Openwrt. Either one of the two:</p>
+
+<ol>
+<li>The kernel config automatically configures the module as a builtin
+and ignores my wish to have it as a module. </li>
+  <li>The package <code>kmod-i2c-gpio-custom</code> incorrectly forces the
+dependency to <code>kmod-i2c-algo-bit</code>, while indeed it is builtin by
+default.</li>
+</ol>
+<p>I do not understand the kernel enough to know who’s wrong, but the
+solution is clear:</p>
+
+<pre><code>&gt; opkg install --force-depends kmod-i2c-gpio-custom
+Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
+Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
+Installing kmod-i2c-gpio (3.3.8-1) to root...
+Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio_3.3.8-1_ar71xx.ipk.
+Configuring kmod-i2c-gpio.
+Configuring kmod-i2c-gpio-custom.
+Collected errors:
+* satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-i2c-gpio-custom:
+* 	kmod-i2c-algo-bit * 
+</code></pre>
+
+<p>But does it work?</p>
+
+<pre><code>&gt; insmod i2c-gpio-custom bus0=0,29,7
+&gt; dmesg |tail
+
+[  711.120000] Custom GPIO-based I2C driver version 0.1.1
+[  711.120000] i2c-gpio i2c-gpio.0: using pins 29 (SDA) and 7 (SCL)
+[  712.920000] br-lan: port 1(eth0) entered forwarding state
+</code></pre>
+
+<p>Success?</p>
+
+<h2 id="the-first-io-test">The first IO test</h2>
+
+<p>I made a breadboard with the <code>PCF8574</code> IO expander from Texas
+Instruments (also available from NXP, but TI gives free samples). It
+takes the 3.3V power from the router, pulls up and has 8 LEDs from
+3.3V to the pins of the <code>PCF8574</code>. Maybe I’ll write an update about
+the breadboard later, but it’s mainly just the datasheet
+application. Later I switched to 5V and added level shifting MOSFETs,
+again, maybe some day I’ll write it up.</p>
+
+<pre><code># i2cdetect 0
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-0.
+I will probe address range 0x03-0x77.
+Continue? [Y/n] 
+	 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: 20 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- -- 
+</code></pre>
+
+<p>It works!</p>
+
+<pre><code># echo pcf8574 0x20 &gt; /sys/bus/i2c/devices/i2c-0/new_device
+# dmesg | tail
+[  153.590000] Custom GPIO-based I2C driver version 0.1.1
+[  153.590000] i2c-gpio i2c-gpio.0: using pins 29 (SDA) and 7 (SCL)
+[  651.600000] gpiochip_add: registered GPIOs 56 to 63 on device: pcf8574
+[  651.600000] pcf857x 0-0020: 
+[  651.610000] i2c i2c-0: new_device: Instantiated device pcf8574 at 0x20
+</code></pre>
+
+<p>Sounds good: we have a chip at the correct address, and 8 new GPIOs
+were created (numberd 56 through 63). Careful though: the <code>PCF8574</code>
+does not get detected in any way. So only the <code>i2cdetect</code> output
+really confirms that something is there on the bus and responding. So let’s test the GPIOs for
+confirmation.</p>
+
+<h2 id="actually-blinking-leds">Actually blinking LEDs</h2>
+
+<p>Let’s try to set one of the pins manually:</p>
+
+<pre><code># cd /sys/class/gpio
+# echo 57 &gt; export
+# echo out&gt;gpio57/direction
+# echo 0 &gt; gpio57/value 
+</code></pre>
+
+<p>Upon setting <code>output</code>, the LED lights up. Success!</p>
+
+<p>The output chip is open drain-ish (quasi bidirectional) and could
+probably have
+been connected with the LEDs oriented to light with the pin set to
+<code>1</code>. The chip then controls the current through an internal current
+source. I did it the other way around, with the cathode connected to
+the output pin. So now, we are able to control each output pin
+individually from userspacs, just by writing to the filesystem. Much,
+much more than I had ever dreamed. Even shell scripts can work with
+the outputs and inputs. Wicked.</p>
+
+<p>The next step: blinking. I was lazy and googled for a bash script that
+blinks. And found it <a href="http://netduinoplusfun.wordpress.com/2012/07/16/blink-a-light-with-raspberry-pi/">on this blog</a>. Tweaked it a little
+bit, which was easy because it’s so well written. I added an argument
+for the GPIO pin to use, to try all 8 pins. This is what I ended up with:</p>
+
+<pre><code>#!/bin/bash
+
+# blink_arg.bash -- must run as root!
+#       
+# Blink GPIO pin on and off
+
+LEDPIN=${1-57}
+OFF=1
+ON=0
+# Make sure we have root access
+if [ $EUID -ne 0 ]; then
+		echo "You must be root to run this. Try 'sudo $0'"
+		exit
+fi
+
+# Clean up procedure--turn off the LED, unexport the GPIO, and exit
+cleanup()
+{
+		PIN=$1
+		echo $OFF &gt; /sys/class/gpio/gpio$PIN/value      # turn off
+		echo $PIN &gt; /sys/class/gpio/unexport
+		echo Interrupted.
+		exit
+}
+
+# Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL
+echo $LEDPIN &gt; /sys/class/gpio/export
+echo out &gt; /sys/class/gpio/gpio$LEDPIN/direction
+trap 'cleanup $LEDPIN' 1 2 15
+
+while true
+do
+		echo $ON &gt; /sys/class/gpio/gpio$LEDPIN/value    # turn on
+		sleep 1
+		echo $OFF &gt; /sys/class/gpio/gpio$LEDPIN/value   # turn off
+		sleep 1
+done
+</code></pre>
+
+<p>And it works as expected. So now for some fun (we did not get all this
+linux power for nothing!). </p>
+
+<pre><code> # ./blink_arg.bash 56&amp;
+ # ./blink_arg.bash 57&amp;
+ # ./blink_arg.bash 58&amp;
+ # # ... etcetera ...
+</code></pre>
+
+<p>So using all the cool multitasking goodness to do nothing special at
+all. How does that look?</p>
+
+<iframe width="640" height="480" src="http://www.youtube.com/embed/eJ91tw86p7I" frameborder="0"></iframe>
+
+<h2 id="input">Input</h2>
+
+<p>The next step is to use the input function. That will be the next update.</p>
+
+ 
+</bodytext><footer></footer></article><titleframe><titlebar><div id="largetitle"> <a href="../">Pragtich</a>
+</div>
+
+ <div id="secnav">
+
+ </div>
+ <div id="artnav">
+ </div> 
+ </titlebar></titleframe><nav><h2>Categories</h2>
+      <ul>
+<li>
+<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
+
+
+
+   <li>
+<a href="../all_Life.html">Life</a> </li>
+
+
+
+   <li>
+<a href="../all_Kippycam.html">Kippycam</a> </li>
+
+
+
+      </ul>
+<h2>About</h2>
+      <ul>
+<li><a href="../about/">About me</a></li>
+      </ul></nav>
+</body>
+</html>

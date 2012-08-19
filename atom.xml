@@ -2,13 +2,371 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>http://members.home.nl/pragtich/</id>
   <title>Joris Pragt's blog feed</title>
-  <updated>2012-07-18T22:00:00Z</updated>
+  <updated>2012-08-14T22:00:00Z</updated>
   <link rel="alternate" href="http://members.home.nl/pragtich/"/>
   <link rel="self" href="http://members.home.nl/pragtich/atom.xml"/>
   <author>
     <name>Joris Pragt</name>
     <uri>http://members.home.nl/pragtich</uri>
   </author>
+  <entry>
+    <id>tag:members.home.nl,2012-08-15:/pragtich/kippycam/Adding an I2C interface to the TL-WR703N.html</id>
+    <title type="html">Adding an I2C interface to the TL-WR703N</title>
+    <published>2012-08-14T22:00:00Z</published>
+    <updated>2012-08-14T22:00:00Z</updated>
+    <link rel="alternate" href="http://members.home.nl/pragtich/kippycam/Adding an I2C interface to the TL-WR703N.html"/>
+    <content type="html">&lt;h1 id="the-goal"&gt;The goal&lt;/h1&gt;
+
+&lt;p&gt;To enable the creative use of the wireless router in the garden to do
+all kinds of fun stuff. My first insane ideas are things like:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Closing the chicken coop door (determined by remote control or
+automatically)&lt;/li&gt;
+  &lt;li&gt;Making a feed dispenser, so that the chickens may be tempted to be
+close to the camera&lt;/li&gt;
+  &lt;li&gt;Counting and logging the egg laying productivity (and the chickens&amp;rsquo;
+noise?)&lt;/li&gt;
+  &lt;li&gt;Monitoring the solar panels and battery charge status.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That&amp;rsquo;s just the start&amp;hellip;&lt;/p&gt;
+
+&lt;h1 id="approach"&gt;Approach&lt;/h1&gt;
+
+&lt;p&gt;Because of the &lt;a href="https://forum.openwrt.org/viewtopic.php?id=36471"&gt;promising reports for at least 2 GPIO pins in the
+TL-WR703N&lt;/a&gt;, I was looking for an interface that supports powerful
+actions, with the minimum of wires. In the end, I chose I2C because a
+cursory web search showed all kinds of cool chips that support it, and
+because of the low complexity. SPI needs addressing, that I was not
+sure I coud deliver, and 1-wire is only suited to a very limited array
+of devices. Serial communication could have worked, but this is not
+very robust against jitter (and we will be bit-banging) and demands a
+lot from each client. So: I2C it is!&lt;/p&gt;
+
+&lt;h1 id="proof-of-principle"&gt;Proof of principle&lt;/h1&gt;
+
+&lt;h2 id="adding-i2c-interface"&gt;Adding I2C interface&lt;/h2&gt;
+
+&lt;p&gt;All the background information that I used came from the kind people
+that generated their knowledge
+&lt;a href="https://forum.openwrt.org/viewtopic.php?id=36471"&gt;to the Openwrt forums&lt;/a&gt;. I pretty much copied that
+what they did before. A few points are critical:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The parts are really really small. Take a lot of care, use a very
+sharp iron and use magnification.&lt;/li&gt;
+  &lt;li&gt;The traces in the router are easily peeled off. Do not apply
+vertical forces and make sure to releive any forces on the wires.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;These were the steps:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Remove R15 and R17.&lt;/li&gt;
+  &lt;li&gt;Solder very thin wires to each pad (the side not towards the USB
+connector)&lt;/li&gt;
+  &lt;li&gt;Solder a +3.3V wire to the square field marked &lt;code&gt;LED2 +&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Solder a ground wire to the micro-USB connector (reset button side)&lt;/li&gt;
+  &lt;li&gt;Solder a +5V wire to the other side of the micro-USB connector
+(Ethernet side)&lt;/li&gt;
+  &lt;li&gt;Glue the wires to the PCB using 2-component epoxy adhesive.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&amp;hellip;although the micro usb wires may be the other way around&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="I2C-soldered.jpg" alt="The finished product" title="After completing the soldering" /&gt;
+&lt;img src="I2C-soldered-detail.jpg" alt="The finished product, some more detail" title="Some more detail" /&gt;&lt;/p&gt;
+
+&lt;p&gt;Then I cut a hole into the top of the housing and glued a 2x3 boxed
+header onto the lid of the router. I chose the following pin-out in an
+attempt to keep the signal wires apart:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;5V&lt;/li&gt;
+  &lt;li&gt;NC&lt;/li&gt;
+  &lt;li&gt;SCL (GPIO7, 3.3V)&lt;/li&gt;
+  &lt;li&gt;GND&lt;/li&gt;
+  &lt;li&gt;SDA (GPIO 29, 3.3V)&lt;/li&gt;
+  &lt;li&gt;3.3V&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;That&amp;rsquo;s how it looks:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src="I2C-done.jpg" alt="The finished product, outside" title="The end product, closed and tidy." /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;No Pull-ups yet, so these need to be put on the client side, or
+  built in later.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id="installing-on-openwrt"&gt;Installing on Openwrt&lt;/h2&gt;
+&lt;p&gt;The OpenWRT wiki has loads of (some more outdated than other) stuff on
+I2C
+&lt;a href="http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c"&gt;at this link&lt;/a&gt;. Let&amp;rsquo;s
+start with the basics:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; Opkg update
+&amp;gt; opkg install i2c-tools
+&amp;gt;	opkg install kmod-i2c-gpio-custom
+
+Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
+Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
+Collected errors:
+ * satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-i2c-gpio-custom:
+ * 	kmod-i2c-algo-bit * 
+ * opkg_install_cmd: Cannot install package kmod-i2c-gpio-custom.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So we are missing kmod-i2c-algo-bit. A quick check on the
+&lt;a href="http://downloads.openwrt.org/snapshots/trunk/ar71xx/packages/"&gt;downloads page for trunk&lt;/a&gt; shows it missing there,
+too. But I really need it. &lt;/p&gt;
+
+&lt;p&gt;**So now what? **&lt;/p&gt;
+
+&lt;p&gt;Left over from
+&lt;a href="Compiling gstreamer
+for C920 webcam.html"&gt;my experiments with compiling OpenWRT on OS X&lt;/a&gt; was a local compile directory that actually
+successfully compiles. So I went in there and did a &lt;code&gt;make
+menuconfig&lt;/code&gt;. When I installed all the I2C stuff, it automatically
+enables the &lt;code&gt;i2c-gpio-custom&lt;/code&gt; module. And after &lt;code&gt;make&lt;/code&gt;, it also
+compiles the matchin object file. But no &lt;code&gt;.ipk&lt;/code&gt; to match. Where did it
+go&amp;hellip;?&lt;/p&gt;
+
+&lt;p&gt;After a bit of searching it was
+found. &lt;code&gt;build_dir/linuxxxx/modles.builtin&lt;/code&gt; tells exactly where it
+went: into the kernel (built-in, not as a module). Actually, loads
+went into the kernel built-in. Here&amp;rsquo;s a list:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kernel/fs/jffs2/jffs2.ko
+kernel/fs/overlayfs/overlayfs.ko
+kernel/fs/squashfs/squashfs.ko
+kernel/crypto/crypto.ko
+kernel/block/deadline-iosched.ko
+kernel/drivers/base/firmware_class.ko
+kernel/drivers/gpio/gpio-nxp-74hc153.ko
+kernel/drivers/gpio/gpio-pcf857x.ko
+kernel/drivers/i2c/i2c-core.ko
+kernel/drivers/i2c/algos/i2c-algo-bit.ko
+kernel/drivers/i2c/busses/i2c-gpio.ko
+kernel/drivers/mtd/mtd.ko
+kernel/drivers/mtd/redboot.ko
+kernel/drivers/mtd/myloader.ko
+kernel/drivers/mtd/tplinkpart.ko
+kernel/drivers/mtd/wrt160nl_part.ko
+kernel/drivers/mtd/mtdchar.ko
+kernel/drivers/mtd/mtd_blkdevs.ko
+kernel/drivers/mtd/mtdblock.ko
+kernel/drivers/mtd/chips/chipreg.ko
+kernel/drivers/mtd/chips/cfi_probe.ko
+kernel/drivers/mtd/chips/cfi_util.ko
+kernel/drivers/mtd/chips/cfi_cmdset_0002.ko
+kernel/drivers/mtd/chips/gen_probe.ko
+kernel/drivers/mtd/chips/jedec_probe.ko
+kernel/drivers/mtd/devices/m25p80.ko
+kernel/drivers/mtd/maps/map_funcs.ko
+kernel/drivers/mtd/maps/physmap.ko
+kernel/drivers/net/mii.ko
+kernel/drivers/net/dsa/mv88e6060.ko
+kernel/drivers/net/ethernet/atheros/ag71xx/ag71xx.ko
+kernel/drivers/net/phy/libphy.ko
+kernel/drivers/net/phy/swconfig.ko
+kernel/drivers/net/phy/marvell.ko
+kernel/drivers/net/phy/ip17xx.ko
+kernel/drivers/net/phy/ar8216.ko
+kernel/drivers/net/phy/rtl8306.ko
+kernel/drivers/net/phy/rtl8366_smi.ko
+kernel/drivers/net/phy/rtl8366s.ko
+kernel/drivers/net/phy/rtl8366rb.ko
+kernel/drivers/net/phy/rtl8367.ko
+kernel/drivers/net/phy/micrel.ko
+kernel/drivers/spi/spi-ap83.ko
+kernel/drivers/spi/spi-ath79.ko
+kernel/drivers/spi/spi-bitbang.ko
+kernel/drivers/tty/serial/serial_core.ko
+kernel/drivers/tty/serial/8250/8250.ko
+kernel/net/802/p8022.ko
+kernel/net/802/psnap.ko
+kernel/net/802/stp.ko
+kernel/net/8021q/vlan_core.ko
+kernel/net/8021q/8021q.ko
+kernel/net/bridge/bridge.ko
+kernel/net/dsa/dsa_core.ko
+kernel/net/ipv4/tcp_cubic.ko
+kernel/net/llc/llc.ko
+kernel/net/packet/af_packet.ko
+kernel/net/unix/unix.ko
+kernel/lib/bitrev.ko
+kernel/lib/crc32.ko
+kernel/lib/lzma/lzma_compress.ko
+kernel/lib/lzma/lzma_decompress.ko
+kernel/lib/xz/xz_dec.ko
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So, something is wonky with Openwrt. Either one of the two:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The kernel config automatically configures the module as a builtin
+and ignores my wish to have it as a module. &lt;/li&gt;
+  &lt;li&gt;The package &lt;code&gt;kmod-i2c-gpio-custom&lt;/code&gt; incorrectly forces the
+dependency to &lt;code&gt;kmod-i2c-algo-bit&lt;/code&gt;, while indeed it is builtin by
+default.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I do not understand the kernel enough to know who&amp;rsquo;s wrong, but the
+solution is clear:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; opkg install --force-depends kmod-i2c-gpio-custom
+Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
+Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
+Installing kmod-i2c-gpio (3.3.8-1) to root...
+Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio_3.3.8-1_ar71xx.ipk.
+Configuring kmod-i2c-gpio.
+Configuring kmod-i2c-gpio-custom.
+Collected errors:
+* satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-i2c-gpio-custom:
+* 	kmod-i2c-algo-bit * 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But does it work?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; insmod i2c-gpio-custom bus0=0,29,7
+&amp;gt; dmesg |tail
+
+[  711.120000] Custom GPIO-based I2C driver version 0.1.1
+[  711.120000] i2c-gpio i2c-gpio.0: using pins 29 (SDA) and 7 (SCL)
+[  712.920000] br-lan: port 1(eth0) entered forwarding state
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Success?&lt;/p&gt;
+
+&lt;h2 id="the-first-io-test"&gt;The first IO test&lt;/h2&gt;
+
+&lt;p&gt;I made a breadboard with the &lt;code&gt;PCF8574&lt;/code&gt; IO expander from Texas
+Instruments (also available from NXP, but TI gives free samples). It
+takes the 3.3V power from the router, pulls up and has 8 LEDs from
+3.3V to the pins of the &lt;code&gt;PCF8574&lt;/code&gt;. Maybe I&amp;rsquo;ll write an update about
+the breadboard later, but it&amp;rsquo;s mainly just the datasheet
+application. Later I switched to 5V and added level shifting MOSFETs,
+again, maybe some day I&amp;rsquo;ll write it up.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# i2cdetect 0
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will probe file /dev/i2c-0.
+I will probe address range 0x03-0x77.
+Continue? [Y/n] 
+	 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: 20 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- -- 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It works!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# echo pcf8574 0x20 &amp;gt; /sys/bus/i2c/devices/i2c-0/new_device
+# dmesg | tail
+[  153.590000] Custom GPIO-based I2C driver version 0.1.1
+[  153.590000] i2c-gpio i2c-gpio.0: using pins 29 (SDA) and 7 (SCL)
+[  651.600000] gpiochip_add: registered GPIOs 56 to 63 on device: pcf8574
+[  651.600000] pcf857x 0-0020: 
+[  651.610000] i2c i2c-0: new_device: Instantiated device pcf8574 at 0x20
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Sounds good: we have a chip at the correct address, and 8 new GPIOs
+were created (numberd 56 through 63). Careful though: the &lt;code&gt;PCF8574&lt;/code&gt;
+does not get detected in any way. So only the &lt;code&gt;i2cdetect&lt;/code&gt; output
+really confirms that something is there on the bus and responding. So let&amp;rsquo;s test the GPIOs for
+confirmation.&lt;/p&gt;
+
+&lt;h2 id="actually-blinking-leds"&gt;Actually blinking LEDs&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s try to set one of the pins manually:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cd /sys/class/gpio
+# echo 57 &amp;gt; export
+# echo out&amp;gt;gpio57/direction
+# echo 0 &amp;gt; gpio57/value 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Upon setting &lt;code&gt;output&lt;/code&gt;, the LED lights up. Success!&lt;/p&gt;
+
+&lt;p&gt;The output chip is open drain-ish (quasi bidirectional) and could
+probably have
+been connected with the LEDs oriented to light with the pin set to
+&lt;code&gt;1&lt;/code&gt;. The chip then controls the current through an internal current
+source. I did it the other way around, with the cathode connected to
+the output pin. So now, we are able to control each output pin
+individually from userspacs, just by writing to the filesystem. Much,
+much more than I had ever dreamed. Even shell scripts can work with
+the outputs and inputs. Wicked.&lt;/p&gt;
+
+&lt;p&gt;The next step: blinking. I was lazy and googled for a bash script that
+blinks. And found it &lt;a href="http://netduinoplusfun.wordpress.com/2012/07/16/blink-a-light-with-raspberry-pi/"&gt;on this blog&lt;/a&gt;. Tweaked it a little
+bit, which was easy because it&amp;rsquo;s so well written. I added an argument
+for the GPIO pin to use, to try all 8 pins. This is what I ended up with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+
+# blink_arg.bash -- must run as root!
+#       
+# Blink GPIO pin on and off
+
+LEDPIN=${1-57}
+OFF=1
+ON=0
+# Make sure we have root access
+if [ $EUID -ne 0 ]; then
+		echo "You must be root to run this. Try 'sudo $0'"
+		exit
+fi
+
+# Clean up procedure--turn off the LED, unexport the GPIO, and exit
+cleanup()
+{
+		PIN=$1
+		echo $OFF &amp;gt; /sys/class/gpio/gpio$PIN/value      # turn off
+		echo $PIN &amp;gt; /sys/class/gpio/unexport
+		echo Interrupted.
+		exit
+}
+
+# Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL
+echo $LEDPIN &amp;gt; /sys/class/gpio/export
+echo out &amp;gt; /sys/class/gpio/gpio$LEDPIN/direction
+trap 'cleanup $LEDPIN' 1 2 15
+
+while true
+do
+		echo $ON &amp;gt; /sys/class/gpio/gpio$LEDPIN/value    # turn on
+		sleep 1
+		echo $OFF &amp;gt; /sys/class/gpio/gpio$LEDPIN/value   # turn off
+		sleep 1
+done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And it works as expected. So now for some fun (we did not get all this
+linux power for nothing!). &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; # ./blink_arg.bash 56&amp;amp;
+ # ./blink_arg.bash 57&amp;amp;
+ # ./blink_arg.bash 58&amp;amp;
+ # # ... etcetera ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So using all the cool multitasking goodness to do nothing special at
+all. How does that look?&lt;/p&gt;
+
+&lt;iframe width="640" height="480" src="http://www.youtube.com/embed/eJ91tw86p7I" frameborder="0"&gt;&lt;/iframe&gt;
+
+&lt;h2 id="input"&gt;Input&lt;/h2&gt;
+
+&lt;p&gt;The next step is to use the input function. That will be the next update.&lt;/p&gt;
+
+</content>
+  </entry>
   <entry>
     <id>tag:members.home.nl,2012-07-19:/pragtich/technology/Compiling gstreamer for C920 webcam.html</id>
     <title type="html">Compiling a modified GStreamer for the C920 webcam</title>
@@ -93,6 +451,58 @@ make toolchain/install
 </content>
   </entry>
   <entry>
+    <id>tag:members.home.nl,2012-07-13:/pragtich/kippycam/Openwrt connection checking.html</id>
+    <title type="html">Keeping Openwrt online using DHCP</title>
+    <published>2012-07-12T22:00:00Z</published>
+    <updated>2012-07-12T22:00:00Z</updated>
+    <link rel="alternate" href="http://members.home.nl/pragtich/kippycam/Openwrt connection checking.html"/>
+    <content type="html">&lt;p&gt;I noticed, when
+&lt;a href="network-layout.html"&gt;installing the WiFi network bridge to the garden shed&lt;/a&gt;,
+that the DHCP client does not reconnect when the connection has been
+lost. It just sits there (don&amp;rsquo;t know when it would reconnect, maybe
+when the lease expires?) unconnected. For my purpose, that&amp;rsquo;s not very
+satisfying, as I need the connection to be robust. &lt;/p&gt;
+
+&lt;p&gt;Since I had worked with &lt;code&gt;monit&lt;/code&gt; before, I figured this would be a
+great way to periodically check the state of the connection and
+re-enable it when it has dropped out. At a later date, &lt;code&gt;monit&lt;/code&gt; could
+also turn out to be helpful in making sure that all other services on
+the router remain healthy. &lt;/p&gt;
+
+&lt;h1 id="installing--configuring"&gt;Installing &amp;amp; configuring&lt;/h1&gt;
+
+&lt;pre&gt;&lt;code&gt;opkg update
+
+# I am getting the packages from my local copy of the trunk, just
+to have it all be consistent. That probably is only critical for
+the kernel modules packages, but let's do it for sake of
+simplicity
+
+opkg install monit
+
+vi /etc/monitrc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I added some sensible settings from the template that is in
+&lt;code&gt;/etc/monitrc&lt;/code&gt;, mainly to start as a daemon, put the work files in
+&lt;code&gt;/tmp&lt;/code&gt; and set the frequency of the checks. And the check for a
+connection:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;check host kiprouter with address 10.0.0.4                                     
+    if failed icmp type echo count 3 with timeout 3 seconds then
+	exec "/etc/init.d/network restart"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then to enable and start monit:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/etc/init.d/monit enable
+/etc/init.d/monit start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Testing results later&amp;hellip;&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <id>tag:members.home.nl,2012-07-13:/pragtich/technology/Aquamacs Notes.html</id>
     <title type="html">Some notes on using Aquamacs</title>
     <published>2012-07-12T22:00:00Z</published>
@@ -153,58 +563,6 @@ Aquamacs starts up, it will be listening.&lt;/p&gt;
 
 &lt;p&gt;Many people rebind this key to something like &lt;code&gt;C-c c&lt;/code&gt; to better match
 other applications like GNUS or VCS. Maybe I will too, some day.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:members.home.nl,2012-07-13:/pragtich/kippycam/Openwrt connection checking.html</id>
-    <title type="html">Keeping Openwrt online using DHCP</title>
-    <published>2012-07-12T22:00:00Z</published>
-    <updated>2012-07-12T22:00:00Z</updated>
-    <link rel="alternate" href="http://members.home.nl/pragtich/kippycam/Openwrt connection checking.html"/>
-    <content type="html">&lt;p&gt;I noticed, when
-&lt;a href="network-layout.html"&gt;installing the WiFi network bridge to the garden shed&lt;/a&gt;,
-that the DHCP client does not reconnect when the connection has been
-lost. It just sits there (don&amp;rsquo;t know when it would reconnect, maybe
-when the lease expires?) unconnected. For my purpose, that&amp;rsquo;s not very
-satisfying, as I need the connection to be robust. &lt;/p&gt;
-
-&lt;p&gt;Since I had worked with &lt;code&gt;monit&lt;/code&gt; before, I figured this would be a
-great way to periodically check the state of the connection and
-re-enable it when it has dropped out. At a later date, &lt;code&gt;monit&lt;/code&gt; could
-also turn out to be helpful in making sure that all other services on
-the router remain healthy. &lt;/p&gt;
-
-&lt;h1 id="installing--configuring"&gt;Installing &amp;amp; configuring&lt;/h1&gt;
-
-&lt;pre&gt;&lt;code&gt;opkg update
-
-# I am getting the packages from my local copy of the trunk, just
-to have it all be consistent. That probably is only critical for
-the kernel modules packages, but let's do it for sake of
-simplicity
-
-opkg install monit
-
-vi /etc/monitrc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I added some sensible settings from the template that is in
-&lt;code&gt;/etc/monitrc&lt;/code&gt;, mainly to start as a daemon, put the work files in
-&lt;code&gt;/tmp&lt;/code&gt; and set the frequency of the checks. And the check for a
-connection:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;check host kiprouter with address 10.0.0.4                                     
-    if failed icmp type echo count 3 with timeout 3 seconds then
-	exec "/etc/init.d/network restart"
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then to enable and start monit:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/etc/init.d/monit enable
-/etc/init.d/monit start
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Testing results later&amp;hellip;&lt;/p&gt;
 </content>
   </entry>
   <entry>
@@ -400,79 +758,6 @@ git checkout source
 
 &lt;p&gt;Did not work immediately, but many times DNS can take some time to
 update. Let&amp;rsquo;s wait and see.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:members.home.nl,2012-06-22:/pragtich/kippycam/network-layout.html</id>
-    <title type="html">Getting network access in the garden</title>
-    <published>2012-06-21T22:00:00Z</published>
-    <updated>2012-06-21T22:00:00Z</updated>
-    <link rel="alternate" href="http://members.home.nl/pragtich/kippycam/network-layout.html"/>
-    <content type="html">&lt;h1 id="the-problem"&gt;The problem&lt;/h1&gt;
-
-&lt;p&gt;The garden is quite long and goes around a bend. The house has an extension towards the back that blocks most lines of sight between the garden and the main house. Also, the distance from the services entry point and the shed where the chickens live, runs in the tens of meters. Here&amp;rsquo;s an overview of the situation:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="gardenlayout.jpg" alt="Layout of the garden" /&gt;&lt;/p&gt;
-
-&lt;p&gt;The best way would be to dig a pipe through the garden and wire with ethernet. But this would involve digging up 20 meters of paving, and 20 meters of grass. Although it needs to be done some day (to get water and electricity in the garden, for one thing), now is not the time. So &amp;mdash; wireless is the way to go!&lt;/p&gt;
-
-&lt;h1 id="layout"&gt;Layout&lt;/h1&gt;
-
-&lt;p&gt;To get a wifi signal at the shed, the existing infrastructure in the house is insufficient. It only reaches roughly 10 meters into the garden. Too many walls, too many trees and leaves. &lt;/p&gt;
-
-&lt;p&gt;An extra access  point is needed. In the first place I will create a wireless repeater, because this has worked before. Later, I may relocate the repeater to a place where I can reach it with Ethernet: that would be a more elegant solution in the long run.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;TODO&lt;/strong&gt;: Research &lt;a href="http://www.rubyinside.com/ruby-graphviz-data-visualization-1477.html"&gt;Railroad&lt;/a&gt; for creating really nice plots.&lt;/p&gt;
-
-&lt;p&gt;The ouline is as follows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Main Router  ==&amp;gt;	Repeater	==&amp;gt;		Webcam server
-Airport		 	TL-WR703N			TL-WR703N
-DHCP server		relay wlan-wlan			relay wlan-lan
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id="openwrt-configuration"&gt;OpenWRT configuration&lt;/h1&gt;
-
-&lt;h2 id="repeater"&gt;Repeater&lt;/h2&gt;
-
-&lt;p&gt;I used the &lt;code&gt;luci&lt;/code&gt; webinterface to configure relaying. Setting this up goes something like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;opkg update
-opkg install luci luci-proto-relay
-  	# this auto-installs many dependencies, including relayd and uhttpd
-  	/etc/init.d/uhttpd enable
-  	/etc/init.d/uhttpd start
-  	/etc/init.d/relayd enable		# This is required in trunk versions
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then, &lt;code&gt;luci&lt;/code&gt; should be up and running by sending the browser to the router&amp;rsquo;s IP address (most likely &lt;code&gt;192.168.1.1&lt;/code&gt;). &lt;/p&gt;
-
-&lt;p&gt;A reasonably clear guide to configuring relaying through &lt;code&gt;luci&lt;/code&gt; is given on &lt;a href="http://trac.gateworks.com/wiki/relayd"&gt;this page at gateworks.com&lt;/a&gt;. Only trouble is, that this example is for relaying between &lt;code&gt;lan&lt;/code&gt; and &lt;code&gt;wwan&lt;/code&gt;. I started ambitiously, trying to relay to both &lt;code&gt;lan&lt;/code&gt; and a new &lt;code&gt;wifi AP&lt;/code&gt;, but this stranded in the complications of it. Start easy.
-Also disable security first. This cost me an afternoon, because &lt;code&gt;psk2&lt;/code&gt; and the &lt;code&gt;auto&lt;/code&gt; cypher setting were not playing nicely with OS X.&lt;/p&gt;
-
-&lt;p&gt;TODO: Add my own nice pictures of how wifi relaying works.&lt;/p&gt;
-
-&lt;p&gt;Another place to check for instructions is &lt;a href="https://forum.openwrt.org/viewtopic.php?pid=163262#p163262"&gt;In the forums&lt;/a&gt;, but be careful. For one, the &lt;code&gt;trunk&lt;/code&gt; releases need an additional &lt;code&gt;/etc/init.d/relayd enable&lt;/code&gt;. Also, some of the &lt;code&gt;wireless&lt;/code&gt; settings are outdated. The essence is good.&lt;/p&gt;
-
-&lt;p&gt;Something very confusing is the IP address choice for the interface that is not directly connected to the &amp;lsquo;live&amp;rsquo; network. So the &amp;lsquo;access point&amp;rsquo; network in this case. It gets a static address by definition, but this address is largely ignored. Actually, the relayd passes all traffic from the outside network to the internal network. This includes DHCP requests, which also get passed on and get answered by the Main Router. So in fact all clients on both sides of the relay use IP addresses from the Main Router&amp;rsquo;s subnet. Setting the IP address of the &amp;lsquo;inside&amp;rsquo; network to a different subnet helps in case the &amp;lsquo;outside&amp;rsquo; network is unavailable or does not provide DHCP. Then, we need this &amp;lsquo;inside&amp;rsquo; subnet in order to gain access to the router.&lt;/p&gt;
-
-&lt;h2 id="webcam-server"&gt;Webcam server&lt;/h2&gt;
-
-&lt;p&gt;The webcam server follows &lt;a href="http://trac.gateworks.com/wiki/relayd"&gt;the instructions at gateworks.com&lt;/a&gt; mostly literally. I kept the &lt;code&gt;lan&lt;/code&gt; IP at &lt;code&gt;192.168.1.1&lt;/code&gt;, simply because there was no real reason to change it. Relay is overkill here, but I chose it because it allows any potential clients on the &lt;code&gt;LAN&lt;/code&gt; interface (wired clients) to join in the network as if nothing was in between. &lt;/p&gt;
-
-&lt;p&gt;TODO: Add description of mjpg-server in additional page and link here&lt;/p&gt;
-
-&lt;h1 id="physical-network"&gt;Physical network&lt;/h1&gt;
-
-&lt;p&gt;The wireless repeater helps bridging the distance between the house and the shed, but it does rely on &amp;lsquo;line of sight&amp;rsquo;. And even with a clear line of sight (which I do not have, there are tree leaves and a roof partially in the way), the distance is still significant. I took several steps that I intend to document separately:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Convert the TL-WR703N routers to add external antenna connectors.&lt;/li&gt;
-  &lt;li&gt;Construct &lt;code&gt;cantennas&lt;/code&gt; to have better gain and a more efficient (narrower) beam.&lt;/li&gt;
-  &lt;li&gt;Place the antennas where there is optimal line of sight&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;At present, this is enough to cover my needs with limited bandwidth, but acceptable reliability. After researching a bit, cantennas seem to be over-hyped. Maybe I will build yagi or other high gain antennas at a later date. For now, the cans are working.&lt;/p&gt;
 </content>
   </entry>
 </feed>
