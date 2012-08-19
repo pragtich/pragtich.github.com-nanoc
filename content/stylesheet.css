@@ -76,7 +76,7 @@ header {
 header img {
 	float: left; 
 	border-radius: 5px;
-	margin-left: -25px;
+	margin-left: 0px;
 	margin-right: 10px;
 }
 /* Body stuff */

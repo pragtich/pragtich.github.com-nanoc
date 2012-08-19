@@ -57,7 +57,6 @@ The chicken coop is located in the garden behind my house. This could be ~50 met
 
 So how to get this to work? I will probably add a cantenna to the WR703 in the garden to get good reception and either move the main wireless router to a better location (the attic?) or set up a repeater somewhere in the house, possibly also with a cantenna. This will take some experimentation.
 
-1. 
 
 ## Solar powering ##
 
@@ -75,7 +74,7 @@ Solar panel prices have dropped a lot recently. The cheap made-in-China panels a
 
 ## OpenWRT ##
 
-1. [How to use an external USB stick as root filesystem][openwrt-eftroot]. I'm not sure how this could affect flash wear: at the moment I will use a cheap memory stick and just see what happens.
+1. [How to use an external USB stick as root filesystem][openwrt-extroot]. I'm not sure how this could affect flash wear: at the moment I will use a cheap memory stick and just see what happens.
 2. [How to enable USB storage, including how to format the partitions for efficiency.][openwrt-usbstor]
 3. [A very concise list of instructions to get a WR703N up and going][minipwner]. Probably not going to use, because it avoids USB stick usage, and why would I?
 4. [Janisalnis' short description of installing OpenWRT onto a USB stick: a useful start.][salnis-openwrt-usb]
