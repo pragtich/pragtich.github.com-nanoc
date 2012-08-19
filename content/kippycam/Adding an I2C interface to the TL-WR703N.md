@@ -59,8 +59,8 @@ connector)
 
 ...although the micro usb wires may be the other way around...
 
-![The finished product](I2C-soldered.jpg)
-![The finished product, some more detail](I2C-soldered-detail.jpg)
+![The finished product](I2C-soldered.jpg "After completing the soldering")
+![The finished product, some more detail](I2C-soldered-detail.jpg "Some more detail")
 
 Then I cut a hole into the top of the housing and glued a 2x3 boxed
 header onto the lid of the router. I chose the following pin-out in an
@@ -75,7 +75,7 @@ attempt to keep the signal wires apart:
 
 That's how it looks:
 
-![The finished product, outside](I2C-done.jpg)
+![The finished product, outside](I2C-done.jpg "The end product, closed and tidy.")
 
 **No Pull-ups yet, so these need to be put on the client side, or
   built in later.**
@@ -193,16 +193,16 @@ I do not understand the kernel enough to know who's wrong, but the
 solution is clear:
 
 	> opkg install --force-depends kmod-i2c-gpio-custom
-   Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
-   Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
-   Installing kmod-i2c-gpio (3.3.8-1) to root...
-   Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio_3.3.8-1_ar71xx.ipk.
-   Configuring kmod-i2c-gpio.
-   Configuring kmod-i2c-gpio-custom.
-   Collected errors:
+    Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
+	Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
+	Installing kmod-i2c-gpio (3.3.8-1) to root...
+	Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio_3.3.8-1_ar71xx.ipk.
+	Configuring kmod-i2c-gpio.
+	Configuring kmod-i2c-gpio-custom.
+	Collected errors:
 	* satisfy_dependencies_for: Cannot satisfy the following dependencies for kmod-i2c-gpio-custom:
 	* 	kmod-i2c-algo-bit * 
- > 
+
 
 But does it work?
 
@@ -331,6 +331,8 @@ linux power for nothing!).
 
 So using all the cool multitasking goodness to do nothing special at
 all. How does that look?
+
+<iframe width="640" height="480" src="http://www.youtube.com/embed/eJ91tw86p7I" frameborder="0"></iframe>
 
 ## Input ##
 
