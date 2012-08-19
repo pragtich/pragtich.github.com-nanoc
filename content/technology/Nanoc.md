@@ -22,13 +22,13 @@ An RSS feed for the site
 
 Of course, a blog should have a RSS feed. Even though you have no readers yet... One never knows when it will be useful.
 
-So, I am trying to get the Blogging helper RSS stuff to work. The [[documentation][http://nanoc.stoneship.org/docs/api/3.1/Nanoc3/Helpers/Blogging.html#atom_feed-instance_method]] shows that we need to set up some stuff. I did just that, although I must say I really dislike the `excerpt` tag, because of its American English brutality. I will try to come up with a way to use `summary` instead.
+So, I am trying to get the Blogging helper RSS stuff to work. The [documentation](http://nanoc.stoneship.org/docs/api/3.1/Nanoc3/Helpers/Blogging.html#atom_feed-instance_method) shows that we need to set up some stuff. I did just that, although I must say I really dislike the `excerpt` tag, because of its American English brutality. I will try to come up with a way to use `summary` instead.
 
     base_url: 'http://http://members.home.nl/pragtich'
 
 Created a `content/atom.xml` with the contents:
 
-    <%= atom_feed %>
+     <%%= atom_feed %>
 
 And created `content/atom.yaml` with:
 
