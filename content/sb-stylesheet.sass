@@ -1,5 +1,5 @@
 $backcolor: #bbbbbb
-$fgcolor: #ffffff
+$fgcolor: #000
 $radius: 6px
 $height: 80%
 $top: 10%
@@ -37,6 +37,7 @@ body
  -webkit-border-radius: $radius
  -moz-border-radius: $radius
  border-radius: $radius
+ overflow: hidden
 
 .switchboard
  height: 100%
@@ -55,7 +56,18 @@ body
 
 img
  max-width: 100%
+ max-height: 100%
+ float: left
 
+a.kippy-hover
+ display: block
+ width: 409px
+ height: 600px
+ background-image: url('kippy-button.jpg')
+ background-position: -409px 0px
+ max-height: 100%
+a.kippy-hover:hover
+ background-position: 0px 0px
 
 .footer
  .text-align: left
