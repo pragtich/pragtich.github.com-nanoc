@@ -39,9 +39,7 @@ of devices. Serial communication could have worked, but this is not
 very robust against jitter (and we will be bit-banging) and demands a
 lot from each client. So: I2C it is!
 
-# Proof of principle #
-
-## Adding I2C interface ##
+# Adding I2C interface #
 
 All the background information that I used came from the kind people
 that generated their knowledge
@@ -49,17 +47,19 @@ that generated their knowledge
 what they did before. A few points are critical:
 
 1. The parts are really really small. Take a lot of care, use a very
-sharp iron and use magnification.
+sharp soldering iron and use magnification.
 2. The traces in the router are easily peeled off. Do not apply
-vertical forces and make sure to releive any forces on the wires.
+vertical forces and make sure to releive any forces on the wires. I
+epoxied all wires to the PCB after soldering to prevent them from
+pulling the PCB traces.
 
 These were the steps:
 
 1. Remove R15 and R17.
-2. Solder very thin wires to each pad (the side not towards the USB
-connector)
+2. Solder very thin wires to each pad (the side facing away from the
+USB connector)
 3. Solder a +3.3V wire to the square field marked `LED2 +`
-4. Solder a ground wire to the micro-USB connector (reset button side)
+4. Solder a GND wire to the micro-USB connector (reset button side)
 5. Solder a +5V wire to the other side of the micro-USB connector
 (Ethernet side)
 6. Glue the wires to the PCB using 2-component epoxy adhesive.
@@ -87,15 +87,15 @@ That's how it looks:
 **No Pull-ups yet, so these need to be put on the client side, or
   built in later.**
 
-## Installing on Openwrt##
+# Installing on Openwrt#
 The OpenWRT wiki has loads of (some more outdated than other) stuff on
 I2C
 [at this link](http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c). Let's
 start with the basics:
 
-	> Opkg update
+	> opkg update
 	> opkg install i2c-tools
-	>	opkg install kmod-i2c-gpio-custom
+	>opkg install kmod-i2c-gpio-custom
 	
 	Installing kmod-i2c-gpio-custom (3.3.8-2) to root...
 	Downloading http://192.168.1.100/downloads.openwrt.org/snapshots/trunk/ar71xx/packages/kmod-i2c-gpio-custom_3.3.8-2_ar71xx.ipk.
@@ -111,7 +111,7 @@ too. But I really need it.
 **So now what? **
 
 Left over from
-[my experiments with compiling OpenWRT on OS X](Compiling gstreamer
+[my experiments with compiling OpenWRT on OS X](../technology/Compiling gstreamer
 for C920 webcam.html) was a local compile directory that actually
 successfully compiles. So I went in there and did a `make
 menuconfig`. When I installed all the I2C stuff, it automatically
@@ -120,9 +120,9 @@ compiles the matchin object file. But no `.ipk` to match. Where did it
 go...?
 
 After a bit of searching it was
-found. `build_dir/linuxxxx/modles.builtin` tells exactly where it
-went: into the kernel (built-in, not as a module). Actually, loads
-went into the kernel built-in. Here's a list:
+found. `trunk/build_dir/linux-ar71xx_generic/linux-3.3.8/modules.builtin`
+tells exactly where it went: into the kernel (built-in, not as a
+module). Here's a list of all the stuff that was builtin:
 
 	kernel/fs/jffs2/jffs2.ko
 	kernel/fs/overlayfs/overlayfs.ko
@@ -222,7 +222,7 @@ But does it work?
 	
 Success?
 
-## The first IO test##
+# The first IO test#
 
 I made a breadboard with the `PCF8574` IO expander from Texas
 Instruments (also available from NXP, but TI gives free samples). It
@@ -232,12 +232,12 @@ the breadboard later, but it's mainly just the datasheet
 application. Later I switched to 5V and added level shifting MOSFETs,
 again, maybe some day I'll write it up.
 
-    # i2cdetect 0
+	# i2cdetect 0
 	WARNING! This program can confuse your I2C bus, cause data loss and worse!
 	I will probe file /dev/i2c-0.
 	I will probe address range 0x03-0x77.
 	Continue? [Y/n] 
-		 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+		  0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
 	00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
 	10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 	20: 20 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
@@ -263,7 +263,7 @@ does not get detected in any way. So only the `i2cdetect` output
 really confirms that something is there on the bus and responding. So let's test the GPIOs for
 confirmation.
 
-## Actually blinking LEDs ##
+# Actually blinking LEDs #
 
 Let's try to set one of the pins manually:
 
@@ -341,7 +341,7 @@ all. How does that look?
 
 <iframe width="640" height="480" src="http://www.youtube.com/embed/eJ91tw86p7I" frameborder="0"></iframe>
 
-## Input ##
+# Input #
 
 The next step is to use the input function. That will be the next update.
 

@@ -103,7 +103,7 @@ compile '*' do
     filter :erb
     case item[:extension]
        when 'md'
-       	    filter :kramdown
+       	    filter :maruku
     end
     layout 'default'
     filter :rubypants
