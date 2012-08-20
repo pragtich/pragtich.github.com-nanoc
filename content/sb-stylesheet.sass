@@ -1,5 +1,6 @@
-$backcolor: #bbbbbb
-$fgcolor: #000
+$backcolor: #000
+$accent: orange
+$fgcolor: #ccc
 $radius: 6px
 $height: 80%
 $top: 10%
@@ -19,55 +20,14 @@ body
 
 
 .title
+ width: 100%
+ margin-left: 20px
  font-family: Verdana, Arial, Helvetica, sans-serif
- font-size: 45px
+ font-size: 60px
  text-decoration: none
- color: #000000
- line-height: 75px
+ color: $fgcolor
+ background-color: $backcolor
+ line-height: 90px
+ .pragti-ch
+  color: $accent
 
-@mixin box-props($width)
- width: $width
- background: $fgcolor
-
- padding: 0
- position: fixed
- height: $height
- top: $top
- text-align: center
- -webkit-border-radius: $radius
- -moz-border-radius: $radius
- border-radius: $radius
- overflow: hidden
-
-.switchboard
- height: 100%
- margin: 10% 0
- padding: 0
- #left
-  clear: left
-  @include box-props($box1)
-  left: $boxmargin
- #middle
-  @include box-props($box2)
-  left: $box1 + 2 * $boxmargin
- #right
-  @include box-props($box3)
-  left: $box1 + $box2 + 3* $boxmargin
-
-img
- max-width: 100%
- max-height: 100%
- float: left
-
-a.kippy-hover
- display: block
- width: 409px
- height: 600px
- background-image: url('kippy-button.jpg')
- background-position: -409px 0px
- max-height: 100%
-a.kippy-hover:hover
- background-position: 0px 0px
-
-.footer
- .text-align: left
