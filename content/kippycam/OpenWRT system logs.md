@@ -39,4 +39,6 @@ with a flash drive), let's start with disk storage:
 	> /etc/init.d/boot restart
 	
 	
-That's it. A lot larger log file. 
+That's it. A lot larger log file is being kept on the USB stick.
+
+Another idea would be to add a network syslog server. Maybe later.
