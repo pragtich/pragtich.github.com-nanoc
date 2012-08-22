@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Pragtich: Compiling a modified GStreamer for the C920 webcam</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="http://members.home.nl/pragtich/atom.xml">
+</head>
+<body>
+  <titleframe><titlebar><div id="largetitle"> <a href="../../">Pragtich</a>
+</div>
+
+	<div id="secnav">
+
+	</div>
+	<div id="artnav">
+	</div> 
+	</titlebar></titleframe><article><!-- If there's no item title; we print no header, even if
+           there's a date. --><header><hgroup><h1 class="itemtitle">Compiling a modified GStreamer for the C920 webcam</h1>
+
+          
+          <h2 class="itemdate">19 Jul 2012</h2>
+          
+
+
+
+        </hgroup></header><summary>
+             The Logitech C920 offers H264 encoding onboard. But not many programs can make use of it. I am trying to compile a patched GStreamer module that allows streaming of H264 directly from the C920 camera….</summary><bodytext><h1 id="careful-work-in-progress">Careful: work in progress</h1>
+
+<p>** Careful here: I am logging what I did, but it is not working at
+  all **</p>
+
+<h1 id="satisfying-build-requirements">Satisfying build requirements</h1>
+
+<h2 id="packages">Packages</h2>
+
+<p>Basically, a matter of <code>make prereq</code> and <code>sudo fink install xxx</code> until
+all dependencies were met.</p>
+
+<h2 id="filesystem">Filesystem</h2>
+
+<p>The OpenWRT buildroot needs a case-sensitive filesystem and tells you
+that:</p>
+
+<pre><code>Build dependency: OpenWrt can only be built on a case-sensitive
+filesystem
+</code></pre>
+
+<p>The default OS X system is not case sensitive. There is a simple
+solution: create a separate disk image. As I found
+<a href="https://forum.openwrt.org/viewtopic.php?id=20914">here</a>:</p>
+
+<pre><code>hdiutil create -size 2048m -fs HFSX -volname openwrt openwrt
+# Later I had to do a resize: I needed ~ 8GB
+Doubleclick the dmg
+cd /Volumes/openwrt/
+tar cf - ~/openwrt | tar xfp -
+</code></pre>
+
+<p>Also, I found the following tips that may be necessary (?) in the same
+forum topic:</p>
+
+<pre><code>A couple notes on using MacOS X as a build environment that I've found so far:
+
+Package names for "port" that you may need:
+* gmake
+* gawk
+* gtar
+* coreutils
+* findutils
+* getopt
+* wget
+
+(There may be others, I can't easily do a "clean install" on Mac)
+
+$ export PATH="/opt/local/bin:$PATH"   # so that the GNU versions get picked up
+
+
+
+You may need to
+
+$ chmod +x scripts/md5sum    # appears to be "fixed" in current trunk
+
+
+As suggested by marca, update XTools and re-symlink (gcov not required, AFAIK, but consistency is good)
+
+/usr/bin/g++ -&gt; g++-4.2
+/usr/bin/gcc -&gt; gcc-4.2
+/usr/bin/gcov -&gt; gcov-4.2
+
+
+If you want to build the documentation, MacTeX will do it -- http://www.tug.org/mactex/
+(though there is no BSD-make wrapper in that directory, so gmake in the docs directory)
+</code></pre>
+
+<h1 id="compiling">Compiling</h1>
+
+<pre><code>make menuconfig
+
+# selected ar7xx, minimal profile, toolchain and sdk
+
+make V=99
+</code></pre>
+
+<p>In the first tries, I errored out due to the disk image being too
+small. I the end I resized it to 8GB and it worked:</p>
+
+<pre><code>hdiutil resize -size 8G openwrt.dmg
+</code></pre>
+
+<h1 id="getting-the-feeds">Getting the feeds</h1>
+
+<pre><code>scripts/feeds update -a
+scripts/feeds install gstreamer
+scripts/feeds install gst-plugins-good
+scripts/feeds install gst-plugins-bad
+scripts/feeds install gst-pluging-ugly
+</code></pre>
+
+<p>No problem!</p>
+
+<h1 id="compiling-the-feeds">Compiling the feeds</h1>
+
+<pre><code>make menuconfig
+sudo ln -s /usr/bin/true /bin/true    # Somewhere there's a direct
+path to true
+
+# select the packages that I want
+make V=99 package/gstreamer/compile
+# et cetera for the plugins
+</code></pre>
+ 
+</bodytext><footer></footer></article><nav><h2>Categories</h2>
+      <ul>
+<li>
+<a href="../../all_Computer%20stuff.html">Computer stuff</a> </li>
+
+
+
+   <li>
+<a href="../../all_Life.html">Life</a> </li>
+
+
+
+   <li>
+<a href="../../all_Kippycam.html">Kippycam</a> </li>
+
+
+
+      </ul>
+<h2>About</h2>
+      <ul>
+<li><a href="../../about/">About me</a></li>
+      </ul></nav>
+</body>
+</html>

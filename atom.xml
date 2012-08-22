@@ -2,13 +2,57 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>http://members.home.nl/pragtich/</id>
   <title>Joris Pragt's blog feed</title>
-  <updated>2012-08-14T22:00:00Z</updated>
+  <updated>2012-08-21T22:00:00Z</updated>
   <link rel="alternate" href="http://members.home.nl/pragtich/"/>
   <link rel="self" href="http://members.home.nl/pragtich/atom.xml"/>
   <author>
     <name>Joris Pragt</name>
     <uri>http://members.home.nl/pragtich</uri>
   </author>
+  <entry>
+    <id>tag:members.home.nl,2012-08-22:/pragtich/kippycam/OpenWRT system logs.html</id>
+    <title type="html">System logging with OpenWRT</title>
+    <published>2012-08-21T22:00:00Z</published>
+    <updated>2012-08-21T22:00:00Z</updated>
+    <link rel="alternate" href="http://members.home.nl/pragtich/kippycam/OpenWRT system logs.html"/>
+    <content type="html">&lt;p&gt;I kept running into issues with the Kippycam server router
+crashing. Because the default syslog apparently is kept in memory,
+these crashes were hard to debug. So I tried to get better (permanent
+logging).&lt;/p&gt;
+
+&lt;p&gt;Since my router has ample storage space (it&amp;rsquo;s an extroot
+with a flash drive), let&amp;rsquo;s start with disk storage:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; vi /etc/config/system
+
+config system
+	option hostname 'Kippycam'
+	option zonename 'UTC'
+	option timezone 'GMT0'
+	option conloglevel '8'
+	option cronloglevel '8'
+	option log_file '/var/log/messages'
+	option log_size '2048'
+	option log_type 'file'
+
+config timeserver 'ntp'
+	list server '0.openwrt.pool.ntp.org'
+	list server '1.openwrt.pool.ntp.org'
+	list server '2.openwrt.pool.ntp.org'
+	list server '3.openwrt.pool.ntp.org'
+	option enable_server '0'
+
+config led
+	option default '0'
+
+&amp;gt; /etc/init.d/boot restart
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;rsquo;s it. A lot larger log file is being kept on the USB stick.&lt;/p&gt;
+
+&lt;p&gt;Another idea would be to add a network syslog server. Maybe later.&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:members.home.nl,2012-08-15:/pragtich/kippycam/Adding an I2C interface to the TL-WR703N.html</id>
     <title type="html">Adding an I2C interface to the TL-WR703N</title>
@@ -451,58 +495,6 @@ make toolchain/install
 </content>
   </entry>
   <entry>
-    <id>tag:members.home.nl,2012-07-13:/pragtich/kippycam/Openwrt connection checking.html</id>
-    <title type="html">Keeping Openwrt online using DHCP</title>
-    <published>2012-07-12T22:00:00Z</published>
-    <updated>2012-07-12T22:00:00Z</updated>
-    <link rel="alternate" href="http://members.home.nl/pragtich/kippycam/Openwrt connection checking.html"/>
-    <content type="html">&lt;p&gt;I noticed, when
-&lt;a href="network-layout.html"&gt;installing the WiFi network bridge to the garden shed&lt;/a&gt;,
-that the DHCP client does not reconnect when the connection has been
-lost. It just sits there (don&amp;rsquo;t know when it would reconnect, maybe
-when the lease expires?) unconnected. For my purpose, that&amp;rsquo;s not very
-satisfying, as I need the connection to be robust. &lt;/p&gt;
-
-&lt;p&gt;Since I had worked with &lt;code&gt;monit&lt;/code&gt; before, I figured this would be a
-great way to periodically check the state of the connection and
-re-enable it when it has dropped out. At a later date, &lt;code&gt;monit&lt;/code&gt; could
-also turn out to be helpful in making sure that all other services on
-the router remain healthy. &lt;/p&gt;
-
-&lt;h1 id="installing--configuring"&gt;Installing &amp;amp; configuring&lt;/h1&gt;
-
-&lt;pre&gt;&lt;code&gt;opkg update
-
-# I am getting the packages from my local copy of the trunk, just
-to have it all be consistent. That probably is only critical for
-the kernel modules packages, but let's do it for sake of
-simplicity
-
-opkg install monit
-
-vi /etc/monitrc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I added some sensible settings from the template that is in
-&lt;code&gt;/etc/monitrc&lt;/code&gt;, mainly to start as a daemon, put the work files in
-&lt;code&gt;/tmp&lt;/code&gt; and set the frequency of the checks. And the check for a
-connection:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;check host kiprouter with address 10.0.0.4                                     
-    if failed icmp type echo count 3 with timeout 3 seconds then
-	exec "/etc/init.d/network restart"
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then to enable and start monit:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/etc/init.d/monit enable
-/etc/init.d/monit start
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Testing results later&amp;hellip;&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
     <id>tag:members.home.nl,2012-07-13:/pragtich/technology/Aquamacs Notes.html</id>
     <title type="html">Some notes on using Aquamacs</title>
     <published>2012-07-12T22:00:00Z</published>
@@ -566,198 +558,55 @@ other applications like GNUS or VCS. Maybe I will too, some day.&lt;/p&gt;
 </content>
   </entry>
   <entry>
-    <id>tag:members.home.nl,2012-07-04:/pragtich/technology/Nanoc-Github-Pages.html</id>
-    <title type="html">Using Nanoc to fill Github Pages</title>
-    <published>2012-07-03T22:00:00Z</published>
-    <updated>2012-07-03T22:00:00Z</updated>
-    <link rel="alternate" href="http://members.home.nl/pragtich/technology/Nanoc-Github-Pages.html"/>
-    <content type="html">&lt;p&gt;Started out with an already-existing nanoc folder.&lt;/p&gt;
+    <id>tag:members.home.nl,2012-07-13:/pragtich/kippycam/Openwrt connection checking.html</id>
+    <title type="html">Keeping Openwrt online using DHCP</title>
+    <published>2012-07-12T22:00:00Z</published>
+    <updated>2012-07-12T22:00:00Z</updated>
+    <link rel="alternate" href="http://members.home.nl/pragtich/kippycam/Openwrt connection checking.html"/>
+    <content type="html">&lt;p&gt;I noticed, when
+&lt;a href="network-layout.html"&gt;installing the WiFi network bridge to the garden shed&lt;/a&gt;,
+that the DHCP client does not reconnect when the connection has been
+lost. It just sits there (don&amp;rsquo;t know when it would reconnect, maybe
+when the lease expires?) unconnected. For my purpose, that&amp;rsquo;s not very
+satisfying, as I need the connection to be robust. &lt;/p&gt;
 
-&lt;p&gt;I Installed git for mac using the standard installer supplied on
-git-scm.com (version 1.7.11.1) and created an account on github.&lt;/p&gt;
+&lt;p&gt;Since I had worked with &lt;code&gt;monit&lt;/code&gt; before, I figured this would be a
+great way to periodically check the state of the connection and
+re-enable it when it has dropped out. At a later date, &lt;code&gt;monit&lt;/code&gt; could
+also turn out to be helpful in making sure that all other services on
+the router remain healthy. &lt;/p&gt;
 
-&lt;p&gt;Created a repository called &lt;username&gt;.github.com&lt;/username&gt;&lt;/p&gt;
+&lt;h1 id="installing--configuring"&gt;Installing &amp;amp; configuring&lt;/h1&gt;
 
-&lt;p&gt;&lt;a href="http://schmurfy.github.com/2011/05/06/create_your_github_user_page_with_nanoc.html"&gt;Followed (approximately) this link&lt;/a&gt;
-although I made a few changes.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;opkg update
 
-&lt;p&gt;First of all, I already had a checkin, so could skip the first code
-box. I did rename the &lt;code&gt;master&lt;/code&gt; branch to &lt;code&gt;source&lt;/code&gt; and add a second remote:&lt;/p&gt;
+# I am getting the packages from my local copy of the trunk, just
+to have it all be consistent. That probably is only critical for
+the kernel modules packages, but let's do it for sake of
+simplicity
 
-&lt;pre&gt;&lt;code&gt;git branch -m master source
-git remote add pages https://github.com/&amp;lt;user&amp;gt;/&amp;lt;user&amp;gt;.github.com.git
-git push -u pages source
+opkg install monit
+
+vi /etc/monitrc
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The output sounds promising:&lt;/p&gt;
+&lt;p&gt;I added some sensible settings from the template that is in
+&lt;code&gt;/etc/monitrc&lt;/code&gt;, mainly to start as a daemon, put the work files in
+&lt;code&gt;/tmp&lt;/code&gt; and set the frequency of the checks. And the check for a
+connection:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;Counting objects: 102, done.
-Delta compression using up to 2 threads.
-Compressing objects: 100% (95/95), done.
-Writing objects: 100% (102/102), 237.00 KiB, done.
-Total 102 (delta 19), reused 0 (delta 0)
-To https://github.com/pragtich/pragtich.github.com.git
- * [new branch]      source -&amp;gt; source
-Branch source set up to track remote branch source from pages.
+&lt;pre&gt;&lt;code&gt;check host kiprouter with address 10.0.0.4                                     
+    if failed icmp type echo count 3 with timeout 3 seconds then
+	exec "/etc/init.d/network restart"
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The &lt;code&gt;source&lt;/code&gt; branch now holds the entire page source (including
-any output).&lt;/p&gt;
+&lt;p&gt;Then to enable and start monit:&lt;/p&gt;
 
-&lt;p&gt;Now I followed the cloning instructions quite rigidly (because I do
-not really understand them yet).&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# fetch a working copy of your repository
-  $ git clone https://github.com/&amp;lt;user&amp;gt;/&amp;lt;user&amp;gt;.github.com.git output
-  $ cd output
-# create the isolated branch
-  $ git symbolic-ref HEAD refs/heads/master
-  $ rm .git/index
-  $ git clean -fdx
+&lt;pre&gt;&lt;code&gt;/etc/init.d/monit enable
+/etc/init.d/monit start
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Then recreate the output files:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cd ..
-nanoc compile
-git commit -a
-git push pages
-cd output/
-git add *
-git commit
-git push origin master
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The &lt;code&gt;git push origin master&lt;/code&gt; part was tricky to figure out to me. It
-pushes the output folder&amp;rsquo;s content to it&amp;rsquo;s set remote origin (which
-came from the &lt;code&gt;clone&lt;/code&gt;, I assume. Adding the &lt;code&gt;master&lt;/code&gt; determines that
-the files are going into the &lt;code&gt;master&lt;/code&gt; branch (which is the leading
-branch for the GitHub Pages).&lt;/p&gt;
-
-&lt;p&gt;Finally, I did:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt; touch .nojekyll
- git add .nojekyll
- git commit
- 
- vi .gitignore       #add .nojekyll to this file
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This should put a .nojekyll file into the repository, that will not
-get clobbered when I nuke the output/ folder (I hope).&lt;/p&gt;
-
-&lt;p&gt;So now, the workflow is:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Update files in the &lt;code&gt;content/&lt;/code&gt; folder&lt;/li&gt;
-  &lt;li&gt;Compile and upload to test server (I use a rake file)&lt;/li&gt;
-  &lt;li&gt;Verify results&lt;/li&gt;
-  &lt;li&gt;In the source folder: &lt;code&gt;git commit -a; git push pages&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;In the output folder: &lt;code&gt;git commit -a; git push origin master&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;strong&gt;TODO&lt;/strong&gt;: Add a rakefile to auto-push both the source and the output once
-I have a satisfactory build.&lt;/p&gt;
-
-&lt;h1 id="pushing-using-nanoc-git"&gt;Pushing using nanoc-git&lt;/h1&gt;
-
-&lt;p&gt;I am playing with nanoc-git. I found it through a Google search. It&amp;rsquo;s
-maker claims it to be alpha-level software. Let&amp;rsquo;s see. It lives
-&lt;a href="https://github.com/cspicker/nanoc-git"&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The script does rebuild the output folder implicitly. So it breaks the
-prototyping build thing that I have described above. Maybe I&amp;rsquo;ll try to
-rewrite it to allow some kind of prototyping, or maybe I will stick
-with the plan before. I will see. Good thing I&amp;rsquo;m keeping this blog,
-because I tend to forget each syntax before I get to use it again.&lt;/p&gt;
-
-&lt;p&gt;For sake of documentation, I did the following:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Updated &lt;code&gt;config.yaml&lt;/code&gt;:&lt;/p&gt;
-
-    &lt;pre&gt;&lt;code&gt;  # Additions for nanoc-git: http://graysky.org/2008/12/git-branch-auto-tracking/
-  deploy:
-    default:
-      dst_remote: pages
-      dst_branch: master
-      src_branch: source
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Installed nanoc-git:&lt;/p&gt;
-
-    &lt;pre&gt;&lt;code&gt;   gem install nanoc-git
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Edited &lt;code&gt;Rakefile&lt;/code&gt;&lt;/p&gt;
-
-    &lt;pre&gt;&lt;code&gt;  require 'nanoc-git/tasks'
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Then, to execute: `rake deploy:git&amp;rsquo; should &lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Clean the nanoc site&lt;/li&gt;
-  &lt;li&gt;Check out the source (&lt;code&gt;source&lt;/code&gt;) from &lt;code&gt;git&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Compile the site using &lt;code&gt;nanoc&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Check out the destination (&lt;code&gt;master&lt;/code&gt;) from &lt;code&gt;git&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Copy all the files from the &lt;code&gt;output/&lt;/code&gt; folder to the root of
-&lt;code&gt;master&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Commit in &lt;code&gt;git&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Push to the remote &lt;code&gt;master&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Check the source back out&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;A possible workflow could be:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# Edit the file 
-git add &amp;lt;file&amp;gt;
-git commit 
-rake co  #this is my prototyping (sitecopy) rake
-
-# Check: ok?
-
-rake deploy:git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;or another option:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# Edit the file 
-rake co  #this is my prototyping (sitecopy) rake
-
-# Check: ok?
-
-git add &amp;lt;file&amp;gt;
-git commit 
-
-rake deploy:git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id="getting-a-domain-name"&gt;Getting a domain name&lt;/h1&gt;
-
-&lt;p&gt;I registered &lt;code&gt;pragti.ch&lt;/code&gt; at &lt;a href="http://nic.ch"&gt;nic.ch&lt;/a&gt; and organized a
-free DNS service to do the DNS hosting. Then, tried to set up the
-CNAME following
-&lt;a href="https://help.github.com/articles/setting-up-a-custom-domain-with-pages"&gt;the documentation at Github&lt;/a&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout master
-vi CNAME
-# just one line: 
-# pragti.ch
-
-git add CNAME
-git commit
-git push pages
-git checkout source
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Did not work immediately, but many times DNS can take some time to
-update. Let&amp;rsquo;s wait and see.&lt;/p&gt;
+&lt;p&gt;Testing results later&amp;hellip;&lt;/p&gt;
 </content>
   </entry>
 </feed>

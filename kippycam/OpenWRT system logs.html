@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Pragtich: System logging with OpenWRT</title>
+<link rel="stylesheet" type="text/css" href="../stylesheet.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="http://members.home.nl/pragtich/atom.xml">
+</head>
+<body>
+  <titleframe><titlebar><div id="largetitle"> <a href="../">Pragtich</a>
+</div>
+
+	<div id="secnav">
+
+	</div>
+	<div id="artnav">
+	</div> 
+	</titlebar></titleframe><article><!-- If there's no item title; we print no header, even if
+           there's a date. --><header><hgroup><h1 class="itemtitle">System logging with OpenWRT</h1>
+
+          
+          <h2 class="itemdate">22 Aug 2012</h2>
+          
+
+
+
+        </hgroup></header><summary>
+             Playing around with the syslogd settings in OpenWRT so that debugging is easier…</summary><bodytext><p>I kept running into issues with the Kippycam server router
+crashing. Because the default syslog apparently is kept in memory,
+these crashes were hard to debug. So I tried to get better (permanent
+logging).</p>
+
+<p>Since my router has ample storage space (it’s an extroot
+with a flash drive), let’s start with disk storage:</p>
+
+<pre><code>&gt; vi /etc/config/system
+
+config system
+	option hostname 'Kippycam'
+	option zonename 'UTC'
+	option timezone 'GMT0'
+	option conloglevel '8'
+	option cronloglevel '8'
+	option log_file '/var/log/messages'
+	option log_size '2048'
+	option log_type 'file'
+
+config timeserver 'ntp'
+	list server '0.openwrt.pool.ntp.org'
+	list server '1.openwrt.pool.ntp.org'
+	list server '2.openwrt.pool.ntp.org'
+	list server '3.openwrt.pool.ntp.org'
+	option enable_server '0'
+
+config led
+	option default '0'
+
+&gt; /etc/init.d/boot restart
+</code></pre>
+
+<p>That’s it. A lot larger log file is being kept on the USB stick.</p>
+
+<p>Another idea would be to add a network syslog server. Maybe later.</p>
+ 
+</bodytext><footer></footer></article><nav><h2>Categories</h2>
+      <ul>
+<li>
+<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
+
+
+
+   <li>
+<a href="../all_Life.html">Life</a> </li>
+
+
+
+   <li>
+<a href="../all_Kippycam.html">Kippycam</a> </li>
+
+
+
+      </ul>
+<h2>About</h2>
+      <ul>
+<li><a href="../about/">About me</a></li>
+      </ul></nav>
+</body>
+</html>
