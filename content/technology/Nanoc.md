@@ -5,6 +5,7 @@ category: Computer stuff
 created_at: November 12, 2011
 indeximage: Nanoc_index.jpg
 summary: "How I used Nanoc to create this personal webpage"
+comment_id: nanoc
 ---
 
 I have previously played around with different systems for creating a personal webpage. Working in HTML quickly frustrated me because it is in essence illegible. Also, it made no sense to me to have to repeat all the layout and navigation stuff in each page.

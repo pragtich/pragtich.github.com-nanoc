@@ -1,4 +1,5 @@
 --- 
+comment_id: wr703n-i2c
 title: Adding an I2C interface to the TL-WR703N
 kind: article
 category: Kippycam

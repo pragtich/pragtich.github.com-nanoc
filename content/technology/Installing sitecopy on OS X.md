@@ -3,7 +3,9 @@ title: Installing sitecopy on OS X Snow Leopard and using it with Nanoc
 kind: article
 category: Computer stuff
 created_at: November 12, 2011
-summary: "I use Sitecopy to upload my Nanoc site to the server. This is how I managed to do it."
+summary: "I use Sitecopy to upload my Nanoc site to the server. This
+is how I managed to do it."
+comment_id: sitecopy
 ---
 
 In order to sync my nanoc site to my provider's server, I have installed sitecopy. Sitecopy requires one of the ports packages. I chose fink, but Darwinports should also work I guess.

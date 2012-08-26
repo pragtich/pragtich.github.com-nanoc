@@ -4,7 +4,9 @@ kind: article
 category: Computer stuff
 created_at: 14 Nov 2011
 index_image: Nanoc_index.jpg
-summary: "How I installed Template.el to help make blogging quick in Emacs"
+summary: "How I installed Template.el to help make blogging quick in
+Emacs"
+comment_id: template-mode
 ---
 
 

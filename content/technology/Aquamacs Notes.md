@@ -3,7 +3,9 @@ title: Some notes on using Aquamacs
 kind: article
 category: Computer stuff
 created_at: 13 Jul 2012
-summary: Because I keep forgetting all the little details, I am writing them down.
+summary: "Because I keep forgetting all the little details, I am
+writing them down."
+comment_id: aquamacs
 ---
 Aquamacs is a great text editor for OS X. It does, however, have its
 idiosyncrises. So, here I am keeping notes on what worked for me.

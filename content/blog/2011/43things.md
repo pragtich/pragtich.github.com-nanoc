@@ -4,6 +4,7 @@ kind: article
 category: Life
 created_at: 22 Nov 2011
 summary: I started a list of things I want to do some time on 43things.org.
+comment_id: 43things
 ---
 I have been having a nagging sense that I have way too many dreams and am not doing much about most of them. It's always been taking the next step, and following the clear path forward. Most of this is because of my 'in the box' thinking, I think. I did not grow up with the talent of seeing big opportunities, of beleiving that the imaginable _can actually be realized_. At times this has been a great burden on things, but recognition has led to increasing understanding, and it's getting easier and easier to actually _follow the dream_.
 

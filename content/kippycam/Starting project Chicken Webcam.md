@@ -4,6 +4,7 @@ kind: article
 category: Kippycam
 created_at: 04 Jun 2012
 summary: "I am starting a new project: a solar-powered webcam in the chicken coop."
+comment_id: kippycam
 ---
 
 I have started a new project: I want to make a webcam in the chicken coop. The poor chickens are out there all day, out of sight of the house. And when we're away, it would be good to be able to check on them now and then, and make sure that they're not getting up to any mischief. Wouldn't it be cool to be able to snap pictures when they're up to no good (like eating that mouse they found, or jumping over the fence, again....)? And it would be a great step towards all kinds of cool automation projects, starting with automatic door closing at night.

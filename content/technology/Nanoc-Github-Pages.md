@@ -3,7 +3,9 @@ title: Using Nanoc to fill Github Pages
 kind: article
 category: Computer stuff
 created_at: 04 Jul 2012
-summary: "Learning to use git to update GitHub Pages -- a free web server."
+summary: "Learning to use git to update GitHub Pages -- a free web
+server."
+comment_id: nanoc-github
 ---
 Started out with an already-existing nanoc folder.
 

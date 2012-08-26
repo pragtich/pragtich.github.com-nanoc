@@ -4,6 +4,7 @@ kind: article
 category: Kippycam 
 created_at: 22 Jun 2012
 summary: "It took quite some work to get a network connection in the garden. How did I manage?"
+comment_id: garden-network
 ---
 
 # The problem #
