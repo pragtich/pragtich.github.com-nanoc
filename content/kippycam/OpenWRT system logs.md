@@ -4,6 +4,7 @@ kind: article
 category: Kippycam
 created_at: 22 Aug 2012
 summary: "Playing around with the syslogd settings in OpenWRT so that debugging is easier"
+comment_id: openwrt-syslog
 ---
 
 I kept running into issues with the Kippycam server router

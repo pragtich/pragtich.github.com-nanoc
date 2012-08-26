@@ -85,18 +85,25 @@
    <%=yield%> 
 </bodytext>
       <footer>
-        <% if @item[:vc_url] %>
+        <% if @item[:comment_id] %>
         <p>
-          You can see for yourself how <a href="<%= @config[:vc_root_url] %><%= @item[:vc_url] %>">this page has changed over time</a>.
+  <div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'pragtich'; // required: replace example with your forum shortname
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
         </p>
         <% end %>
-
-        <% if item[:vc_url] %>
-        <p><a href="http://html5.validator.nu/?doc=http%3A%2F%2Fschof.org/<%= @item[:vc_url].chomp('.html') %>">Validate this page as HTML5.</a></p>
-        <% end %>
-
-
-
       </footer>
 
     </article>
