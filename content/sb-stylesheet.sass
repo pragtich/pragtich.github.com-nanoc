@@ -1,6 +1,7 @@
 $fgcolor: #bbb
 $backcolor: #000
 $accent: orange
+$hover: #222
 
 html
  height: 100%
@@ -24,7 +25,7 @@ a.button
  font-family: Verdana, Arial, Helvetica, sans-serif
  font-size: 16px
  width: 70%
- margin: 5% 10%
+ margin: 2% 10%
  color: $fgcolor
  height: 8em
  display: block
@@ -32,15 +33,16 @@ a.button
  border-radius: 1em
 
 a.button:hover
- background-color: #111
+ background-color: $hover
  color: #eee
 
 img
- height: 100% 
+ max-height: 100% 
  float: left
 
  vertical-align: middle
  max-height: 100%
+ 
   
   
 .txt
