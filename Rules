@@ -32,14 +32,14 @@ preprocess do
   	  @items << Nanoc3::Item.new(
                                  "<%= render 'index_page'%>",
                                  {:myarts => articles_index, :title => "Index of articles (1..#{@config[:index_count]})"},
-                                 "/"
+                                 "/blog/"
  	  )
 
   # Create index overflow
   	  @items << Nanoc3::Item.new(
         "<%= render 'index_page' %>",
     	{:myarts => sorted_articles, :title => "Complete index of all articles" },
-    	"/all_articles/"
+    	"/blog/all_articles/"
   	  )
   end
 
@@ -54,7 +54,7 @@ preprocess do
 	      items << Nanoc3::Item.new(
                                 "<%= render 'category_page', :my_category => \"#{name}\" %>",
                                 { :title => "#{name}"},
-                                "/all_#{name}/"
+                                "/blog/all_#{name}/"
       )
     end
   end
@@ -75,16 +75,19 @@ preprocess do
 end
 
 
-layout '/index_page/', :erb
+layout '/blog/index_page/', :erb
 
-layout '/category_page/', :erb
+layout '/blog/category_page/', :erb
 
 compile '/stylesheet/' do
   #nothing
 end
 
+compile '/sb-stylesheet/' do
+  filter :sass
+end
 
-compile '/all_*/' do 
+compile '/blog/all_*/' do 
 		filter :erb
 		layout 'default'
 		filter :relativize_paths, :type => :html 
@@ -95,8 +98,8 @@ compile '/atom/' do
   filter :erb
 end
 
-
-compile '*' do
+# Blog folder: this compile rule started as a copy of the '*' rule
+compile '/blog/*' do
   if item.binary?
     # don’t filter binary items
   else 
@@ -112,12 +115,57 @@ compile '*' do
   end
 end
 
+layout '/switchboard/', :haml, :format => :html5
+
+# Match the index page to make my switchboard.
+compile '/' do
+  if item.binary?
+    # don’t filter binary items
+  else 
+    filter :erb
+    case item[:extension]
+        when 'md'
+       	    filter :kramdown
+        when 'haml'
+       	    filter :haml
+    end
+    layout 'switchboard'
+    filter :rubypants
+	filter :relativize_paths, :type => :html 
+    
+  end
+end
+
+# The default processor for anything that did not match before
+compile '*' do
+  if item.binary?
+    # don’t filter binary items
+  else 
+    filter :erb
+    case item[:extension]
+        when 'md'
+       	    filter :kramdown
+        when 'haml'
+       	    filter :haml
+    end
+    layout 'default'
+    filter :rubypants
+	filter :relativize_paths, :type => :html 
+    
+  end
+end
+
+
+
 
 route '/atom/' do
   '/atom.xml'
 end
 route '/stylesheet/' do
   '/stylesheet.css'
+end
+route '/sb-stylesheet/' do
+  '/sb-stylesheet.css'
 end
 
 route '/' do

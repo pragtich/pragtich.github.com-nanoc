@@ -10,7 +10,8 @@ pages = @item[:myarts]
  <IMG SRC="<%= relative_path_to(pic_path) %>"/>
  <% end %>
 
-<%= link_to(article[:title], article) %>
+<%=
+link_to(article[:title], article) %>
 
 <H2 class="itemdate"><%= article[:created_at] %></H2>
 
@@ -21,7 +22,7 @@ pages = @item[:myarts]
 
 <indexmore>
 <%= 
-  myitem = @items.find { |i| i.identifier == '/all_articles/' }
+  myitem = @items.find { |i| i.identifier == '/blog/all_articles/' }
   link_to('All older articles...', myitem)
 %>
 </indexmore>
