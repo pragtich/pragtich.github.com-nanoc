@@ -4,6 +4,8 @@
 # Mac stuff
 .DS_Store
 
+# Sass cache
+.sass-cache/
 
 # Default location for output, needs to match output_dir's value found in config.yaml
 #
