@@ -1,37 +1,46 @@
 html {
-  height: 100%;
-  margin: 0; }
+  height: 100%; }
 
 body {
   background-color: black;
-  height: 100%;
-  margin: 0;
-  margin-left: 20px; }
+  height: 100%; }
 
 .title {
-  width: 100%;
-  margin-left: 20px;
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 60px;
+  font-size: 450%;
+  margin-left: 0.75em;
+  margin-top: 0.5em;
   text-decoration: none;
-  color: #cccccc;
-  background-color: black;
-  line-height: 90px; }
+  color: #bbbbbb;
+  background-color: black; }
   .title .pragti-ch {
     color: orange; }
 
-.content {
+a.button {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  color: #cccccc;
-  margin-left: 24px;
-  margin-top: 40px;
-  margin-bottom: 30px; }
+  font-size: 100%;
+  width: 70%;
+  margin: 2% 10%;
+  color: #bbbbbb;
+  height: 10em;
+  display: block;
+  text-decoration: none;
+  border-radius: 1em; }
 
-.item {
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  color: #cccccc;
-  margin-left: 24px; }
-  .item img {
-    border: 0; }
+a.button:hover {
+  background-color: #222222;
+  color: #eeeeee; }
+
+img {
+  float: left;
+  vertical-align: middle;
+  max-height: 8em;
+  margin-top: 1em;
+  margin-left: 1em; }
+
+.txt {
+  margin-left: 3em;
+  line-height: 10em; }
+
+.footer {
+  clear: both; }
