@@ -114,6 +114,7 @@
     <nav>
       <h2>Categories</h2>
       <ul>
+		   <li><%= link_to( "All articles", "/blog/all_articles.html"  ) %> </li>
 <%
    $cats.each do |name, cat|
 		# @my_art = @items.find { |i| i.identifier == '/blog/all_#{name}/'}
