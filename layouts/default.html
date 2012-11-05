@@ -116,12 +116,12 @@
       <ul>
 <%
    $cats.each do |name, cat|
-		# @my_art = @items.find { |i| i.identifier == '/all_#{name}/'}
+		# @my_art = @items.find { |i| i.identifier == '/blog/all_#{name}/'}
 		# Does not work because we are rendering the alls_#{name}
 		# stuff before the pages have been created!
 		
 %>
-   <li><%= link_to( name, "/all_#{name}.html"  ) %> </li>
+   <li><%= link_to( name, "/blog/all_#{name}.html"  ) %> </li>
 
 
 <% end %>
