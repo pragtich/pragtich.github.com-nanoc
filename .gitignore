@@ -11,7 +11,7 @@
 # readded it: the source and master repos should not copy or delete these files. nanoc-git will do the copying for me
 output/
 
-#.sass-cache/
+.sass-cache/
 crash.log
 
 # Temporary file directory
