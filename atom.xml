@@ -2,13 +2,145 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>http://members.home.nl/pragtich/</id>
   <title>Joris Pragt's blog feed</title>
-  <updated>2012-09-21T22:00:00Z</updated>
+  <updated>2012-12-14T23:00:00Z</updated>
   <link href="http://members.home.nl/pragtich/" rel="alternate"/>
   <link href="http://members.home.nl/pragtich/atom.xml" rel="self"/>
   <author>
     <name>Joris Pragt</name>
     <uri>http://members.home.nl/pragtich</uri>
   </author>
+  <entry>
+    <id>tag:members.home.nl,2012-12-15:/pragtich/blog/technology/GNU Emacs 24.html</id>
+    <title type="html">Switching to GNU Emacs 24 on Mac OS X</title>
+    <published>2012-12-14T23:00:00Z</published>
+    <updated>2012-12-14T23:00:00Z</updated>
+    <link href="http://members.home.nl/pragtich/blog/technology/GNU Emacs 24.html" rel="alternate"/>
+    <content type="html">&lt;h1 id="introduction"&gt;Introduction&lt;/h1&gt;
+
+&lt;p&gt;I downloaded the native Cocoa emacs &lt;a href="http://emacsformacosx.com/"&gt;from here&lt;/a&gt;. Since the new version 24, GNU Emacs is supposed to really work well in OS X. So I am trying what happens if I ditch Aquamacs for GNU Emacs 24. This is how I&amp;rsquo;m getting on.&lt;/p&gt;
+
+&lt;h1 id="starting-up"&gt;Starting up&lt;/h1&gt;
+
+&lt;p&gt;Emacs.app does not deliver the standard startup scripts where you
+would expect them. And sadly, when you simply &lt;code&gt;ln -s&lt;/code&gt; the Emacs files
+to &lt;code&gt;/usr/local/bin&lt;/code&gt; or &lt;code&gt;/usr/bin&lt;/code&gt;, it breaks with a very unfriendly
+error message that actually refers to folders that do not exist on
+this system, but did on the build system!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; Joris-Pragts-MacBook:bin pragtich$ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
+ Joris-Pragts-MacBook:bin pragtich$ ./emacs
+ Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.
+ Warning: arch-independent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/) does not exist.
+ Error: charsets directory not found:
+ /Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/charsets
+ Emacs will not function correctly without the character map files.
+ Please check your installation!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is due to the relocatability of the App, and apparently it does
+not handle being launched from the wrong place
+properly. &lt;a href="https://github.com/mxcl/homebrew/issues/6661"&gt;The homebrew people&lt;/a&gt;
+have looked at this and concluded that it is a bug in Emacs. And
+&lt;a href="http://trac.macports.org/ticket/36502"&gt;the Macports people have also found it&lt;/a&gt;. &lt;/p&gt;
+
+&lt;p&gt;I came a long way using the strategies that some of the people on the
+web were using, namely with wrapper scripts or functions. Problem is
+that these use the OS X builtin &lt;code&gt;open&lt;/code&gt;, which has several
+limitations. For one, it does not allow to load nonexistent files so
+you need to make the nonexistent files yourself and delete them
+afterwards if not edited. And it breaks the &lt;code&gt;-nw&lt;/code&gt; option (which you
+use to get a text console instead of a graphical frame).&lt;/p&gt;
+
+&lt;h1 id="solution"&gt;Solution&lt;/h1&gt;
+
+&lt;h2 id="editing-my-path"&gt;Editing my PATH&lt;/h2&gt;
+
+&lt;p&gt;In the end, the solution is quite easy. Just gave up and added the
+Emacs.app folder to early in my &lt;code&gt;PATH&lt;/code&gt;. So, added to &lt;code&gt;~/.bashrc&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
+export PATH
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Strangely, the Emacs.app executable is called &lt;code&gt;Emacs&lt;/code&gt; instead of the
+normal &lt;code&gt;emacs&lt;/code&gt;. Thankfully, the OS X filesystem is case-insensitive by
+default, so it works to type &lt;code&gt;emacs&lt;/code&gt; anyway.&lt;/p&gt;
+
+&lt;h2 id="removing-the-old-files-and-referring-to-the-right-emacsclient"&gt;Removing the old files and referring to the right emacsclient&lt;/h2&gt;
+
+&lt;p&gt;The standard emacs that comes with OS X is very old and you really do
+not want the confusion between the two versions. So, I did:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo mv /usr/bin/emacs /usr/bin/emacs.orig
+sudo mv /usr/bin/emacsclient /usr/bin/emacsclient.orig
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And then it is a good idea to put the new &lt;code&gt;emacsclient&lt;/code&gt; in a standard
+location (but not &lt;code&gt;/usr/bin&lt;/code&gt;, because this is a system place that
+could get overwritten whenever Apple wants to):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emacsclient
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="setting-up-some-aliases"&gt;Setting up some aliases&lt;/h2&gt;
+
+&lt;p&gt;In my &lt;code&gt;~/.bash_profile&lt;/code&gt;, I setup some environment variables to allow
+easy access to the editor through the alial &lt;code&gt;e&lt;/code&gt;. This should
+automatically launch emacs when it is not yet running, or connect to
+it using &lt;code&gt;emacsclient&lt;/code&gt; if it is. &lt;/p&gt;
+
+&lt;p&gt;I also fill some editor variables that tell other programs that they
+should launch emacs when they want to edit a file. This is my
+&lt;code&gt;~/.bash_profile&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+		. ~/.bashrc
+fi
+
+# Read autocomplete stuff if present
+if [ -f /sw/etc/bash_completion ]; then
+		. /sw/etc/bash_completion
+fi
+
+test -r /sw/bin/init.sh &amp;amp;&amp;amp; . /sw/bin/init.sh
+
+export EDITOR="emacsclient -a emacs"
+export VISUAL=$EDITOR
+export GIT_EDITOR="$VISUAL +0"
+
+alias e=$VISUAL
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id="setting-up-server-mode"&gt;Setting up server mode&lt;/h2&gt;
+
+&lt;p&gt;To start the emacs server when emacs starts, you need to add the following to &lt;code&gt;~/.emacs&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(server-start)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id="migrating-my-settings"&gt;Migrating my settings&lt;/h1&gt;
+
+&lt;p&gt;I am converting from Aquamacs to Emacs 24, so I need to convert my setting file. Aquamacs keeps its settings in the Library: &lt;code&gt;~/Library/Preferences/Aquamacs Emacs/Preferences.el&lt;/code&gt; and Emacs keeps the settings in the standard location &lt;code&gt;~/.emacs&lt;/code&gt;. &lt;/p&gt;
+
+&lt;p&gt;I just copied everything in my Preferences.el underneath the skeleton &lt;code&gt;.emacs&lt;/code&gt; that Emacs 24 had created for me, which contained next to nothing but some default tab settings and some code to enable the &lt;code&gt;ELPA&lt;/code&gt; package manager.&lt;/p&gt;
+
+&lt;p&gt;There are probably some things that I do that are obsolete, but I will sort that out later. For example, Emacs 24 has a built in color theme manager, and I am still referring to an older package. I will try to work with it like this for now, and study the changes as time goes by.&lt;/p&gt;
+
+&lt;h2 id="some-differences"&gt;Some differences&lt;/h2&gt;
+
+&lt;p&gt;It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let&amp;rsquo;s get rid of the startup screen that shows together with your first file (I know how to get help anyway).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(setq inhibit-startup-echo-area-message t)
+(setq inhibit-startup-message t)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, raising of the windows seems not to be automatic. Whenever I start Emacs from the Terminal, I need to CMD-Tab there. Annoying as hell. &lt;a href="http://stackoverflow.com/questions/945709/emacs-23-os-x-multi-tty-and-emacsclient"&gt;The fix was quite easy, thankfully&lt;/a&gt;. &lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(select-frame-set-input-focus (nth 0 (frame-list)))
+&lt;/code&gt;&lt;/pre&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:members.home.nl,2012-09-22:/pragtich/blog/kippycam/OpenWRT on the TL-WR703N.html</id>
     <title type="html">Installing OpenWRT on a TL-WR703N router using a USB stick as storage</title>
@@ -1172,58 +1304,6 @@ path to true
 make V=99 package/gstreamer/compile
 # et cetera for the plugins
 &lt;/code&gt;&lt;/pre&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:members.home.nl,2012-07-13:/pragtich/blog/kippycam/Openwrt connection checking.html</id>
-    <title type="html">Keeping Openwrt online using DHCP</title>
-    <published>2012-07-12T22:00:00Z</published>
-    <updated>2012-07-12T22:00:00Z</updated>
-    <link href="http://members.home.nl/pragtich/blog/kippycam/Openwrt connection checking.html" rel="alternate"/>
-    <content type="html">&lt;p&gt;I noticed, when
-&lt;a href="network-layout.html"&gt;installing the WiFi network bridge to the garden shed&lt;/a&gt;,
-that the DHCP client does not reconnect when the connection has been
-lost. It just sits there (don&amp;rsquo;t know when it would reconnect, maybe
-when the lease expires?) unconnected. For my purpose, that&amp;rsquo;s not very
-satisfying, as I need the connection to be robust. &lt;/p&gt;
-
-&lt;p&gt;Since I had worked with &lt;code&gt;monit&lt;/code&gt; before, I figured this would be a
-great way to periodically check the state of the connection and
-re-enable it when it has dropped out. At a later date, &lt;code&gt;monit&lt;/code&gt; could
-also turn out to be helpful in making sure that all other services on
-the router remain healthy. &lt;/p&gt;
-
-&lt;h1 id="installing--configuring"&gt;Installing &amp;amp; configuring&lt;/h1&gt;
-
-&lt;pre&gt;&lt;code&gt;opkg update
-
-# I am getting the packages from my local copy of the trunk, just
-to have it all be consistent. That probably is only critical for
-the kernel modules packages, but let's do it for sake of
-simplicity
-
-opkg install monit
-
-vi /etc/monitrc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I added some sensible settings from the template that is in
-&lt;code&gt;/etc/monitrc&lt;/code&gt;, mainly to start as a daemon, put the work files in
-&lt;code&gt;/tmp&lt;/code&gt; and set the frequency of the checks. And the check for a
-connection:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;check host kiprouter with address 10.0.0.4                                     
-    if failed icmp type echo count 3 with timeout 3 seconds then
-	exec "/etc/init.d/network restart"
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then to enable and start monit:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/etc/init.d/monit enable
-/etc/init.d/monit start
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Testing results later&amp;hellip;&lt;/p&gt;
 </content>
   </entry>
 </feed>

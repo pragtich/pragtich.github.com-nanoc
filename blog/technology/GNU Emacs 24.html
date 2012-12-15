@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Pragtich: Switching to GNU Emacs 24 on Mac OS X</title>
+<link rel="stylesheet" type="text/css" href="../../stylesheet.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="http://members.home.nl/pragtich/atom.xml">
+</head>
+<body>
+  <titleframe><titlebar><div id="largetitle"> <a href="../../">Pragtich</a>
+</div>
+
+	<div id="secnav">
+
+	</div>
+	<div id="artnav">
+	</div> 
+	</titlebar></titleframe><article><!-- If there's no item title; we print no header, even if
+           there's a date. --><header><hgroup><h1 class="itemtitle">Switching to GNU Emacs 24 on Mac OS X</h1>
+
+          
+          <h2 class="itemdate">15 Dec 2012</h2>
+          
+
+
+
+        </hgroup></header><summary>
+             The new GNU Emacs 24 has native Cocoa support, so I wanted to switch. Not completely trivial, but possible….</summary><bodytext><h1 id="introduction">Introduction</h1>
+
+<p>I downloaded the native Cocoa emacs <a href="http://emacsformacosx.com/">from here</a>. Since the new version 24, GNU Emacs is supposed to really work well in OS X. So I am trying what happens if I ditch Aquamacs for GNU Emacs 24. This is how I’m getting on.</p>
+
+<h1 id="starting-up">Starting up</h1>
+
+<p>Emacs.app does not deliver the standard startup scripts where you
+would expect them. And sadly, when you simply <code>ln -s</code> the Emacs files
+to <code>/usr/local/bin</code> or <code>/usr/bin</code>, it breaks with a very unfriendly
+error message that actually refers to folders that do not exist on
+this system, but did on the build system!</p>
+
+<pre><code> Joris-Pragts-MacBook:bin pragtich$ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
+ Joris-Pragts-MacBook:bin pragtich$ ./emacs
+ Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.
+ Warning: arch-independent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/) does not exist.
+ Error: charsets directory not found:
+ /Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/charsets
+ Emacs will not function correctly without the character map files.
+ Please check your installation!
+</code></pre>
+
+<p>This is due to the relocatability of the App, and apparently it does
+not handle being launched from the wrong place
+properly. <a href="https://github.com/mxcl/homebrew/issues/6661">The homebrew people</a>
+have looked at this and concluded that it is a bug in Emacs. And
+<a href="http://trac.macports.org/ticket/36502">the Macports people have also found it</a>. </p>
+
+<p>I came a long way using the strategies that some of the people on the
+web were using, namely with wrapper scripts or functions. Problem is
+that these use the OS X builtin <code>open</code>, which has several
+limitations. For one, it does not allow to load nonexistent files so
+you need to make the nonexistent files yourself and delete them
+afterwards if not edited. And it breaks the <code>-nw</code> option (which you
+use to get a text console instead of a graphical frame).</p>
+
+<h1 id="solution">Solution</h1>
+
+<h2 id="editing-my-path">Editing my PATH</h2>
+
+<p>In the end, the solution is quite easy. Just gave up and added the
+Emacs.app folder to early in my <code>PATH</code>. So, added to <code>~/.bashrc</code>:</p>
+
+<pre><code>PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
+export PATH
+</code></pre>
+
+<p>Strangely, the Emacs.app executable is called <code>Emacs</code> instead of the
+normal <code>emacs</code>. Thankfully, the OS X filesystem is case-insensitive by
+default, so it works to type <code>emacs</code> anyway.</p>
+
+<h2 id="removing-the-old-files-and-referring-to-the-right-emacsclient">Removing the old files and referring to the right emacsclient</h2>
+
+<p>The standard emacs that comes with OS X is very old and you really do
+not want the confusion between the two versions. So, I did:</p>
+
+<pre><code>sudo mv /usr/bin/emacs /usr/bin/emacs.orig
+sudo mv /usr/bin/emacsclient /usr/bin/emacsclient.orig
+</code></pre>
+
+<p>And then it is a good idea to put the new <code>emacsclient</code> in a standard
+location (but not <code>/usr/bin</code>, because this is a system place that
+could get overwritten whenever Apple wants to):</p>
+
+<pre><code>ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emacsclient
+</code></pre>
+
+<h2 id="setting-up-some-aliases">Setting up some aliases</h2>
+
+<p>In my <code>~/.bash_profile</code>, I setup some environment variables to allow
+easy access to the editor through the alial <code>e</code>. This should
+automatically launch emacs when it is not yet running, or connect to
+it using <code>emacsclient</code> if it is. </p>
+
+<p>I also fill some editor variables that tell other programs that they
+should launch emacs when they want to edit a file. This is my
+<code>~/.bash_profile</code>:</p>
+
+<pre><code># Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+		. ~/.bashrc
+fi
+
+# Read autocomplete stuff if present
+if [ -f /sw/etc/bash_completion ]; then
+		. /sw/etc/bash_completion
+fi
+
+test -r /sw/bin/init.sh &amp;&amp; . /sw/bin/init.sh
+
+export EDITOR="emacsclient -a emacs"
+export VISUAL=$EDITOR
+export GIT_EDITOR="$VISUAL +0"
+
+alias e=$VISUAL
+</code></pre>
+
+<h2 id="setting-up-server-mode">Setting up server mode</h2>
+
+<p>To start the emacs server when emacs starts, you need to add the following to <code>~/.emacs</code>:</p>
+
+<pre><code>(server-start)
+</code></pre>
+
+<h1 id="migrating-my-settings">Migrating my settings</h1>
+
+<p>I am converting from Aquamacs to Emacs 24, so I need to convert my setting file. Aquamacs keeps its settings in the Library: <code>~/Library/Preferences/Aquamacs Emacs/Preferences.el</code> and Emacs keeps the settings in the standard location <code>~/.emacs</code>. </p>
+
+<p>I just copied everything in my Preferences.el underneath the skeleton <code>.emacs</code> that Emacs 24 had created for me, which contained next to nothing but some default tab settings and some code to enable the <code>ELPA</code> package manager.</p>
+
+<p>There are probably some things that I do that are obsolete, but I will sort that out later. For example, Emacs 24 has a built in color theme manager, and I am still referring to an older package. I will try to work with it like this for now, and study the changes as time goes by.</p>
+
+<h2 id="some-differences">Some differences</h2>
+
+<p>It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let’s get rid of the startup screen that shows together with your first file (I know how to get help anyway).</p>
+
+<pre><code>(setq inhibit-startup-echo-area-message t)
+(setq inhibit-startup-message t)
+</code></pre>
+
+<p>Then, raising of the windows seems not to be automatic. Whenever I start Emacs from the Terminal, I need to CMD-Tab there. Annoying as hell. <a href="http://stackoverflow.com/questions/945709/emacs-23-os-x-multi-tty-and-emacsclient">The fix was quite easy, thankfully</a>. </p>
+
+<pre><code>(select-frame-set-input-focus (nth 0 (frame-list)))
+</code></pre>
+ 
+</bodytext><footer><p>
+  </p>
+<div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = 'pragtich'; // required: replace example with your forum shortname
+  var disqus_identifier = 'Emacs24Mac';
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+        
+        
+      </footer></article><nav><h2>Categories</h2>
+      <ul>
+<li>
+<a href="../all_articles.html">All articles</a> </li>
+
+   <li>
+<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
+
+
+
+   <li>
+<a href="../all_Kippycam.html">Kippycam</a> </li>
+
+
+
+   <li>
+<a href="../all_Life.html">Life</a> </li>
+
+
+
+      </ul>
+<h2>About</h2>
+      <ul>
+<li><a href="../../about/">About me</a></li>
+      </ul></nav>
+</body>
+</html>
