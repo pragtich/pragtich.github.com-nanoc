@@ -18,8 +18,8 @@ to `/usr/local/bin` or `/usr/bin`, it breaks with a very unfriendly
 error message that actually refers to folders that do not exist on
 this system, but did on the build system!
 
-	 Joris-Pragts-MacBook:bin pragtich$ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
-	 Joris-Pragts-MacBook:bin pragtich$ ./emacs
+	 $ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
+	 $ ./emacs
 	 Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.
 	 Warning: arch-independent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/) does not exist.
 	 Error: charsets directory not found:
@@ -72,9 +72,18 @@ could get overwritten whenever Apple wants to):
 ## Setting up some aliases
 
 In my `~/.bash_profile`, I setup some environment variables to allow
-easy access to the editor through the alial `e`. This should
+easy access to the editor through the alias `e`. This should
 automatically launch emacs when it is not yet running, or connect to
-it using `emacsclient` if it is. 
+it using `emacsclient` if it is. I had some trouble when `ssh`'ing into the machine, because somehow the correct socket file would not be found. That would give the following error message. It was fixed by adding the `-s` option. This works most of the time, although when autostarting the `Emacs` binary from `emacsclient`, all options are dropped by `emacsclient`, so things like `-nw` will not stick. Maybe I will make a function to copy the arguments and stick them back into Emacs, but this is a marginal case so I will leave it for now. Just need to remember to start Emacs with `-nw` when working in a text only environment.
+
+	emacsclient: can't find socket; have you started the server?
+	To start the server in Emacs, type "M-x server-start".
+	emacsclient: No socket or alternate editor.  Please use:
+
+		--socket-name
+		--server-file      (or environment variable EMACS_SERVER_FILE)
+		--alternate-editor (or environment variable ALTERNATE_EDITOR)
+
 
 I also fill some editor variables that tell other programs that they
 should launch emacs when they want to edit a file. This is my
@@ -92,7 +101,7 @@ should launch emacs when they want to edit a file. This is my
 
 	test -r /sw/bin/init.sh && . /sw/bin/init.sh
 
-	export EDITOR="emacsclient -a emacs"
+	export EDITOR="emacsclient -s \"/tmp/emacs${UID}/server\" -a Emacs \"\$@\""
 	export VISUAL=$EDITOR
 	export GIT_EDITOR="$VISUAL +0"
 
@@ -124,3 +133,4 @@ It seems that Aquamacs has some different defaults than GNU Emacs. I changed a f
 Then, raising of the windows seems not to be automatic. Whenever I start Emacs from the Terminal, I need to CMD-Tab there. Annoying as hell. [The fix was quite easy, thankfully](http://stackoverflow.com/questions/945709/emacs-23-os-x-multi-tty-and-emacsclient). 
 
     (select-frame-set-input-focus (nth 0 (frame-list)))
+
