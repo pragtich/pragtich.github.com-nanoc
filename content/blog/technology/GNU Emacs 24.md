@@ -110,8 +110,9 @@ should launch emacs when they want to edit a file. This is my
 
 ## Setting up server mode
 	
-To start the emacs server when emacs starts, you need to add the following to `~/.emacs`:
-
+To start the emacs server when emacs starts, you need to add the following to `~/.emacs`. I needed to provide a stable place for the sockets, otherwise they break when `ssh`'in in. Don't understand why.
+	
+	(setq server-socket-dir (format "/tmp/emacs%d" (user-uid))) 
     (server-start)
 
 # Migrating my settings
@@ -124,10 +125,11 @@ There are probably some things that I do that are obsolete, but I will sort that
 
 ## Some differences
 
-It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let's get rid of the startup screen that shows together with your first file (I know how to get help anyway).
+It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let's get rid of the startup screen that shows together with your first file (I know how to get help anyway). And let's also drop the ugly toolbar.
 
     (setq inhibit-startup-echo-area-message t)
 	(setq inhibit-startup-message t)
+	(tool-bar-mode -1)
 	
 	
 Then, raising of the windows seems not to be automatic. Whenever I start Emacs from the Terminal, I need to CMD-Tab there. Annoying as hell. [The fix was quite easy, thankfully](http://stackoverflow.com/questions/945709/emacs-23-os-x-multi-tty-and-emacsclient). 
@@ -139,7 +141,7 @@ Then, raising of the windows seems not to be automatic. Whenever I start Emacs f
 
 ## Reading 
 
-A very nice Emacs blog is [Masterin Emacs](http://www.masteringemacs.org/). It has a nice 2-part series on Emacs 24 that [starts here](http://www.masteringemacs.org/articles/2011/12/06/what-is-new-in-emacs-24-part-1/). I am slowly going through it because there's lots to learn.
+A very nice Emacs blog is [Mastering Emacs](http://www.masteringemacs.org/). It has a nice 2-part series on Emacs 24 that [starts here](http://www.masteringemacs.org/articles/2011/12/06/what-is-new-in-emacs-24-part-1/). I am slowly going through it because there's lots to learn.
 
 ## Enabling package management
 
