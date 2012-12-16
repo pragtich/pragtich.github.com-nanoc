@@ -101,7 +101,7 @@ should launch emacs when they want to edit a file. This is my
 
 	test -r /sw/bin/init.sh && . /sw/bin/init.sh
 
-	export EDITOR="emacsclient -s \"/tmp/emacs${UID}/server\" -a Emacs \"\$@\""
+	export EDITOR="emacsclient -s "/tmp/emacs${UID}/server" -a Emacs \"\$@\""
 	export VISUAL=$EDITOR
 	export GIT_EDITOR="$VISUAL +0"
 
