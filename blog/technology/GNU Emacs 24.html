@@ -40,8 +40,8 @@ to <code>/usr/local/bin</code> or <code>/usr/bin</code>, it breaks with a very u
 error message that actually refers to folders that do not exist on
 this system, but did on the build system!</p>
 
-<pre><code> Joris-Pragts-MacBook:bin pragtich$ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
- Joris-Pragts-MacBook:bin pragtich$ ./emacs
+<pre><code> $ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
+ $ ./emacs
  Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.
  Warning: arch-independent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/) does not exist.
  Error: charsets directory not found:
@@ -98,9 +98,18 @@ could get overwritten whenever Apple wants to):</p>
 <h2 id="setting-up-some-aliases">Setting up some aliases</h2>
 
 <p>In my <code>~/.bash_profile</code>, I setup some environment variables to allow
-easy access to the editor through the alial <code>e</code>. This should
+easy access to the editor through the alias <code>e</code>. This should
 automatically launch emacs when it is not yet running, or connect to
-it using <code>emacsclient</code> if it is. </p>
+it using <code>emacsclient</code> if it is. I had some trouble when <code>ssh</code>‘ing into the machine, because somehow the correct socket file would not be found. That would give the following error message. It was fixed by adding the <code>-s</code> option. This works most of the time, although when autostarting the <code>Emacs</code> binary from <code>emacsclient</code>, all options are dropped by <code>emacsclient</code>, so things like <code>-nw</code> will not stick. Maybe I will make a function to copy the arguments and stick them back into Emacs, but this is a marginal case so I will leave it for now. Just need to remember to start Emacs with <code>-nw</code> when working in a text only environment.</p>
+
+<pre><code>emacsclient: can't find socket; have you started the server?
+To start the server in Emacs, type "M-x server-start".
+emacsclient: No socket or alternate editor.  Please use:
+
+	--socket-name
+	--server-file      (or environment variable EMACS_SERVER_FILE)
+	--alternate-editor (or environment variable ALTERNATE_EDITOR)
+</code></pre>
 
 <p>I also fill some editor variables that tell other programs that they
 should launch emacs when they want to edit a file. This is my
@@ -118,7 +127,7 @@ fi
 
 test -r /sw/bin/init.sh &amp;&amp; . /sw/bin/init.sh
 
-export EDITOR="emacsclient -a emacs"
+export EDITOR="emacsclient -s "/tmp/emacs${UID}/server" -a Emacs \"\$@\""
 export VISUAL=$EDITOR
 export GIT_EDITOR="$VISUAL +0"
 
@@ -127,9 +136,10 @@ alias e=$VISUAL
 
 <h2 id="setting-up-server-mode">Setting up server mode</h2>
 
-<p>To start the emacs server when emacs starts, you need to add the following to <code>~/.emacs</code>:</p>
+<p>To start the emacs server when emacs starts, you need to add the following to <code>~/.emacs</code>. I needed to provide a stable place for the sockets, otherwise they break when <code>ssh</code>‘in in. Don’t understand why.</p>
 
-<pre><code>(server-start)
+<pre><code>(setq server-socket-dir (format "/tmp/emacs%d" (user-uid))) 
+(server-start)
 </code></pre>
 
 <h1 id="migrating-my-settings">Migrating my settings</h1>
@@ -142,16 +152,33 @@ alias e=$VISUAL
 
 <h2 id="some-differences">Some differences</h2>
 
-<p>It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let’s get rid of the startup screen that shows together with your first file (I know how to get help anyway).</p>
+<p>It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let’s get rid of the startup screen that shows together with your first file (I know how to get help anyway). And let’s also drop the ugly toolbar.</p>
 
 <pre><code>(setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-message t)
+(tool-bar-mode -1)
 </code></pre>
 
 <p>Then, raising of the windows seems not to be automatic. Whenever I start Emacs from the Terminal, I need to CMD-Tab there. Annoying as hell. <a href="http://stackoverflow.com/questions/945709/emacs-23-os-x-multi-tty-and-emacsclient">The fix was quite easy, thankfully</a>. </p>
 
 <pre><code>(select-frame-set-input-focus (nth 0 (frame-list)))
 </code></pre>
+
+<h1 id="getting-the-most-out-of-it">Getting the most out of it</h1>
+
+<h2 id="reading">Reading</h2>
+
+<p>A very nice Emacs blog is <a href="http://www.masteringemacs.org/">Mastering Emacs</a>. It has a nice 2-part series on Emacs 24 that <a href="http://www.masteringemacs.org/articles/2011/12/06/what-is-new-in-emacs-24-part-1/">starts here</a>. I am slowly going through it because there’s lots to learn.</p>
+
+<h2 id="enabling-package-management">Enabling package management</h2>
+
+<p>Added the following to <code>~/.emacs</code> (and deleted some package stuff that was left from before).</p>
+
+<pre><code>(require 'package)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+</code></pre>
+
+<p>Now I can list the packages available with <code>M-x list-packages</code>. Need to start learning how that works.</p>
  
 </bodytext><footer><p>
   </p>
@@ -178,17 +205,17 @@ alias e=$VISUAL
 <a href="../all_articles.html">All articles</a> </li>
 
    <li>
-<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
-
-
-
-   <li>
 <a href="../all_Kippycam.html">Kippycam</a> </li>
 
 
 
    <li>
 <a href="../all_Life.html">Life</a> </li>
+
+
+
+   <li>
+<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
 
 
 

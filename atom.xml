@@ -27,8 +27,8 @@ to &lt;code&gt;/usr/local/bin&lt;/code&gt; or &lt;code&gt;/usr/bin&lt;/code&gt;,
 error message that actually refers to folders that do not exist on
 this system, but did on the build system!&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt; Joris-Pragts-MacBook:bin pragtich$ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
- Joris-Pragts-MacBook:bin pragtich$ ./emacs
+&lt;pre&gt;&lt;code&gt; $ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
+ $ ./emacs
  Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.
  Warning: arch-independent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/) does not exist.
  Error: charsets directory not found:
@@ -85,9 +85,18 @@ could get overwritten whenever Apple wants to):&lt;/p&gt;
 &lt;h2 id="setting-up-some-aliases"&gt;Setting up some aliases&lt;/h2&gt;
 
 &lt;p&gt;In my &lt;code&gt;~/.bash_profile&lt;/code&gt;, I setup some environment variables to allow
-easy access to the editor through the alial &lt;code&gt;e&lt;/code&gt;. This should
+easy access to the editor through the alias &lt;code&gt;e&lt;/code&gt;. This should
 automatically launch emacs when it is not yet running, or connect to
-it using &lt;code&gt;emacsclient&lt;/code&gt; if it is. &lt;/p&gt;
+it using &lt;code&gt;emacsclient&lt;/code&gt; if it is. I had some trouble when &lt;code&gt;ssh&lt;/code&gt;&amp;lsquo;ing into the machine, because somehow the correct socket file would not be found. That would give the following error message. It was fixed by adding the &lt;code&gt;-s&lt;/code&gt; option. This works most of the time, although when autostarting the &lt;code&gt;Emacs&lt;/code&gt; binary from &lt;code&gt;emacsclient&lt;/code&gt;, all options are dropped by &lt;code&gt;emacsclient&lt;/code&gt;, so things like &lt;code&gt;-nw&lt;/code&gt; will not stick. Maybe I will make a function to copy the arguments and stick them back into Emacs, but this is a marginal case so I will leave it for now. Just need to remember to start Emacs with &lt;code&gt;-nw&lt;/code&gt; when working in a text only environment.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;emacsclient: can't find socket; have you started the server?
+To start the server in Emacs, type "M-x server-start".
+emacsclient: No socket or alternate editor.  Please use:
+
+	--socket-name
+	--server-file      (or environment variable EMACS_SERVER_FILE)
+	--alternate-editor (or environment variable ALTERNATE_EDITOR)
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;I also fill some editor variables that tell other programs that they
 should launch emacs when they want to edit a file. This is my
@@ -105,7 +114,7 @@ fi
 
 test -r /sw/bin/init.sh &amp;amp;&amp;amp; . /sw/bin/init.sh
 
-export EDITOR="emacsclient -a emacs"
+export EDITOR="emacsclient -s "/tmp/emacs${UID}/server" -a Emacs \"\$@\""
 export VISUAL=$EDITOR
 export GIT_EDITOR="$VISUAL +0"
 
@@ -114,9 +123,10 @@ alias e=$VISUAL
 
 &lt;h2 id="setting-up-server-mode"&gt;Setting up server mode&lt;/h2&gt;
 
-&lt;p&gt;To start the emacs server when emacs starts, you need to add the following to &lt;code&gt;~/.emacs&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;To start the emacs server when emacs starts, you need to add the following to &lt;code&gt;~/.emacs&lt;/code&gt;. I needed to provide a stable place for the sockets, otherwise they break when &lt;code&gt;ssh&lt;/code&gt;&amp;lsquo;in in. Don&amp;rsquo;t understand why.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;(server-start)
+&lt;pre&gt;&lt;code&gt;(setq server-socket-dir (format "/tmp/emacs%d" (user-uid))) 
+(server-start)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h1 id="migrating-my-settings"&gt;Migrating my settings&lt;/h1&gt;
@@ -129,16 +139,33 @@ alias e=$VISUAL
 
 &lt;h2 id="some-differences"&gt;Some differences&lt;/h2&gt;
 
-&lt;p&gt;It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let&amp;rsquo;s get rid of the startup screen that shows together with your first file (I know how to get help anyway).&lt;/p&gt;
+&lt;p&gt;It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let&amp;rsquo;s get rid of the startup screen that shows together with your first file (I know how to get help anyway). And let&amp;rsquo;s also drop the ugly toolbar.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;(setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-message t)
+(tool-bar-mode -1)
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Then, raising of the windows seems not to be automatic. Whenever I start Emacs from the Terminal, I need to CMD-Tab there. Annoying as hell. &lt;a href="http://stackoverflow.com/questions/945709/emacs-23-os-x-multi-tty-and-emacsclient"&gt;The fix was quite easy, thankfully&lt;/a&gt;. &lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;(select-frame-set-input-focus (nth 0 (frame-list)))
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id="getting-the-most-out-of-it"&gt;Getting the most out of it&lt;/h1&gt;
+
+&lt;h2 id="reading"&gt;Reading&lt;/h2&gt;
+
+&lt;p&gt;A very nice Emacs blog is &lt;a href="http://www.masteringemacs.org/"&gt;Mastering Emacs&lt;/a&gt;. It has a nice 2-part series on Emacs 24 that &lt;a href="http://www.masteringemacs.org/articles/2011/12/06/what-is-new-in-emacs-24-part-1/"&gt;starts here&lt;/a&gt;. I am slowly going through it because there&amp;rsquo;s lots to learn.&lt;/p&gt;
+
+&lt;h2 id="enabling-package-management"&gt;Enabling package management&lt;/h2&gt;
+
+&lt;p&gt;Added the following to &lt;code&gt;~/.emacs&lt;/code&gt; (and deleted some package stuff that was left from before).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(require 'package)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I can list the packages available with &lt;code&gt;M-x list-packages&lt;/code&gt;. Need to start learning how that works.&lt;/p&gt;
 </content>
   </entry>
   <entry>
