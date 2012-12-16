@@ -134,7 +134,7 @@ Then, raising of the windows seems not to be automatic. Whenever I start Emacs f
 
     (select-frame-set-input-focus (nth 0 (frame-list)))
 
-# Getting the most of it
+# Getting the most out of it
 
 
 ## Reading 
