@@ -134,3 +134,19 @@ Then, raising of the windows seems not to be automatic. Whenever I start Emacs f
 
     (select-frame-set-input-focus (nth 0 (frame-list)))
 
+# Getting the most of it
+
+
+## Reading 
+
+A very nice Emacs blog is [Masterin Emacs](http://www.masteringemacs.org/). It has a nice 2-part series on Emacs 24 that [starts here](http://www.masteringemacs.org/articles/2011/12/06/what-is-new-in-emacs-24-part-1/). I am slowly going through it because there's lots to learn.
+
+## Enabling package management
+
+Added the following to `~/.emacs` (and deleted some package stuff that was left from before).
+
+	(require 'package)
+	(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+	
+Now I can list the packages available with `M-x list-packages`. Need to start learning how that works.
+
