@@ -152,3 +152,18 @@ Added the following to `~/.emacs` (and deleted some package stuff that was left 
 	
 Now I can list the packages available with `M-x list-packages`. Need to start learning how that works.
 
+## Using Magit
+
+i used the package manager to install Magit. A great frontend to `git`!
+
+    M-x list-packages
+	
+	; find magit
+	i    ; for install
+	x    ; for execute
+	y    ; for yes
+	
+In order to avoid typing `magit-status` a lot, I bound it to a key in `~/.emacs`:
+
+    (global-set-key (kbd "C-x g") 'magit-status)
+	
