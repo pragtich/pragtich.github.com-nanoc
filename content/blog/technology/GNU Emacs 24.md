@@ -123,6 +123,8 @@ I just copied everything in my Preferences.el underneath the skeleton `.emacs` t
 
 There are probably some things that I do that are obsolete, but I will sort that out later. For example, Emacs 24 has a built in color theme manager, and I am still referring to an older package. I will try to work with it like this for now, and study the changes as time goes by.
 
+I will also probably need a local lisp file to set platform specific things, for example file locations. Most of the stuff could then stay in the general `.emacs`.
+
 ## Some differences
 
 It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let's get rid of the startup screen that shows together with your first file (I know how to get help anyway). And let's also drop the ugly toolbar.
