@@ -135,7 +135,7 @@ It seems that Aquamacs has some different defaults than GNU Emacs. I changed a f
 Then, raising of the windows seems not to be automatic. Whenever I start Emacs from the Terminal, I need to CMD-Tab there. Annoying as hell. [The fix was quite easy, thankfully](http://stackoverflow.com/questions/945709/emacs-23-os-x-multi-tty-and-emacsclient). 
 
     (select-frame-set-input-focus (nth 0 (frame-list)))
-
+	
 # Getting the most out of it
 
 
@@ -166,4 +166,13 @@ i used the package manager to install Magit. A great frontend to `git`!
 In order to avoid typing `magit-status` a lot, I bound it to a key in `~/.emacs`:
 
     (global-set-key (kbd "C-x g") 'magit-status)
+	
+	
+## Enabling Ido mode
+
+Although it has been around, I had not yet heard of Ido mode. [It sounds very useful](http://www.masteringemacs.org/articles/2010/10/10/introduction-to-ido-mode/). So let's enable it:
+
+    (setq ido-enable-flex-matching t)
+    (setq ido-everywhere t)
+	(ido-mode 1)
 	
