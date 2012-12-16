@@ -5,6 +5,7 @@ category: Computer stuff
 created_at: 15 Dec 2012
 summary: "The new GNU Emacs 24 has native Cocoa support, so I wanted to switch. Not completely trivial, but possible."
 comment_id: Emacs24Mac
+indeximage: emacs.jpg
 ---
 # Introduction
 
