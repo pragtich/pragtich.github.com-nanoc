@@ -24,15 +24,7 @@
 
 preprocess do
   def create_index
-    # Create main index page with only index_count members
-    articles_index = sorted_articles.slice(0..@config[:index_count]-1)
-    @items << Nanoc3::Item.new(
-                                 "<%= render 'index_page'%>",
-                                 {:myarts => articles_index, :title => "Index of articles (1..#{@config[:index_count]})"},
-                                 "/blog/"
- 	  )
-
-    # Create index overflow
+    # Create index page
     @items << Nanoc3::Item.new(
         "<%= render 'index_page' %>",
     	{:myarts => sorted_articles, :title => "Complete index of all articles" },
