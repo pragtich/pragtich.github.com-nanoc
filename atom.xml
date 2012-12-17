@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <id>http://pragti.ch//</id>
+  <id>http://pragti.ch/</id>
   <title>Joris Pragt's blog feed</title>
   <updated>2012-12-14T23:00:00Z</updated>
-  <link href="http://pragti.ch//" rel="alternate"/>
-  <link href="http://pragti.ch//atom.xml" rel="self"/>
+  <link href="http://pragti.ch/" rel="alternate"/>
+  <link href="http://pragti.ch/atom.xml" rel="self"/>
   <author>
     <name>Joris Pragt</name>
-    <uri>http://members.home.nl/pragtich</uri>
+    <uri>http://pragti.ch</uri>
   </author>
   <entry>
-    <id>tag:pragti.ch,2012-12-15://blog/technology/GNU Emacs 24.html</id>
+    <id>tag:pragti.ch,2012-12-15:/blog/technology/GNU Emacs 24.html</id>
     <title type="html">Switching to GNU Emacs 24 on Mac OS X</title>
     <published>2012-12-14T23:00:00Z</published>
     <updated>2012-12-14T23:00:00Z</updated>
-    <link href="http://pragti.ch//blog/technology/GNU Emacs 24.html" rel="alternate"/>
+    <link href="http://pragti.ch/blog/technology/GNU Emacs 24.html" rel="alternate"/>
     <content type="html">&lt;h1 id="introduction"&gt;Introduction&lt;/h1&gt;
 
 &lt;p&gt;I downloaded the native Cocoa emacs &lt;a href="http://emacsformacosx.com/"&gt;from here&lt;/a&gt;. Since the new version 24, GNU Emacs is supposed to really work well in OS X. So I am trying what happens if I ditch Aquamacs for GNU Emacs 24. This is how I&amp;#8217;m getting on.&lt;/p&gt;
@@ -197,11 +197,11 @@ y    ; for yes
 </content>
   </entry>
   <entry>
-    <id>tag:pragti.ch,2012-09-22://blog/kippycam/OpenWRT on the TL-WR703N.html</id>
+    <id>tag:pragti.ch,2012-09-22:/blog/kippycam/OpenWRT on the TL-WR703N.html</id>
     <title type="html">Installing OpenWRT on a TL-WR703N router using a USB stick as storage</title>
     <published>2012-09-21T22:00:00Z</published>
     <updated>2012-09-21T22:00:00Z</updated>
-    <link href="http://pragti.ch//blog/kippycam/OpenWRT on the TL-WR703N.html" rel="alternate"/>
+    <link href="http://pragti.ch/blog/kippycam/OpenWRT on the TL-WR703N.html" rel="alternate"/>
     <content type="html">&lt;h1 id="the-situation"&gt;The situation&lt;/h1&gt;
 
 &lt;p&gt;I have actually been working with the TL-WR703N for a while. I got I2C
@@ -849,11 +849,11 @@ website&lt;/a&gt; and copied the www folder into &lt;code&gt;/www/webcam0/&lt;/c
 </content>
   </entry>
   <entry>
-    <id>tag:pragti.ch,2012-08-22://kippycam/OpenWRT system logs.html</id>
+    <id>tag:pragti.ch,2012-08-22:/kippycam/OpenWRT system logs.html</id>
     <title type="html">System logging with OpenWRT</title>
     <published>2012-08-21T22:00:00Z</published>
     <updated>2012-08-21T22:00:00Z</updated>
-    <link href="http://pragti.ch//kippycam/OpenWRT system logs.html" rel="alternate"/>
+    <link href="http://pragti.ch/kippycam/OpenWRT system logs.html" rel="alternate"/>
     <content type="html">&lt;p&gt;I kept running into issues with the Kippycam server router
 crashing. Because the default syslog apparently is kept in memory,
 these crashes were hard to debug. So I tried to get better (permanent
@@ -893,11 +893,11 @@ config led
 </content>
   </entry>
   <entry>
-    <id>tag:pragti.ch,2012-08-15://blog/kippycam/Adding an I2C interface to the TL-WR703N.html</id>
+    <id>tag:pragti.ch,2012-08-15:/blog/kippycam/Adding an I2C interface to the TL-WR703N.html</id>
     <title type="html">Adding an I2C interface to the TL-WR703N</title>
     <published>2012-08-14T22:00:00Z</published>
     <updated>2012-08-14T22:00:00Z</updated>
-    <link href="http://pragti.ch//blog/kippycam/Adding an I2C interface to the TL-WR703N.html" rel="alternate"/>
+    <link href="http://pragti.ch/blog/kippycam/Adding an I2C interface to the TL-WR703N.html" rel="alternate"/>
     <content type="html">&lt;h1 id="the-goal"&gt;The goal&lt;/h1&gt;
 
 &lt;p&gt;To enable the creative use of the wireless router in the garden to do
@@ -1251,11 +1251,11 @@ all. How does that look?&lt;/p&gt;
 </content>
   </entry>
   <entry>
-    <id>tag:pragti.ch,2012-07-19://blog/technology/Compiling gstreamer for C920 webcam.html</id>
+    <id>tag:pragti.ch,2012-07-19:/blog/technology/Compiling gstreamer for C920 webcam.html</id>
     <title type="html">Compiling a modified GStreamer for the C920 webcam</title>
     <published>2012-07-18T22:00:00Z</published>
     <updated>2012-07-18T22:00:00Z</updated>
-    <link href="http://pragti.ch//blog/technology/Compiling gstreamer for C920 webcam.html" rel="alternate"/>
+    <link href="http://pragti.ch/blog/technology/Compiling gstreamer for C920 webcam.html" rel="alternate"/>
     <content type="html">&lt;h1 id="status"&gt;Status&lt;/h1&gt;
 
 &lt;p&gt;** Take care: this page is full of mess. It does not work **&lt;/p&gt;
