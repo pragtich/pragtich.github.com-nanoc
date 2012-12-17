@@ -24,19 +24,16 @@
 
 preprocess do
   def create_index
-
-	  articles_index = sorted_articles.slice(0..@config[:index_count]-1)
-
-  # Create main index page
-
-  	  @items << Nanoc3::Item.new(
+    # Create main index page with only index_count members
+    articles_index = sorted_articles.slice(0..@config[:index_count]-1)
+    @items << Nanoc3::Item.new(
                                  "<%= render 'index_page'%>",
                                  {:myarts => articles_index, :title => "Index of articles (1..#{@config[:index_count]})"},
                                  "/blog/"
  	  )
 
-  # Create index overflow
-  	  @items << Nanoc3::Item.new(
+    # Create index overflow
+    @items << Nanoc3::Item.new(
         "<%= render 'index_page' %>",
     	{:myarts => sorted_articles, :title => "Complete index of all articles" },
     	"/blog/all_articles/"
@@ -44,24 +41,21 @@ preprocess do
   end
 
   def create_categories
-
-    #articles_all = items.select { |i| i[:kind] == 'article'}
-	sorted_articles.each do |article|
+	# Gather a list of all categories with their articles
+    sorted_articles.each do |article|
 	  $cats[article[:category]] << article
 	end
 
 	$cats.each do |name, cat|
-	      items << Nanoc3::Item.new(
-                                "<%= render 'category_page', :my_category => \"#{name}\" %>",
-                                { :title => "#{name}"},
-                                "/blog/all_#{name}/"
+      items << Nanoc3::Item.new(
+          "<%= render 'category_page', :my_category => \"#{name}\" %>",
+          { :title => "#{name}"},
+          "/blog/all_#{name}/"
       )
     end
   end
 
   def cleanup_items
-    # Prepares everything for the index page creation
-
     # Capitalize categories in order to get consistent results in the Index column
     sorted_articles.each do |art|
 	  art[:category].capitalize!
@@ -87,11 +81,11 @@ compile '/sb-stylesheet/' do
   filter :sass
 end
 
-compile '/blog/all_*/' do 
-		filter :erb
-		layout 'default'
-		filter :relativize_paths, :type => :html 
-end
+#compile '/blog/all_*/' do 
+#		filter :erb
+#		layout 'default'
+#		filter :relativize_paths, :type => :html 
+#end
 
 
 compile '/atom/' do
