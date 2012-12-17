@@ -1,7 +1,7 @@
 # Base url for the blogging helper's RSS/Atom stuff
-base_url: 'http://pragti.ch/'
+base_url: 'http://pragti.ch'
 author_name: 'Joris Pragt'
-author_uri: 'http://pragti.ch/'
+author_uri: 'http://pragti.ch'
 
 # Index page definitions
 index_count: 10
