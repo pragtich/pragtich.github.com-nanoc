@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<!-- Set up & clean variables --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Joris Pragt’s site – Pragtich: Using multiple webcams in mjpg-streamer on OpenWRT</title>
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" media="screen">
+<!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]--><link rel="alternate" type="application/rss+xml" title="Pragtich blog
+    feed" href="http://pragti.ch/atom.xml">
+</head>
+<body>
+  <titleframe><titlebar><div id="largetitle"> <a href="../../../">Pragtich</a>
+</div>
+
+	<div id="secnav">
+
+	</div>
+	<div id="artnav">
+	</div> 
+	</titlebar></titleframe><article><!-- If there's no item title; we print no header, even if
+           there's a date. --><header><hgroup><h1 class="itemtitle">Using multiple webcams in mjpg-streamer on OpenWRT</h1>
+
+          
+          <h2 class="itemdate">02 Jan 2013</h2>
+          
+
+
+
+        </hgroup></header><summary>
+             OpenWRT actually contains everything needed to run two or even more webcams with mjpg-streamer. But there is a bug in the init script that prevents it from working properly. This is an easy fix….</summary><bodytext><h1 id="the-init-file-problem">The init file problem</h1>
+
+<p>For my Kippycam project, I am trying to run the mjpg-streamer with various instances, so that I can stream from multiple cameras from my TL-WR3020 or TL-WR703N routers. There is a nice init and config system that comes with the mjpg-streamer package in OpenWRT, that does most of the work. It puts configuration for the server in the UCI file <code>/etc/config/mjpg-streamer</code>, and the <code>/etc/init.d/mjpg-streamer</code> script actually loops over any possible configurations already. So, to instantiate multiple servers, I only need to add a second server definition in the config file. </p>
+
+<p>BUT, then I get the following error in the logfile, and the second server does not start:</p>
+
+<pre><code>Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Using V4L2 device.: /dev/video0
+Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Desired Resolution: 640 x 481
+Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Frames Per Second.: 2
+Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Format............: MJPEG
+Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: init_VideoIn failed
+</code></pre>
+
+<p>The key is they incorrectly detected device name <code>/dev/video0</code> for the second camera. This is simply the default hardcoded into mjpg-streamer. It is not properly picking up the device name. Then, trying to open <code>/dev/video0</code> a second time, will of course fail.</p>
+
+<h1 id="the-solution">The solution</h1>
+
+<p>I do not understand the root cause fully, but it is clear that the <code>/etc/init.d/mjpg-streamer</code> script contains some layout so that it is more legible. This layout does, however, introduce some whitespace into the command line that is causing our trouble. I will leave analysis of the true root cause to the experts, but describe the quick and dirty solution.</p>
+
+<p>This is a part of the original file, below. The problem is with the line continuation with slashes.</p>
+
+<pre><code>start_instance() {
+	local s="$1"
+
+	section_enabled "$s" || return 1
+
+	config_get device "$s" 'device'
+	config_get resolution "$s" 'resolution'
+	config_get fps "$s" 'fps'
+	config_get www "$s" 'www'
+	config_get port "$s" 'port'
+
+	[ -c "$device" ] || {
+		error "device '$device' does not exist"
+		return 1
+	}
+
+	service_start /usr/bin/mjpg_streamer --input "input_uvc.so \   # &lt;=== Problem is here
+		--device $device --fps $fps --resolution $resolution" \
+		--output "output_http.so --www $www --port $port"
+}
+</code></pre>
+
+<p>I simply removed the backslashed line continuations and put everything in one line, and that solves the issue for me:</p>
+
+<pre><code>	service_start /usr/bin/mjpg_streamer --input "input_uvc.so --device $device --fps $fps --resolution $resolution"  --output "output_http.so --www $www --port $port"
+</code></pre>
+
+<h1 id="correcting-pidfile-issue">Correcting PIDfile issue</h1>
+
+<p>There is a second issue, because the default <code>service_start</code> behaviour is to prevent starting of multiple instances of the same daemon. So, we need to explicitly make sure that it does make multiple instances for us (because we are asking nicely). There are several ways to this, but I chose to explicitly help by supplying a pid file name for each camera. By using the unique configuration name from the config file, these will be unique. It is an easy edit in two places of <code>/etc/init.d/mjpg-streamer</code>. First, the function <code>start_instance</code> again:</p>
+
+<pre><code>start_instance() {
+	local s="$1"
+
+	section_enabled "$s" || return 1
+
+	SERVICE_PID_FILE=${PIDLOC}-${s}.pid
+
+	config_get device "$s" 'device'
+	config_get resolution "$s" 'resolution'
+	config_get fps "$s" 'fps'
+	config_get www "$s" 'www'
+	config_get port "$s" 'port'
+
+	[ -c "$device" ] || {
+		error "device '$device' does not exist"
+		return 1
+	}
+
+	service_start /usr/bin/mjpg_streamer --input "input_uvc.so --device $device --fps $fps --resolution $resolution"  --output "output_http.so --www $www --port $port"
+
+}
+</code></pre>
+
+<p>So in short, I generate a <code>$SERVICE_PID_FILE</code> that uniquely identifies the service. Of course, for killing the service we need to go back to the same pidfile:</p>
+
+<pre><code>stop_instance() {
+	local s="$1"
+
+	section_enabled "$s" || return 1
+
+
+	SERVICE_PID_FILE=/var/run/mjpg-streamer-${s}.pid
+
+	service_stop /usr/bin/mjpg_streamer
+}
+</code></pre>
+
+<h1 id="configuration">Configuration</h1>
+
+<p>Now, it is really easy to edit <code>/etc/config/mjpg-streamer</code> for multiple devices. Do be careful not to exceed the memory of your device, and also the USB and memory bandwidths, or you may make the device very unstable. Adding a name for each <code>config</code> heading is not strictly necessary, but very helpful as it gives some identification. I am assuming that each device has a fixed <code>/dev/video</code> devicename, which is the case on my device as long as I do not replug any camera.</p>
+
+<p>This is my config file:</p>
+
+<pre><code>config mjpg-streamer c920
+	option device		"/dev/video0"
+	option enabled		"1"
+	option resolution	"960x720"	
+	option fps		"3"
+	option www		"/www/webcam"
+	option port		"8080"
+
+config mjpg-streamer logi
+	option enabled		"1"
+	option device		"/dev/video1"
+	option resolution	"640x480"
+	option fps		"2"
+	option www		"/www/webcam"
+	option port		"8081"
+</code></pre>
+
+<h1 id="version-update">Version update</h1>
+
+<p>The packages version of the mjpg-streamer was old. I actually compiled my own version of mjpg-streamer by updating the packages <code>Makefile</code> in the OpenWRT buildroot. A nice description of the process of building with buildroot is what I roughly followed <a href="https://forum.openwrt.org/viewtopic.php?id=34676">from this post in the forums</a>, which links to <a href="http://wiki.openwrt.org/doc/howto/build">this wiki page after installing the prerequisites</a>. After <code>./scripts/feeds install -a</code>, I found the Makefile for mjpg-streamer (somewhere in <code>tmp</code>, if I remember correctly) and updated it to the latest SVN revision number. This did solve some instability issues I was facing with random reboots, so I highly recommemd going this way. </p>
+
+<p>Again, maybe I should learn how to submit patches for OpenWRT to help improve it…</p>
+ 
+</bodytext><footer><p>
+  </p>
+<div id="disqus_thread"></div>
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = 'pragtich'; // required: replace example with your forum shortname
+  var disqus_identifier = 'mjpg-streamer-init-fix-mult';
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        
+        
+        
+      </footer></article><nav><h2>Categories</h2>
+      <ul>
+<li>
+<a href="../../all_articles.html">All articles</a> </li>
+
+   <li>
+<a href="../../all_Life.html">Life</a> </li>
+
+
+
+   <li>
+<a href="../../all_Kippycam.html">Kippycam</a> </li>
+
+
+
+   <li>
+<a href="../../all_Computer%20stuff.html">Computer stuff</a> </li>
+
+
+
+      </ul>
+<h2>About</h2>
+      <ul>
+<li><a href="../../../about/">About me</a></li>
+      </ul></nav>
+</body>
+</html>

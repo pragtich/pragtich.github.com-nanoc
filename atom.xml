@@ -2,13 +2,138 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>http://pragti.ch/</id>
   <title>Joris Pragt's blog feed</title>
-  <updated>2012-12-14T23:00:00Z</updated>
+  <updated>2013-01-01T23:00:00Z</updated>
   <link href="http://pragti.ch/" rel="alternate"/>
   <link href="http://pragti.ch/atom.xml" rel="self"/>
   <author>
     <name>Joris Pragt</name>
     <uri>http://pragti.ch</uri>
   </author>
+  <entry>
+    <id>tag:pragti.ch,2013-01-02:/blog/2013/01/Mjpg-streamer-multiple.html</id>
+    <title type="html">Using multiple webcams in mjpg-streamer on OpenWRT</title>
+    <published>2013-01-01T23:00:00Z</published>
+    <updated>2013-01-01T23:00:00Z</updated>
+    <link href="http://pragti.ch/blog/2013/01/Mjpg-streamer-multiple.html" rel="alternate"/>
+    <content type="html">&lt;h1 id="the-init-file-problem"&gt;The init file problem&lt;/h1&gt;
+
+&lt;p&gt;For my Kippycam project, I am trying to run the mjpg-streamer with various instances, so that I can stream from multiple cameras from my TL-WR3020 or TL-WR703N routers. There is a nice init and config system that comes with the mjpg-streamer package in OpenWRT, that does most of the work. It puts configuration for the server in the UCI file &lt;code&gt;/etc/config/mjpg-streamer&lt;/code&gt;, and the &lt;code&gt;/etc/init.d/mjpg-streamer&lt;/code&gt; script actually loops over any possible configurations already. So, to instantiate multiple servers, I only need to add a second server definition in the config file. &lt;/p&gt;
+
+&lt;p&gt;BUT, then I get the following error in the logfile, and the second server does not start:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Using V4L2 device.: /dev/video0
+Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Desired Resolution: 640 x 481
+Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Frames Per Second.: 2
+Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: Format............: MJPEG
+Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: init_VideoIn failed
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The key is they incorrectly detected device name &lt;code&gt;/dev/video0&lt;/code&gt; for the second camera. This is simply the default hardcoded into mjpg-streamer. It is not properly picking up the device name. Then, trying to open &lt;code&gt;/dev/video0&lt;/code&gt; a second time, will of course fail.&lt;/p&gt;
+
+&lt;h1 id="the-solution"&gt;The solution&lt;/h1&gt;
+
+&lt;p&gt;I do not understand the root cause fully, but it is clear that the &lt;code&gt;/etc/init.d/mjpg-streamer&lt;/code&gt; script contains some layout so that it is more legible. This layout does, however, introduce some whitespace into the command line that is causing our trouble. I will leave analysis of the true root cause to the experts, but describe the quick and dirty solution.&lt;/p&gt;
+
+&lt;p&gt;This is a part of the original file, below. The problem is with the line continuation with slashes.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;start_instance() {
+	local s="$1"
+
+	section_enabled "$s" || return 1
+
+	config_get device "$s" 'device'
+	config_get resolution "$s" 'resolution'
+	config_get fps "$s" 'fps'
+	config_get www "$s" 'www'
+	config_get port "$s" 'port'
+
+	[ -c "$device" ] || {
+		error "device '$device' does not exist"
+		return 1
+	}
+
+	service_start /usr/bin/mjpg_streamer --input "input_uvc.so \   # &amp;lt;=== Problem is here
+		--device $device --fps $fps --resolution $resolution" \
+		--output "output_http.so --www $www --port $port"
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I simply removed the backslashed line continuations and put everything in one line, and that solves the issue for me:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;	service_start /usr/bin/mjpg_streamer --input "input_uvc.so --device $device --fps $fps --resolution $resolution"  --output "output_http.so --www $www --port $port"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id="correcting-pidfile-issue"&gt;Correcting PIDfile issue&lt;/h1&gt;
+
+&lt;p&gt;There is a second issue, because the default &lt;code&gt;service_start&lt;/code&gt; behaviour is to prevent starting of multiple instances of the same daemon. So, we need to explicitly make sure that it does make multiple instances for us (because we are asking nicely). There are several ways to this, but I chose to explicitly help by supplying a pid file name for each camera. By using the unique configuration name from the config file, these will be unique. It is an easy edit in two places of &lt;code&gt;/etc/init.d/mjpg-streamer&lt;/code&gt;. First, the function &lt;code&gt;start_instance&lt;/code&gt; again:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;start_instance() {
+	local s="$1"
+
+	section_enabled "$s" || return 1
+
+	SERVICE_PID_FILE=${PIDLOC}-${s}.pid
+
+	config_get device "$s" 'device'
+	config_get resolution "$s" 'resolution'
+	config_get fps "$s" 'fps'
+	config_get www "$s" 'www'
+	config_get port "$s" 'port'
+
+	[ -c "$device" ] || {
+		error "device '$device' does not exist"
+		return 1
+	}
+
+	service_start /usr/bin/mjpg_streamer --input "input_uvc.so --device $device --fps $fps --resolution $resolution"  --output "output_http.so --www $www --port $port"
+
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So in short, I generate a &lt;code&gt;$SERVICE_PID_FILE&lt;/code&gt; that uniquely identifies the service. Of course, for killing the service we need to go back to the same pidfile:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;stop_instance() {
+	local s="$1"
+
+	section_enabled "$s" || return 1
+
+
+	SERVICE_PID_FILE=/var/run/mjpg-streamer-${s}.pid
+
+	service_stop /usr/bin/mjpg_streamer
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id="configuration"&gt;Configuration&lt;/h1&gt;
+
+&lt;p&gt;Now, it is really easy to edit &lt;code&gt;/etc/config/mjpg-streamer&lt;/code&gt; for multiple devices. Do be careful not to exceed the memory of your device, and also the USB and memory bandwidths, or you may make the device very unstable. Adding a name for each &lt;code&gt;config&lt;/code&gt; heading is not strictly necessary, but very helpful as it gives some identification. I am assuming that each device has a fixed &lt;code&gt;/dev/video&lt;/code&gt; devicename, which is the case on my device as long as I do not replug any camera.&lt;/p&gt;
+
+&lt;p&gt;This is my config file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;config mjpg-streamer c920
+	option device		"/dev/video0"
+	option enabled		"1"
+	option resolution	"960x720"	
+	option fps		"3"
+	option www		"/www/webcam"
+	option port		"8080"
+
+config mjpg-streamer logi
+	option enabled		"1"
+	option device		"/dev/video1"
+	option resolution	"640x480"
+	option fps		"2"
+	option www		"/www/webcam"
+	option port		"8081"
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id="version-update"&gt;Version update&lt;/h1&gt;
+
+&lt;p&gt;The packages version of the mjpg-streamer was old. I actually compiled my own version of mjpg-streamer by updating the packages &lt;code&gt;Makefile&lt;/code&gt; in the OpenWRT buildroot. A nice description of the process of building with buildroot is what I roughly followed &lt;a href="https://forum.openwrt.org/viewtopic.php?id=34676"&gt;from this post in the forums&lt;/a&gt;, which links to &lt;a href="http://wiki.openwrt.org/doc/howto/build"&gt;this wiki page after installing the prerequisites&lt;/a&gt;. After &lt;code&gt;./scripts/feeds install -a&lt;/code&gt;, I found the Makefile for mjpg-streamer (somewhere in &lt;code&gt;tmp&lt;/code&gt;, if I remember correctly) and updated it to the latest SVN revision number. This did solve some instability issues I was facing with random reboots, so I highly recommemd going this way. &lt;/p&gt;
+
+&lt;p&gt;Again, maybe I should learn how to submit patches for OpenWRT to help improve it&amp;#8230;&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:pragti.ch,2012-12-15:/blog/technology/GNU Emacs 24.html</id>
     <title type="html">Switching to GNU Emacs 24 on Mac OS X</title>
@@ -1248,117 +1373,6 @@ all. How does that look?&lt;/p&gt;
 
 &lt;p&gt;The next step is to use the input function. That will be the next update.&lt;/p&gt;
 
-</content>
-  </entry>
-  <entry>
-    <id>tag:pragti.ch,2012-07-19:/blog/technology/Compiling gstreamer for C920 webcam.html</id>
-    <title type="html">Compiling a modified GStreamer for the C920 webcam</title>
-    <published>2012-07-18T22:00:00Z</published>
-    <updated>2012-07-18T22:00:00Z</updated>
-    <link href="http://pragti.ch/blog/technology/Compiling gstreamer for C920 webcam.html" rel="alternate"/>
-    <content type="html">&lt;h1 id="status"&gt;Status&lt;/h1&gt;
-
-&lt;p&gt;** Take care: this page is full of mess. It does not work **&lt;/p&gt;
-
-&lt;h1 id="satisfying-build-requirements"&gt;Satisfying build requirements&lt;/h1&gt;
-
-&lt;h2 id="packages"&gt;Packages&lt;/h2&gt;
-
-&lt;p&gt;Basically, a matter of &lt;code&gt;make prereq&lt;/code&gt; and &lt;code&gt;sudo fink install xxx&lt;/code&gt; until
-all dependencies were met.&lt;/p&gt;
-
-&lt;h2 id="filesystem"&gt;Filesystem&lt;/h2&gt;
-
-&lt;p&gt;The OpenWRT buildroot needs a case-sensitive filesystem and tells you
-that:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Build dependency: OpenWrt can only be built on a case-sensitive
-filesystem
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The default OS X system is not case sensitive. There is a simple
-solution: create a separate disk image. As I found
-&lt;a href="https://forum.openwrt.org/viewtopic.php?id=20914"&gt;here&lt;/a&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;hdiutil create -size 2048m -fs HFSX -volname openwrt openwrt
-# Later I had to do a resize: I needed ~ 8GB
-Doubleclick the dmg
-cd /Volumes/openwrt/
-tar cf - ~/openwrt | tar xfp -
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Also, I found the following tips that may be necessary (?) in the same
-forum topic:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;A couple notes on using MacOS X as a build environment that I've found so far:
-
-Package names for "port" that you may need:
-* gmake
-* gawk
-* gtar
-* coreutils
-* findutils
-* getopt
-* wget
-
-(There may be others, I can't easily do a "clean install" on Mac)
-
-$ export PATH="/opt/local/bin:$PATH"   # so that the GNU versions get picked up
-
-
-
-You may need to
-
-$ chmod +x scripts/md5sum    # appears to be "fixed" in current trunk
-
-
-As suggested by marca, update XTools and re-symlink (gcov not required, AFAIK, but consistency is good)
-
-/usr/bin/g++ -&amp;gt; g++-4.2
-/usr/bin/gcc -&amp;gt; gcc-4.2
-/usr/bin/gcov -&amp;gt; gcov-4.2
-
-
-If you want to build the documentation, MacTeX will do it -- http://www.tug.org/mactex/
-(though there is no BSD-make wrapper in that directory, so gmake in the docs directory)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id="compiling"&gt;Compiling&lt;/h1&gt;
-
-&lt;pre&gt;&lt;code&gt;make menuconfig
-
-# selected ar7xx, minimal profile, toolchain and sdk
-
-make V=99
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In the first tries, I errored out due to the disk image being too
-small. I the end I resized it to 8GB and it worked:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;hdiutil resize -size 8G openwrt.dmg
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id="getting-the-feeds"&gt;Getting the feeds&lt;/h1&gt;
-
-&lt;pre&gt;&lt;code&gt;scripts/feeds update -a
-scripts/feeds install gstreamer
-scripts/feeds install gst-plugins-good
-scripts/feeds install gst-plugins-bad
-scripts/feeds install gst-pluging-ugly
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;No problem!&lt;/p&gt;
-
-&lt;h1 id="compiling-the-feeds"&gt;Compiling the feeds&lt;/h1&gt;
-
-&lt;pre&gt;&lt;code&gt;make menuconfig
-sudo ln -s /usr/bin/true /bin/true    # Somewhere there's a direct
-path to true
-
-# select the packages that I want
-make V=99 package/gstreamer/compile
-# et cetera for the plugins
-&lt;/code&gt;&lt;/pre&gt;
 </content>
   </entry>
 </feed>
