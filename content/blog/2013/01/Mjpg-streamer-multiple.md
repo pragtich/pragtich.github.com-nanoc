@@ -44,7 +44,7 @@ This is a part of the original file, below. The problem is with the line continu
 			return 1
 		}
 
-		service_start /usr/bin/mjpg_streamer --input "input_uvc.so \
+		service_start /usr/bin/mjpg_streamer --input "input_uvc.so \   # <=== Problem is here
 			--device $device --fps $fps --resolution $resolution" \
 			--output "output_http.so --www $www --port $port"
 	}
