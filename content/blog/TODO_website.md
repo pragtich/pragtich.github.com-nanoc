@@ -22,6 +22,8 @@ summary: What I still intend to do
 * Make images work with a full size image clickable through the thumbnail
 * Add an 'all categories' button in the nav pane
 * make the 'about' page
+* Switch from categories to tags?
+* Add code coloration
 
 
 
