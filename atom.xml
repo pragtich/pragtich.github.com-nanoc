@@ -59,49 +59,46 @@ Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: init_VideoIn failed
 
 &lt;p&gt;I simply removed the backslashed line continuations and put everything in one line, and that solves the issue for me:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;	service_start /usr/bin/mjpg_streamer --input "input_uvc.so --device $device --fps $fps --resolution $resolution"  --output "output_http.so --www $www --port $port"
-&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;service_start /usr/bin/mjpg_streamer --input &lt;span class="s2"&gt;"input_uvc.so --device $device --fps $fps --resolution $resolution"&lt;/span&gt;  --output &lt;span class="s2"&gt;"output_http.so --www $www --port $port"&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h1 id="correcting-pidfile-issue"&gt;Correcting PIDfile issue&lt;/h1&gt;
 
 &lt;p&gt;There is a second issue, because the default &lt;code&gt;service_start&lt;/code&gt; behaviour is to prevent starting of multiple instances of the same daemon. So, we need to explicitly make sure that it does make multiple instances for us (because we are asking nicely). There are several ways to this, but I chose to explicitly help by supplying a pid file name for each camera. By using the unique configuration name from the config file, these will be unique. It is an easy edit in two places of &lt;code&gt;/etc/init.d/mjpg-streamer&lt;/code&gt;. First, the function &lt;code&gt;start_instance&lt;/code&gt; again:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;start_instance() {
-	local s="$1"
+&lt;pre&gt;&lt;code class="language-bash"&gt;start_instance&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+	&lt;span class="nb"&gt;local &lt;/span&gt;&lt;span class="nv"&gt;s&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"$1"&lt;/span&gt;
 
-	section_enabled "$s" || return 1
+	section_enabled &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="k"&gt;return &lt;/span&gt;1
 
-	SERVICE_PID_FILE=${PIDLOC}-${s}.pid
+	&lt;span class="nv"&gt;SERVICE_PID_FILE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;PIDLOC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;-&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;s&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;.pid
 
-	config_get device "$s" 'device'
-	config_get resolution "$s" 'resolution'
-	config_get fps "$s" 'fps'
-	config_get www "$s" 'www'
-	config_get port "$s" 'port'
+	config_get device &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="s1"&gt;'device'&lt;/span&gt;
+	config_get resolution &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="s1"&gt;'resolution'&lt;/span&gt;
+	config_get fps &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="s1"&gt;'fps'&lt;/span&gt;
+	config_get www &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="s1"&gt;'www'&lt;/span&gt;
+	config_get port &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="s1"&gt;'port'&lt;/span&gt;
 
-	[ -c "$device" ] || {
-		error "device '$device' does not exist"
-		return 1
-	}
+	&lt;span class="o"&gt;[&lt;/span&gt; -c &lt;span class="s2"&gt;"$device"&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+		error &lt;span class="s2"&gt;"device '$device' does not exist"&lt;/span&gt;
+		&lt;span class="k"&gt;return &lt;/span&gt;1
+	&lt;span class="o"&gt;}&lt;/span&gt;
 
-	service_start /usr/bin/mjpg_streamer --input "input_uvc.so --device $device --fps $fps --resolution $resolution"  --output "output_http.so --www $www --port $port"
+	service_start /usr/bin/mjpg_streamer --input &lt;span class="s2"&gt;"input_uvc.so --device $device --fps $fps --resolution $resolution"&lt;/span&gt;  --output &lt;span class="s2"&gt;"output_http.so --www $www --port $port"&lt;/span&gt;
 
-}
-&lt;/code&gt;&lt;/pre&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;So in short, I generate a &lt;code&gt;$SERVICE_PID_FILE&lt;/code&gt; that uniquely identifies the service. Of course, for killing the service we need to go back to the same pidfile:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;stop_instance() {
-	local s="$1"
+&lt;pre&gt;&lt;code class="language-bash"&gt;stop_instance&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+	&lt;span class="nb"&gt;local &lt;/span&gt;&lt;span class="nv"&gt;s&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"$1"&lt;/span&gt;
 
-	section_enabled "$s" || return 1
+	section_enabled &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="k"&gt;return &lt;/span&gt;1
 
 
-	SERVICE_PID_FILE=/var/run/mjpg-streamer-${s}.pid
+	&lt;span class="nv"&gt;SERVICE_PID_FILE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/var/run/mjpg-streamer-&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;s&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;.pid
 
 	service_stop /usr/bin/mjpg_streamer
-}
-&lt;/code&gt;&lt;/pre&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h1 id="configuration"&gt;Configuration&lt;/h1&gt;
 

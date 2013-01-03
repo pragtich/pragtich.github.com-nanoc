@@ -73,49 +73,46 @@ Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: init_VideoIn failed
 
 <p>I simply removed the backslashed line continuations and put everything in one line, and that solves the issue for me:</p>
 
-<pre><code>	service_start /usr/bin/mjpg_streamer --input "input_uvc.so --device $device --fps $fps --resolution $resolution"  --output "output_http.so --www $www --port $port"
-</code></pre>
+<pre><code class="language-bash">service_start /usr/bin/mjpg_streamer --input <span class="s2">"input_uvc.so --device $device --fps $fps --resolution $resolution"</span>  --output <span class="s2">"output_http.so --www $www --port $port"</span></code></pre>
 
 <h1 id="correcting-pidfile-issue">Correcting PIDfile issue</h1>
 
 <p>There is a second issue, because the default <code>service_start</code> behaviour is to prevent starting of multiple instances of the same daemon. So, we need to explicitly make sure that it does make multiple instances for us (because we are asking nicely). There are several ways to this, but I chose to explicitly help by supplying a pid file name for each camera. By using the unique configuration name from the config file, these will be unique. It is an easy edit in two places of <code>/etc/init.d/mjpg-streamer</code>. First, the function <code>start_instance</code> again:</p>
 
-<pre><code>start_instance() {
-	local s="$1"
+<pre><code class="language-bash">start_instance<span class="o">()</span> <span class="o">{</span>
+	<span class="nb">local </span><span class="nv">s</span><span class="o">=</span><span class="s2">"$1"</span>
 
-	section_enabled "$s" || return 1
+	section_enabled <span class="s2">"$s"</span> <span class="o">||</span> <span class="k">return </span>1
 
-	SERVICE_PID_FILE=${PIDLOC}-${s}.pid
+	<span class="nv">SERVICE_PID_FILE</span><span class="o">=</span><span class="k">${</span><span class="nv">PIDLOC</span><span class="k">}</span>-<span class="k">${</span><span class="nv">s</span><span class="k">}</span>.pid
 
-	config_get device "$s" 'device'
-	config_get resolution "$s" 'resolution'
-	config_get fps "$s" 'fps'
-	config_get www "$s" 'www'
-	config_get port "$s" 'port'
+	config_get device <span class="s2">"$s"</span> <span class="s1">'device'</span>
+	config_get resolution <span class="s2">"$s"</span> <span class="s1">'resolution'</span>
+	config_get fps <span class="s2">"$s"</span> <span class="s1">'fps'</span>
+	config_get www <span class="s2">"$s"</span> <span class="s1">'www'</span>
+	config_get port <span class="s2">"$s"</span> <span class="s1">'port'</span>
 
-	[ -c "$device" ] || {
-		error "device '$device' does not exist"
-		return 1
-	}
+	<span class="o">[</span> -c <span class="s2">"$device"</span> <span class="o">]</span> <span class="o">||</span> <span class="o">{</span>
+		error <span class="s2">"device '$device' does not exist"</span>
+		<span class="k">return </span>1
+	<span class="o">}</span>
 
-	service_start /usr/bin/mjpg_streamer --input "input_uvc.so --device $device --fps $fps --resolution $resolution"  --output "output_http.so --www $www --port $port"
+	service_start /usr/bin/mjpg_streamer --input <span class="s2">"input_uvc.so --device $device --fps $fps --resolution $resolution"</span>  --output <span class="s2">"output_http.so --www $www --port $port"</span>
 
-}
-</code></pre>
+<span class="o">}</span></code></pre>
 
 <p>So in short, I generate a <code>$SERVICE_PID_FILE</code> that uniquely identifies the service. Of course, for killing the service we need to go back to the same pidfile:</p>
 
-<pre><code>stop_instance() {
-	local s="$1"
+<pre><code class="language-bash">stop_instance<span class="o">()</span> <span class="o">{</span>
+	<span class="nb">local </span><span class="nv">s</span><span class="o">=</span><span class="s2">"$1"</span>
 
-	section_enabled "$s" || return 1
+	section_enabled <span class="s2">"$s"</span> <span class="o">||</span> <span class="k">return </span>1
 
 
-	SERVICE_PID_FILE=/var/run/mjpg-streamer-${s}.pid
+	<span class="nv">SERVICE_PID_FILE</span><span class="o">=</span>/var/run/mjpg-streamer-<span class="k">${</span><span class="nv">s</span><span class="k">}</span>.pid
 
 	service_stop /usr/bin/mjpg_streamer
-}
-</code></pre>
+<span class="o">}</span></code></pre>
 
 <h1 id="configuration">Configuration</h1>
 
@@ -170,17 +167,17 @@ config mjpg-streamer logi
 <a href="../../all_articles.html">All articles</a> </li>
 
    <li>
-<a href="../../all_Kippycam.html">Kippycam</a> </li>
-
-
-
-   <li>
 <a href="../../all_Life.html">Life</a> </li>
 
 
 
    <li>
 <a href="../../all_Computer%20stuff.html">Computer stuff</a> </li>
+
+
+
+   <li>
+<a href="../../all_Kippycam.html">Kippycam</a> </li>
 
 
 
