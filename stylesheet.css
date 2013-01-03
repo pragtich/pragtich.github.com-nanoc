@@ -230,8 +230,13 @@ article ul {
 }
 
 
-article li {
+article ul li {
   list-style-type: square;
+  font-size: 15px;
+  line-height: 20px;
+}
+article ol li {
+  list-style-type: decimal;
   font-size: 15px;
   line-height: 20px;
 }
