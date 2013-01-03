@@ -289,3 +289,9 @@ footer {
   font-family: sans-serif;
 }
 
+
+/* Code highlighting. Most of it is in the xxx.css files (I like Monokai) */
+
+pre {
+	background-color: #f8f8f8;
+}

@@ -36,27 +36,26 @@ Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: init_VideoIn failed
 
 &lt;p&gt;This is a part of the original file, below. The problem is with the line continuation with slashes.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;start_instance() {
-	local s="$1"
+&lt;pre&gt;&lt;code class="language-bash"&gt;start_instance&lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+	&lt;span class="nb"&gt;local &lt;/span&gt;&lt;span class="nv"&gt;s&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"$1"&lt;/span&gt;
 
-	section_enabled "$s" || return 1
+	section_enabled &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="k"&gt;return &lt;/span&gt;1
 
-	config_get device "$s" 'device'
-	config_get resolution "$s" 'resolution'
-	config_get fps "$s" 'fps'
-	config_get www "$s" 'www'
-	config_get port "$s" 'port'
+	config_get device &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="s1"&gt;'device'&lt;/span&gt;
+	config_get resolution &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="s1"&gt;'resolution'&lt;/span&gt;
+	config_get fps &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="s1"&gt;'fps'&lt;/span&gt;
+	config_get www &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="s1"&gt;'www'&lt;/span&gt;
+	config_get port &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="s1"&gt;'port'&lt;/span&gt;
 
-	[ -c "$device" ] || {
-		error "device '$device' does not exist"
-		return 1
-	}
+	&lt;span class="o"&gt;[&lt;/span&gt; -c &lt;span class="s2"&gt;"$device"&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+		error &lt;span class="s2"&gt;"device '$device' does not exist"&lt;/span&gt;
+		&lt;span class="k"&gt;return &lt;/span&gt;1
+	&lt;span class="o"&gt;}&lt;/span&gt;
 
-	service_start /usr/bin/mjpg_streamer --input "input_uvc.so \   # &amp;lt;=== Problem is here
-		--device $device --fps $fps --resolution $resolution" \
-		--output "output_http.so --www $www --port $port"
-}
-&lt;/code&gt;&lt;/pre&gt;
+	service_start /usr/bin/mjpg_streamer --input &lt;span class="s2"&gt;"input_uvc.so \   # &amp;lt;=== Problem is here&lt;/span&gt;
+&lt;span class="s2"&gt;		--device $device --fps $fps --resolution $resolution"&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+		--output &lt;span class="s2"&gt;"output_http.so --www $www --port $port"&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;I simply removed the backslashed line continuations and put everything in one line, and that solves the issue for me:&lt;/p&gt;
 
@@ -131,8 +130,7 @@ config mjpg-streamer logi
 
 &lt;p&gt;The packages version of the mjpg-streamer was old. I actually compiled my own version of mjpg-streamer by updating the packages &lt;code&gt;Makefile&lt;/code&gt; in the OpenWRT buildroot. A nice description of the process of building with buildroot is what I roughly followed &lt;a href="https://forum.openwrt.org/viewtopic.php?id=34676"&gt;from this post in the forums&lt;/a&gt;, which links to &lt;a href="http://wiki.openwrt.org/doc/howto/build"&gt;this wiki page after installing the prerequisites&lt;/a&gt;. After &lt;code&gt;./scripts/feeds install -a&lt;/code&gt;, I found the Makefile for mjpg-streamer (somewhere in &lt;code&gt;tmp&lt;/code&gt;, if I remember correctly) and updated it to the latest SVN revision number. This did solve some instability issues I was facing with random reboots, so I highly recommemd going this way. &lt;/p&gt;
 
-&lt;p&gt;Again, maybe I should learn how to submit patches for OpenWRT to help improve it&amp;#8230;&lt;/p&gt;
-</content>
+&lt;p&gt;Again, maybe I should learn how to submit patches for OpenWRT to help improve it&#8230;&lt;/p&gt;</content>
   </entry>
   <entry>
     <id>tag:pragti.ch,2012-12-15:/blog/technology/GNU Emacs 24.html</id>
@@ -142,7 +140,7 @@ config mjpg-streamer logi
     <link href="http://pragti.ch/blog/technology/GNU Emacs 24.html" rel="alternate"/>
     <content type="html">&lt;h1 id="introduction"&gt;Introduction&lt;/h1&gt;
 
-&lt;p&gt;I downloaded the native Cocoa emacs &lt;a href="http://emacsformacosx.com/"&gt;from here&lt;/a&gt;. Since the new version 24, GNU Emacs is supposed to really work well in OS X. So I am trying what happens if I ditch Aquamacs for GNU Emacs 24. This is how I&amp;#8217;m getting on.&lt;/p&gt;
+&lt;p&gt;I downloaded the native Cocoa emacs &lt;a href="http://emacsformacosx.com/"&gt;from here&lt;/a&gt;. Since the new version 24, GNU Emacs is supposed to really work well in OS X. So I am trying what happens if I ditch Aquamacs for GNU Emacs 24. This is how I&#8217;m getting on.&lt;/p&gt;
 
 &lt;h1 id="starting-up"&gt;Starting up&lt;/h1&gt;
 
@@ -212,7 +210,7 @@ could get overwritten whenever Apple wants to):&lt;/p&gt;
 &lt;p&gt;In my &lt;code&gt;~/.bash_profile&lt;/code&gt;, I setup some environment variables to allow
 easy access to the editor through the alias &lt;code&gt;e&lt;/code&gt;. This should
 automatically launch emacs when it is not yet running, or connect to
-it using &lt;code&gt;emacsclient&lt;/code&gt; if it is. I had some trouble when &lt;code&gt;ssh&lt;/code&gt;&amp;#8216;ing into the machine, because somehow the correct socket file would not be found. That would give the following error message. It was fixed by adding the &lt;code&gt;-s&lt;/code&gt; option. This works most of the time, although when autostarting the &lt;code&gt;Emacs&lt;/code&gt; binary from &lt;code&gt;emacsclient&lt;/code&gt;, all options are dropped by &lt;code&gt;emacsclient&lt;/code&gt;, so things like &lt;code&gt;-nw&lt;/code&gt; will not stick. Maybe I will make a function to copy the arguments and stick them back into Emacs, but this is a marginal case so I will leave it for now. Just need to remember to start Emacs with &lt;code&gt;-nw&lt;/code&gt; when working in a text only environment.&lt;/p&gt;
+it using &lt;code&gt;emacsclient&lt;/code&gt; if it is. I had some trouble when &lt;code&gt;ssh&lt;/code&gt;&#8216;ing into the machine, because somehow the correct socket file would not be found. That would give the following error message. It was fixed by adding the &lt;code&gt;-s&lt;/code&gt; option. This works most of the time, although when autostarting the &lt;code&gt;Emacs&lt;/code&gt; binary from &lt;code&gt;emacsclient&lt;/code&gt;, all options are dropped by &lt;code&gt;emacsclient&lt;/code&gt;, so things like &lt;code&gt;-nw&lt;/code&gt; will not stick. Maybe I will make a function to copy the arguments and stick them back into Emacs, but this is a marginal case so I will leave it for now. Just need to remember to start Emacs with &lt;code&gt;-nw&lt;/code&gt; when working in a text only environment.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;emacsclient: can't find socket; have you started the server?
 To start the server in Emacs, type "M-x server-start".
@@ -248,7 +246,7 @@ alias e=$VISUAL
 
 &lt;h2 id="setting-up-server-mode"&gt;Setting up server mode&lt;/h2&gt;
 
-&lt;p&gt;To start the emacs server when emacs starts, you need to add the following to &lt;code&gt;~/.emacs&lt;/code&gt;. I needed to provide a stable place for the sockets, otherwise they break when &lt;code&gt;ssh&lt;/code&gt;&amp;#8216;in in. Don&amp;#8217;t understand why.&lt;/p&gt;
+&lt;p&gt;To start the emacs server when emacs starts, you need to add the following to &lt;code&gt;~/.emacs&lt;/code&gt;. I needed to provide a stable place for the sockets, otherwise they break when &lt;code&gt;ssh&lt;/code&gt;&#8216;in in. Don&#8217;t understand why.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;(setq server-socket-dir (format "/tmp/emacs%d" (user-uid))) 
 (server-start)
@@ -266,7 +264,7 @@ alias e=$VISUAL
 
 &lt;h2 id="some-differences"&gt;Some differences&lt;/h2&gt;
 
-&lt;p&gt;It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let&amp;#8217;s get rid of the startup screen that shows together with your first file (I know how to get help anyway). And let&amp;#8217;s also drop the ugly toolbar.&lt;/p&gt;
+&lt;p&gt;It seems that Aquamacs has some different defaults than GNU Emacs. I changed a few things to become more consistent. First, let&#8217;s get rid of the startup screen that shows together with your first file (I know how to get help anyway). And let&#8217;s also drop the ugly toolbar.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;(setq inhibit-startup-echo-area-message t)
 (setq inhibit-startup-message t)
@@ -282,7 +280,7 @@ alias e=$VISUAL
 
 &lt;h2 id="reading"&gt;Reading&lt;/h2&gt;
 
-&lt;p&gt;A very nice Emacs blog is &lt;a href="http://www.masteringemacs.org/"&gt;Mastering Emacs&lt;/a&gt;. It has a nice 2-part series on Emacs 24 that &lt;a href="http://www.masteringemacs.org/articles/2011/12/06/what-is-new-in-emacs-24-part-1/"&gt;starts here&lt;/a&gt;. I am slowly going through it because there&amp;#8217;s lots to learn.&lt;/p&gt;
+&lt;p&gt;A very nice Emacs blog is &lt;a href="http://www.masteringemacs.org/"&gt;Mastering Emacs&lt;/a&gt;. It has a nice 2-part series on Emacs 24 that &lt;a href="http://www.masteringemacs.org/articles/2011/12/06/what-is-new-in-emacs-24-part-1/"&gt;starts here&lt;/a&gt;. I am slowly going through it because there&#8217;s lots to learn.&lt;/p&gt;
 
 &lt;h2 id="enabling-package-management"&gt;Enabling package management&lt;/h2&gt;
 
@@ -313,13 +311,12 @@ y    ; for yes
 
 &lt;h2 id="enabling-ido-mode"&gt;Enabling Ido mode&lt;/h2&gt;
 
-&lt;p&gt;Although it has been around, I had not yet heard of Ido mode. &lt;a href="http://www.masteringemacs.org/articles/2010/10/10/introduction-to-ido-mode/"&gt;It sounds very useful&lt;/a&gt;. So let&amp;#8217;s enable it:&lt;/p&gt;
+&lt;p&gt;Although it has been around, I had not yet heard of Ido mode. &lt;a href="http://www.masteringemacs.org/articles/2010/10/10/introduction-to-ido-mode/"&gt;It sounds very useful&lt;/a&gt;. So let&#8217;s enable it:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;(setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
 (ido-mode 1)
-&lt;/code&gt;&lt;/pre&gt;
-</content>
+&lt;/code&gt;&lt;/pre&gt;</content>
   </entry>
   <entry>
     <id>tag:pragti.ch,2012-09-22:/blog/kippycam/OpenWRT on the TL-WR703N.html</id>
@@ -334,7 +331,7 @@ hardware control to work, and it has been serving mjpeg-streamer
 images from a webcam happily for a while. There has been some
 crashing, however, and when I got a better webcam (Logitech C920) as a
 gift, the crashing is now 100% once the camera is put to work. So,
-let&amp;#8217;s try an upgrade to the latest release of openwrt, and take the
+let&#8217;s try an upgrade to the latest release of openwrt, and take the
 chance to document the steps along the way. &lt;/p&gt;
 
 &lt;p&gt;YMMV, of course. This &lt;em&gt;is&lt;/em&gt; Linux, after all.&lt;/p&gt;
@@ -351,7 +348,7 @@ install the first time, and how to make a USB filesystem.&lt;/p&gt;
 folder. This keeps all files compatible, as the trunk files get
 changed nearly every day and I do not have 100% faith in my ability to
 manage all the possible version conflicts (did I ever say I hate Linux
-for all the version conflicts?). This is not very polite, so don&amp;#8217;t do
+for all the version conflicts?). This is not very polite, so don&#8217;t do
 it often.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt; wget -mk -w 20 http://downloads.openwrt.org/snapshots/trunk/ar71xx/
@@ -365,7 +362,7 @@ it often.&lt;/p&gt;
 &lt;h1 id="flashing-the-new-version"&gt;Flashing the new version&lt;/h1&gt;
 
 &lt;p&gt;&lt;strong&gt;Update&lt;/strong&gt;: I did end up running into issues on this install. You may
-  want to scroll down to &amp;#8216;fixing space issues&amp;#8217; to get my updates from
+  want to scroll down to &#8216;fixing space issues&#8217; to get my updates from
   there first.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;wget http://192.168.1.102/downloads.openwrt.org/snapshots/trunk/ar71xx/ md5sums
@@ -379,11 +376,11 @@ md5sum -c md5sums
 /tmp/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;And hold your breath&amp;#8230;&lt;/p&gt;
+&lt;p&gt;And hold your breath&#8230;&lt;/p&gt;
 
 &lt;p&gt;According to
 &lt;a href="http://wiki.openwrt.org/doc/howto/generic.sysupgrade"&gt;the wiki&lt;/a&gt;, the
-files in the libraries folder will still be loaded. Scary&amp;#8230;&lt;/p&gt;
+files in the libraries folder will still be loaded. Scary&#8230;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;root@OpenWrt:/tmp# ls /lib/modules/3.3.8/
 aes_generic.ko          iptable_nat.ko          ppp_generic.ko
@@ -460,7 +457,7 @@ option overlay_root /overlay
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;These are my settings (note, I have 2 different IP ranges depending on
-weither I&amp;#8217;m hard-wiring the router to my laptop, or going through
+weither I&#8217;m hard-wiring the router to my laptop, or going through
 WiFi). &lt;strong&gt;Wrong address for the link&lt;/strong&gt;: This should have been without
 the revision number. &lt;/p&gt;
 
@@ -493,7 +490,7 @@ Collected errors:
 root@OpenWrt:~# 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Apparently the kernel has updated during my mirroring? Rats&amp;#8230; 
+&lt;p&gt;Apparently the kernel has updated during my mirroring? Rats&#8230; 
 Nope, I had the incorrect folder set in my opkg.conf, so it was
 fetching old package data. &lt;/p&gt;
 
@@ -523,7 +520,7 @@ Configuring kmod-scsi-generic.
 root@OpenWrt:~# 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;What&amp;#8217;s wrong with opkg? It can download, and it can install. But not
+&lt;p&gt;What&#8217;s wrong with opkg? It can download, and it can install. But not
 together??&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;oot@OpenWrt:~# opkg install kmod-usb-storage block-mount swap-utils kmod-fs-ext4 kmod-scs
@@ -572,7 +569,7 @@ Configuring kmod-fs-ext4.
 root@OpenWrt:~# 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Finally&amp;#8230;&lt;/p&gt;
+&lt;p&gt;Finally&#8230;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;root@OpenWrt:~# opkg list-upgradable
 libblkid - 2.21.1-1 - 2.21.2-1
@@ -678,7 +675,7 @@ config swap
 
 &lt;p&gt;opkg install e2fsprogs&lt;/p&gt;
 
-&lt;p&gt;device full&amp;#8230; Hrmpf again&lt;/p&gt;
+&lt;p&gt;device full&#8230; Hrmpf again&lt;/p&gt;
 
 &lt;h1 id="fixing-space-issue"&gt;Fixing space issue&lt;/h1&gt;
 
@@ -909,12 +906,12 @@ opkg install mjpg-streamer
 root@OpenWrt:~# /etc/init.d/mjpg-streamer start
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;oops, forgot the kermel modules&amp;#8230; &lt;/p&gt;
+&lt;p&gt;oops, forgot the kermel modules&#8230; &lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;opkg install kmod-video-uvc
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Now let&amp;#8217;s check if it has been recognized:&lt;/p&gt;
+&lt;p&gt;Now let&#8217;s check if it has been recognized:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;[  719.130000] usbcore: registered new interface driver uvcvideo
 [  719.130000] USB Video Class driver (1.1.1)
@@ -927,7 +924,7 @@ root@OpenWrt:~# /etc/init.d/mjpg-streamer start
 &lt;h1 id="does-it-work"&gt;Does it work?&lt;/h1&gt;
 
 &lt;p&gt;Hotplug already works and automatically starts the mjpeg-streamer
-daemon as soon as the webcam is plugged in, and kills it when it&amp;#8217;s
+daemon as soon as the webcam is plugged in, and kills it when it&#8217;s
 plugged out. Nice!&lt;/p&gt;
 
 &lt;h2 id="memory-limitations"&gt;Memory limitations&lt;/h2&gt;
@@ -941,7 +938,7 @@ this, or at least alleviate it. &lt;/p&gt;
 
 &lt;p&gt;This is the memory status after all this (at 640x480):&lt;/p&gt;
 
-&lt;p&gt;&lt;img src="mjpegstreamer-640-480.jpg" alt="The screenshot of htop with the settings from this log" title="The screenshot of htop with the settings from this log" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="mjpegstreamer-640-480.jpg" alt="The screenshot of htop with the settings from this log" title="The screenshot of htop with the settings from this log"&gt;&lt;/p&gt;
 
 &lt;h2 id="garbled-images"&gt;Garbled images&lt;/h2&gt;
 
@@ -950,7 +947,7 @@ too high. This is probably due to some bug in the kernel drivers (or
 is it by design?) combined with the limited memory transfer bandwidth
 of these Atheros processors. It could be that the client reads from a
 buffer while another part of the buffer is still being written. Just
-guessing here: I&amp;#8217;m no kernel expert. &lt;/p&gt;
+guessing here: I&#8217;m no kernel expert. &lt;/p&gt;
 
 &lt;p&gt;Anyway, keeping the framerate low enough, everything is ok. I should
 not expect the world from a router that uses roughly 0.5W!&lt;/p&gt;
@@ -968,10 +965,9 @@ into the flash to eliminate these instabilities. Janis Alnis
 
 &lt;p&gt;The standard mjpeg-streamer package for openwrt has no www files
 included, in order to reduce the storage requirements. I do want it
-there, because it&amp;#8217;s a quick way of getting some useful testing
+there, because it&#8217;s a quick way of getting some useful testing
 done. So, I downloaded the full mjpeg-streamer distribution from &lt;a href="http://sourceforge.net/projects/mjpg-streamer/"&gt;their
-website&lt;/a&gt; and copied the www folder into &lt;code&gt;/www/webcam0/&lt;/code&gt;.&lt;/p&gt;
-</content>
+website&lt;/a&gt; and copied the www folder into &lt;code&gt;/www/webcam0/&lt;/code&gt;.&lt;/p&gt;</content>
   </entry>
   <entry>
     <id>tag:pragti.ch,2012-08-22:/kippycam/OpenWRT system logs.html</id>
@@ -1029,16 +1025,14 @@ config led
 all kinds of fun stuff. My first insane ideas are things like:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;Closing the chicken coop door (determined by remote control or
+&lt;li&gt;Closing the chicken coop door (determined by remote control or
 automatically)&lt;/li&gt;
   &lt;li&gt;Making a feed dispenser, so that the chickens may be tempted to be
 close to the camera&lt;/li&gt;
-  &lt;li&gt;Counting and logging the egg laying productivity (and the chickens&amp;#8217;
+  &lt;li&gt;Counting and logging the egg laying productivity (and the chickens&#8217;
 noise?)&lt;/li&gt;
   &lt;li&gt;Monitoring the solar panels and battery charge status.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;That&amp;#8217;s just the start&amp;#8230;&lt;/p&gt;
+&lt;/ul&gt;&lt;p&gt;That&#8217;s just the start&#8230;&lt;/p&gt;
 
 &lt;h1 id="approach"&gt;Approach&lt;/h1&gt;
 
@@ -1060,48 +1054,42 @@ that generated their knowledge
 what they did before. A few points are critical:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;The parts are really really small. Take a lot of care, use a very
+&lt;li&gt;The parts are really really small. Take a lot of care, use a very
 sharp soldering iron and use magnification.&lt;/li&gt;
   &lt;li&gt;The traces in the router are easily peeled off. Do not apply
 vertical forces and make sure to releive any forces on the wires. I
 epoxied all wires to the PCB after soldering to prevent them from
 pulling the PCB traces.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;These were the steps:&lt;/p&gt;
+&lt;/ol&gt;&lt;p&gt;These were the steps:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Remove R15 and R17.&lt;/li&gt;
+&lt;li&gt;Remove R15 and R17.&lt;/li&gt;
   &lt;li&gt;Solder very thin wires to each pad (the side facing away from the
 USB connector)&lt;/li&gt;
-  &lt;li&gt;Solder a +3.3V wire to the square field marked &lt;code&gt;LED2 +&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Solder a +3.3V wire to the square field marked &lt;code&gt;LED2 +&lt;/code&gt;
+&lt;/li&gt;
   &lt;li&gt;Solder a GND wire to the micro-USB connector (reset button side)&lt;/li&gt;
   &lt;li&gt;Solder a +5V wire to the other side of the micro-USB connector
 (Ethernet side)&lt;/li&gt;
   &lt;li&gt;Glue the wires to the PCB using 2-component epoxy adhesive.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;/ol&gt;&lt;p&gt;&#8230;although the micro usb wires may be the other way around&#8230;&lt;/p&gt;
 
-&lt;p&gt;&amp;#8230;although the micro usb wires may be the other way around&amp;#8230;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="I2C-soldered.jpg" alt="The finished product" title="After completing the soldering" /&gt;
-&lt;img src="I2C-soldered-detail.jpg" alt="The finished product, some more detail" title="Some more detail" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="I2C-soldered.jpg" alt="The finished product" title="After completing the soldering"&gt;&lt;img src="I2C-soldered-detail.jpg" alt="The finished product, some more detail" title="Some more detail"&gt;&lt;/p&gt;
 
 &lt;p&gt;Then I cut a hole into the top of the housing and glued a 2x3 boxed
 header onto the lid of the router. I chose the following pin-out in an
 attempt to keep the signal wires apart:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;5V&lt;/li&gt;
+&lt;li&gt;5V&lt;/li&gt;
   &lt;li&gt;NC&lt;/li&gt;
   &lt;li&gt;SCL (GPIO7, 3.3V)&lt;/li&gt;
   &lt;li&gt;GND&lt;/li&gt;
   &lt;li&gt;SDA (GPIO 29, 3.3V)&lt;/li&gt;
   &lt;li&gt;3.3V&lt;/li&gt;
-&lt;/ol&gt;
+&lt;/ol&gt;&lt;p&gt;That&#8217;s how it looks:&lt;/p&gt;
 
-&lt;p&gt;That&amp;#8217;s how it looks:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src="I2C-done.jpg" alt="The finished product, outside" title="The end product, closed and tidy." /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src="I2C-done.jpg" alt="The finished product, outside" title="The end product, closed and tidy."&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;No Pull-ups yet, so these need to be put on the client side, or
   built in later.&lt;/strong&gt;&lt;/p&gt;
@@ -1109,7 +1097,7 @@ attempt to keep the signal wires apart:&lt;/p&gt;
 &lt;h1 id="installing-on-openwrt"&gt;Installing on Openwrt&lt;/h1&gt;
 &lt;p&gt;The OpenWRT wiki has loads of (some more outdated than other) stuff on
 I2C
-&lt;a href="http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c"&gt;at this link&lt;/a&gt;. Let&amp;#8217;s
+&lt;a href="http://wiki.openwrt.org/doku.php?id=oldwiki:port.i2c"&gt;at this link&lt;/a&gt;. Let&#8217;s
 start with the basics:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;gt; opkg update
@@ -1131,18 +1119,17 @@ too. But I really need it. &lt;/p&gt;
 &lt;p&gt;**So now what? **&lt;/p&gt;
 
 &lt;p&gt;Left over from
-&lt;a href="../technology/Compiling gstreamer
-for C920 webcam.html"&gt;my experiments with compiling OpenWRT on OS X&lt;/a&gt; was a local compile directory that actually
+&lt;a href="../technology/Compiling%20gstreamer%0Afor%20C920%20webcam.html"&gt;my experiments with compiling OpenWRT on OS X&lt;/a&gt; was a local compile directory that actually
 successfully compiles. So I went in there and did a &lt;code&gt;make
 menuconfig&lt;/code&gt;. When I installed all the I2C stuff, it automatically
 enables the &lt;code&gt;i2c-gpio-custom&lt;/code&gt; module. And after &lt;code&gt;make&lt;/code&gt;, it also
 compiles the matchin object file. But no &lt;code&gt;.ipk&lt;/code&gt; to match. Where did it
-go&amp;#8230;?&lt;/p&gt;
+go&#8230;?&lt;/p&gt;
 
 &lt;p&gt;After a bit of searching it was
 found. &lt;code&gt;trunk/build_dir/linux-ar71xx_generic/linux-3.3.8/modules.builtin&lt;/code&gt;
 tells exactly where it went: into the kernel (built-in, not as a
-module). Here&amp;#8217;s a list of all the stuff that was builtin:&lt;/p&gt;
+module). Here&#8217;s a list of all the stuff that was builtin:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;kernel/fs/jffs2/jffs2.ko
 kernel/fs/overlayfs/overlayfs.ko
@@ -1212,14 +1199,12 @@ kernel/lib/xz/xz_dec.ko
 &lt;p&gt;So, something is wonky with Openwrt. Either one of the two:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;The kernel config automatically configures the module as a builtin
+&lt;li&gt;The kernel config automatically configures the module as a builtin
 and ignores my wish to have it as a module. &lt;/li&gt;
   &lt;li&gt;The package &lt;code&gt;kmod-i2c-gpio-custom&lt;/code&gt; incorrectly forces the
 dependency to &lt;code&gt;kmod-i2c-algo-bit&lt;/code&gt;, while indeed it is builtin by
 default.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;I do not understand the kernel enough to know who&amp;#8217;s wrong, but the
+&lt;/ol&gt;&lt;p&gt;I do not understand the kernel enough to know who&#8217;s wrong, but the
 solution is clear:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;&amp;gt; opkg install --force-depends kmod-i2c-gpio-custom
@@ -1251,10 +1236,10 @@ Collected errors:
 &lt;p&gt;I made a breadboard with the &lt;code&gt;PCF8574&lt;/code&gt; IO expander from Texas
 Instruments (also available from NXP, but TI gives free samples). It
 takes the 3.3V power from the router, pulls up and has 8 LEDs from
-3.3V to the pins of the &lt;code&gt;PCF8574&lt;/code&gt;. Maybe I&amp;#8217;ll write an update about
-the breadboard later, but it&amp;#8217;s mainly just the datasheet
+3.3V to the pins of the &lt;code&gt;PCF8574&lt;/code&gt;. Maybe I&#8217;ll write an update about
+the breadboard later, but it&#8217;s mainly just the datasheet
 application. Later I switched to 5V and added level shifting MOSFETs,
-again, maybe some day I&amp;#8217;ll write it up.&lt;/p&gt;
+again, maybe some day I&#8217;ll write it up.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;# i2cdetect 0
 WARNING! This program can confuse your I2C bus, cause data loss and worse!
@@ -1286,12 +1271,12 @@ Continue? [Y/n]
 &lt;p&gt;Sounds good: we have a chip at the correct address, and 8 new GPIOs
 were created (numberd 56 through 63). Careful though: the &lt;code&gt;PCF8574&lt;/code&gt;
 does not get detected in any way. So only the &lt;code&gt;i2cdetect&lt;/code&gt; output
-really confirms that something is there on the bus and responding. So let&amp;#8217;s test the GPIOs for
+really confirms that something is there on the bus and responding. So let&#8217;s test the GPIOs for
 confirmation.&lt;/p&gt;
 
 &lt;h1 id="actually-blinking-leds"&gt;Actually blinking LEDs&lt;/h1&gt;
 
-&lt;p&gt;Let&amp;#8217;s try to set one of the pins manually:&lt;/p&gt;
+&lt;p&gt;Let&#8217;s try to set one of the pins manually:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;# cd /sys/class/gpio
 # echo 57 &amp;gt; export
@@ -1313,7 +1298,7 @@ the outputs and inputs. Wicked.&lt;/p&gt;
 
 &lt;p&gt;The next step: blinking. I was lazy and googled for a bash script that
 blinks. And found it &lt;a href="http://netduinoplusfun.wordpress.com/2012/07/16/blink-a-light-with-raspberry-pi/"&gt;on this blog&lt;/a&gt;. Tweaked it a little
-bit, which was easy because it&amp;#8217;s so well written. I added an argument
+bit, which was easy because it&#8217;s so well written. I added an argument
 for the GPIO pin to use, to try all 8 pins. This is what I ended up with:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;#!/bin/bash
@@ -1371,8 +1356,6 @@ all. How does that look?&lt;/p&gt;
 
 &lt;h1 id="input"&gt;Input&lt;/h1&gt;
 
-&lt;p&gt;The next step is to use the input function. That will be the next update.&lt;/p&gt;
-
-</content>
+&lt;p&gt;The next step is to use the input function. That will be the next update.&lt;/p&gt;</content>
   </entry>
 </feed>
