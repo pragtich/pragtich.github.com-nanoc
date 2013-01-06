@@ -41,15 +41,14 @@ to <code>/usr/local/bin</code> or <code>/usr/bin</code>, it breaks with a very u
 error message that actually refers to folders that do not exist on
 this system, but did on the build system!</p>
 
-<pre><code> $ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
- $ ./emacs
- Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.
- Warning: arch-independent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/) does not exist.
- Error: charsets directory not found:
- /Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/charsets
- Emacs will not function correctly without the character map files.
- Please check your installation!
-</code></pre>
+<pre><code class="language-console"><span class="gp">$</span> ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
+<span class="gp">$</span> ./emacs
+<span class="go">Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.</span>
+<span class="go">Warning: arch-independent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/) does not exist.</span>
+<span class="go">Error: charsets directory not found:</span>
+<span class="go">/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/charsets</span>
+<span class="go">Emacs will not function correctly without the character map files.</span>
+<span class="go">Please check your installation!</span></code></pre>
 
 <p>This is due to the relocatability of the App, and apparently it does
 not handle being launched from the wrong place
@@ -84,16 +83,14 @@ default, so it works to type <code>emacs</code> anyway.</p>
 <p>The standard emacs that comes with OS X is very old and you really do
 not want the confusion between the two versions. So, I did:</p>
 
-<pre><code>sudo mv /usr/bin/emacs /usr/bin/emacs.orig
-sudo mv /usr/bin/emacsclient /usr/bin/emacsclient.orig
-</code></pre>
+<pre><code class="language-bash">sudo mv /usr/bin/emacs /usr/bin/emacs.orig
+sudo mv /usr/bin/emacsclient /usr/bin/emacsclient.orig</code></pre>
 
 <p>And then it is a good idea to put the new <code>emacsclient</code> in a standard
 location (but not <code>/usr/bin</code>, because this is a system place that
 could get overwritten whenever Apple wants to):</p>
 
-<pre><code>ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emacsclient
-</code></pre>
+<pre><code class="language-bash">ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emacsclient</code></pre>
 
 <h2 id="setting-up-some-aliases">Setting up some aliases</h2>
 
@@ -232,17 +229,17 @@ y    ; for yes
 <a href="../all_articles.html">All articles</a> </li>
 
    <li>
-<a href="../all_Life.html">Life</a> </li>
-
-
-
-   <li>
 <a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
 
 
 
    <li>
 <a href="../all_Kippycam.html">Kippycam</a> </li>
+
+
+
+   <li>
+<a href="../all_Life.html">Life</a> </li>
 
 
 

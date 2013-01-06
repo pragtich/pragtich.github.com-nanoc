@@ -146,15 +146,14 @@ to &lt;code&gt;/usr/local/bin&lt;/code&gt; or &lt;code&gt;/usr/bin&lt;/code&gt;,
 error message that actually refers to folders that do not exist on
 this system, but did on the build system!&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt; $ ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
- $ ./emacs
- Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.
- Warning: arch-independent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/) does not exist.
- Error: charsets directory not found:
- /Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/charsets
- Emacs will not function correctly without the character map files.
- Please check your installation!
-&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class="language-console"&gt;&lt;span class="gp"&gt;$&lt;/span&gt; ln -s /Applications/Emacs.app/Contents/MacOS/Emacs emacs
+&lt;span class="gp"&gt;$&lt;/span&gt; ./emacs
+&lt;span class="go"&gt;Warning: arch-dependent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/MacOS//libexec/emacs/24.2/x86_64-apple-darwin/) does not exist.&lt;/span&gt;
+&lt;span class="go"&gt;Warning: arch-independent data dir (/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/) does not exist.&lt;/span&gt;
+&lt;span class="go"&gt;Error: charsets directory not found:&lt;/span&gt;
+&lt;span class="go"&gt;/Users/david/src/emacs-dev/ftp-versions/emacs-24.2/nextstep/Emacs.app/Contents/Resources/share/emacs/24.2/etc/charsets&lt;/span&gt;
+&lt;span class="go"&gt;Emacs will not function correctly without the character map files.&lt;/span&gt;
+&lt;span class="go"&gt;Please check your installation!&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;This is due to the relocatability of the App, and apparently it does
 not handle being launched from the wrong place
@@ -189,16 +188,14 @@ default, so it works to type &lt;code&gt;emacs&lt;/code&gt; anyway.&lt;/p&gt;
 &lt;p&gt;The standard emacs that comes with OS X is very old and you really do
 not want the confusion between the two versions. So, I did:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;sudo mv /usr/bin/emacs /usr/bin/emacs.orig
-sudo mv /usr/bin/emacsclient /usr/bin/emacsclient.orig
-&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;sudo mv /usr/bin/emacs /usr/bin/emacs.orig
+sudo mv /usr/bin/emacsclient /usr/bin/emacsclient.orig&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;And then it is a good idea to put the new &lt;code&gt;emacsclient&lt;/code&gt; in a standard
 location (but not &lt;code&gt;/usr/bin&lt;/code&gt;, because this is a system place that
 could get overwritten whenever Apple wants to):&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emacsclient
-&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;ln -s /Applications/Emacs.app/Contents/MacOS/bin/emacsclient /usr/local/bin/emacsclient&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id="setting-up-some-aliases"&gt;Setting up some aliases&lt;/h2&gt;
 
