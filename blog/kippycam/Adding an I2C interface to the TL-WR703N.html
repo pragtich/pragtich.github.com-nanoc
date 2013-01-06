@@ -293,11 +293,10 @@ confirmation.</p>
 
 <p>Let’s try to set one of the pins manually:</p>
 
-<pre><code># cd /sys/class/gpio
-# echo 57 &gt; export
-# echo out&gt;gpio57/direction
-# echo 0 &gt; gpio57/value 
-</code></pre>
+<pre><code class="language-bash"><span class="c"># cd /sys/class/gpio</span>
+<span class="c"># echo 57 &gt; export</span>
+<span class="c"># echo out&gt;gpio57/direction</span>
+<span class="c"># echo 0 &gt; gpio57/value</span></code></pre>
 
 <p>Upon setting <code>output</code>, the LED lights up. Success!</p>
 
@@ -316,44 +315,43 @@ blinks. And found it <a href="http://netduinoplusfun.wordpress.com/2012/07/16/bl
 bit, which was easy because it’s so well written. I added an argument
 for the GPIO pin to use, to try all 8 pins. This is what I ended up with:</p>
 
-<pre><code>#!/bin/bash
+<pre><code class="language-bash"><span class="c">#!/bin/bash</span>
 
-# blink_arg.bash -- must run as root!
-#       
-# Blink GPIO pin on and off
+<span class="c"># blink_arg.bash -- must run as root!</span>
+<span class="c">#       </span>
+<span class="c"># Blink GPIO pin on and off</span>
 
-LEDPIN=${1-57}
-OFF=1
-ON=0
-# Make sure we have root access
-if [ $EUID -ne 0 ]; then
-		echo "You must be root to run this. Try 'sudo $0'"
-		exit
-fi
+<span class="nv">LEDPIN</span><span class="o">=</span><span class="k">${</span><span class="nv">1</span><span class="p">-57</span><span class="k">}</span>
+<span class="nv">OFF</span><span class="o">=</span>1
+<span class="nv">ON</span><span class="o">=</span>0
+<span class="c"># Make sure we have root access</span>
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$EUID</span> -ne 0 <span class="o">]</span>; <span class="k">then</span>
+<span class="k">		</span><span class="nb">echo</span> <span class="s2">"You must be root to run this. Try 'sudo $0'"</span>
+		<span class="nb">exit</span>
+<span class="k">fi</span>
 
-# Clean up procedure--turn off the LED, unexport the GPIO, and exit
-cleanup()
-{
-		PIN=$1
-		echo $OFF &gt; /sys/class/gpio/gpio$PIN/value      # turn off
-		echo $PIN &gt; /sys/class/gpio/unexport
-		echo Interrupted.
-		exit
-}
+<span class="c"># Clean up procedure--turn off the LED, unexport the GPIO, and exit</span>
+cleanup<span class="o">()</span>
+<span class="o">{</span>
+		<span class="nv">PIN</span><span class="o">=</span><span class="nv">$1</span>
+		<span class="nb">echo</span> <span class="nv">$OFF</span> &gt; /sys/class/gpio/gpio<span class="nv">$PIN</span>/value      <span class="c"># turn off</span>
+		<span class="nb">echo</span> <span class="nv">$PIN</span> &gt; /sys/class/gpio/unexport
+		<span class="nb">echo </span>Interrupted.
+		<span class="nb">exit</span>
+<span class="o">}</span>
 
-# Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL
-echo $LEDPIN &gt; /sys/class/gpio/export
-echo out &gt; /sys/class/gpio/gpio$LEDPIN/direction
-trap 'cleanup $LEDPIN' 1 2 15
+<span class="c"># Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL</span>
+<span class="nb">echo</span> <span class="nv">$LEDPIN</span> &gt; /sys/class/gpio/export
+<span class="nb">echo </span>out &gt; /sys/class/gpio/gpio<span class="nv">$LEDPIN</span>/direction
+<span class="nb">trap</span> <span class="s1">'cleanup $LEDPIN'</span> 1 2 15
 
-while true
-do
-		echo $ON &gt; /sys/class/gpio/gpio$LEDPIN/value    # turn on
+<span class="k">while </span><span class="nb">true</span>
+<span class="k">do</span>
+<span class="k">		</span><span class="nb">echo</span> <span class="nv">$ON</span> &gt; /sys/class/gpio/gpio<span class="nv">$LEDPIN</span>/value    <span class="c"># turn on</span>
 		sleep 1
-		echo $OFF &gt; /sys/class/gpio/gpio$LEDPIN/value   # turn off
+		<span class="nb">echo</span> <span class="nv">$OFF</span> &gt; /sys/class/gpio/gpio<span class="nv">$LEDPIN</span>/value   <span class="c"># turn off</span>
 		sleep 1
-done
-</code></pre>
+<span class="k">done</span></code></pre>
 
 <p>And it works as expected. So now for some fun (we did not get all this
 linux power for nothing!). </p>
@@ -402,12 +400,12 @@ all. How does that look?</p>
 
 
    <li>
-<a href="../all_Kippycam.html">Kippycam</a> </li>
+<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
 
 
 
    <li>
-<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
+<a href="../all_Kippycam.html">Kippycam</a> </li>
 
 
 

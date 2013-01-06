@@ -108,8 +108,7 @@ Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: init_VideoIn failed
 
 	section_enabled <span class="s2">"$s"</span> <span class="o">||</span> <span class="k">return </span>1
 
-
-	<span class="nv">SERVICE_PID_FILE</span><span class="o">=</span>/var/run/mjpg-streamer-<span class="k">${</span><span class="nv">s</span><span class="k">}</span>.pid
+	<span class="nv">SERVICE_PID_FILE</span><span class="o">=</span><span class="k">${</span><span class="nv">PIDLOC</span><span class="k">}</span>-<span class="k">${</span><span class="nv">s</span><span class="k">}</span>.pid
 
 	service_stop /usr/bin/mjpg_streamer
 <span class="o">}</span></code></pre>
@@ -172,12 +171,12 @@ config mjpg-streamer logi
 
 
    <li>
-<a href="../../all_Kippycam.html">Kippycam</a> </li>
+<a href="../../all_Computer%20stuff.html">Computer stuff</a> </li>
 
 
 
    <li>
-<a href="../../all_Computer%20stuff.html">Computer stuff</a> </li>
+<a href="../../all_Kippycam.html">Kippycam</a> </li>
 
 
 

@@ -72,9 +72,8 @@ use to get a text console instead of a graphical frame).</p>
 <p>In the end, the solution is quite easy. Just gave up and added the
 Emacs.app folder to early in my <code>PATH</code>. So, added to <code>~/.bashrc</code>:</p>
 
-<pre><code>PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
-export PATH
-</code></pre>
+<pre><code class="language-bash"><span class="nv">PATH</span><span class="o">=</span>/Applications/Emacs.app/Contents/MacOS:<span class="nv">$PATH</span>
+<span class="nb">export </span>PATH</code></pre>
 
 <p>Strangely, the Emacs.app executable is called <code>Emacs</code> instead of the
 normal <code>emacs</code>. Thankfully, the OS X filesystem is case-insensitive by
@@ -116,24 +115,24 @@ emacsclient: No socket or alternate editor.  Please use:
 should launch emacs when they want to edit a file. This is my
 <code>~/.bash_profile</code>:</p>
 
-<pre><code># Get the aliases and functions
-if [ -f ~/.bashrc ]; then
+<pre><code class="language-bash"><span class="c"># Get the aliases and functions</span>
+<span class="k">if</span> <span class="o">[</span> -f ~/.bashrc <span class="o">]</span>; <span class="k">then</span>
 		. ~/.bashrc
-fi
+<span class="k">fi</span>
 
-# Read autocomplete stuff if present
-if [ -f /sw/etc/bash_completion ]; then
+<span class="c"># Read autocomplete stuff if present (Fink)</span>
+<span class="k">if</span> <span class="o">[</span> -f /sw/etc/bash_completion <span class="o">]</span>; <span class="k">then</span>
 		. /sw/etc/bash_completion
-fi
+<span class="k">fi</span>
 
-test -r /sw/bin/init.sh &amp;&amp; . /sw/bin/init.sh
+<span class="c"># Initialize Fink (paths mainly)</span>
+<span class="nb">test</span> -r /sw/bin/init.sh <span class="o">&amp;&amp;</span> . /sw/bin/init.sh
 
-export EDITOR="emacsclient -s "/tmp/emacs${UID}/server" -a Emacs \"\$@\""
-export VISUAL=$EDITOR
-export GIT_EDITOR="$VISUAL +0"
+<span class="nb">export </span><span class="nv">EDITOR</span><span class="o">=</span><span class="s2">"emacsclient -s "</span>/tmp/emacs<span class="k">${</span><span class="nv">UID</span><span class="k">}</span>/server<span class="s2">" -a Emacs \"\$@\""</span>
+<span class="nb">export </span><span class="nv">VISUAL</span><span class="o">=</span><span class="nv">$EDITOR</span>
+<span class="nb">export </span><span class="nv">GIT_EDITOR</span><span class="o">=</span><span class="s2">"$VISUAL +0"</span>
 
-alias e=$VISUAL
-</code></pre>
+<span class="nb">alias </span><span class="nv">e</span><span class="o">=</span><span class="nv">$VISUAL</span></code></pre>
 
 <h2 id="setting-up-server-mode">Setting up server mode</h2>
 
@@ -238,12 +237,12 @@ y    ; for yes
 
 
    <li>
-<a href="../all_Kippycam.html">Kippycam</a> </li>
+<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
 
 
 
    <li>
-<a href="../all_Computer%20stuff.html">Computer stuff</a> </li>
+<a href="../all_Kippycam.html">Kippycam</a> </li>
 
 
 

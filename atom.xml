@@ -94,8 +94,7 @@ Jan  2 09:41:32 OpenWrt user.info MJPG-streamer [1580]: init_VideoIn failed
 
 	section_enabled &lt;span class="s2"&gt;"$s"&lt;/span&gt; &lt;span class="o"&gt;||&lt;/span&gt; &lt;span class="k"&gt;return &lt;/span&gt;1
 
-
-	&lt;span class="nv"&gt;SERVICE_PID_FILE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/var/run/mjpg-streamer-&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;s&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;.pid
+	&lt;span class="nv"&gt;SERVICE_PID_FILE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;PIDLOC&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;-&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;s&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;.pid
 
 	service_stop /usr/bin/mjpg_streamer
 &lt;span class="o"&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
@@ -178,9 +177,8 @@ use to get a text console instead of a graphical frame).&lt;/p&gt;
 &lt;p&gt;In the end, the solution is quite easy. Just gave up and added the
 Emacs.app folder to early in my &lt;code&gt;PATH&lt;/code&gt;. So, added to &lt;code&gt;~/.bashrc&lt;/code&gt;:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;PATH=/Applications/Emacs.app/Contents/MacOS:$PATH
-export PATH
-&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;&lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;/Applications/Emacs.app/Contents/MacOS:&lt;span class="nv"&gt;$PATH&lt;/span&gt;
+&lt;span class="nb"&gt;export &lt;/span&gt;PATH&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Strangely, the Emacs.app executable is called &lt;code&gt;Emacs&lt;/code&gt; instead of the
 normal &lt;code&gt;emacs&lt;/code&gt;. Thankfully, the OS X filesystem is case-insensitive by
@@ -222,24 +220,24 @@ emacsclient: No socket or alternate editor.  Please use:
 should launch emacs when they want to edit a file. This is my
 &lt;code&gt;~/.bash_profile&lt;/code&gt;:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;# Get the aliases and functions
-if [ -f ~/.bashrc ]; then
+&lt;pre&gt;&lt;code class="language-bash"&gt;&lt;span class="c"&gt;# Get the aliases and functions&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -f ~/.bashrc &lt;span class="o"&gt;]&lt;/span&gt;; &lt;span class="k"&gt;then&lt;/span&gt;
 		. ~/.bashrc
-fi
+&lt;span class="k"&gt;fi&lt;/span&gt;
 
-# Read autocomplete stuff if present
-if [ -f /sw/etc/bash_completion ]; then
+&lt;span class="c"&gt;# Read autocomplete stuff if present (Fink)&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -f /sw/etc/bash_completion &lt;span class="o"&gt;]&lt;/span&gt;; &lt;span class="k"&gt;then&lt;/span&gt;
 		. /sw/etc/bash_completion
-fi
+&lt;span class="k"&gt;fi&lt;/span&gt;
 
-test -r /sw/bin/init.sh &amp;amp;&amp;amp; . /sw/bin/init.sh
+&lt;span class="c"&gt;# Initialize Fink (paths mainly)&lt;/span&gt;
+&lt;span class="nb"&gt;test&lt;/span&gt; -r /sw/bin/init.sh &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; . /sw/bin/init.sh
 
-export EDITOR="emacsclient -s "/tmp/emacs${UID}/server" -a Emacs \"\$@\""
-export VISUAL=$EDITOR
-export GIT_EDITOR="$VISUAL +0"
+&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;EDITOR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"emacsclient -s "&lt;/span&gt;/tmp/emacs&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;UID&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;/server&lt;span class="s2"&gt;" -a Emacs \"\$@\""&lt;/span&gt;
+&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;VISUAL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$EDITOR&lt;/span&gt;
+&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;GIT_EDITOR&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"$VISUAL +0"&lt;/span&gt;
 
-alias e=$VISUAL
-&lt;/code&gt;&lt;/pre&gt;
+&lt;span class="nb"&gt;alias &lt;/span&gt;&lt;span class="nv"&gt;e&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$VISUAL&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id="setting-up-server-mode"&gt;Setting up server mode&lt;/h2&gt;
 
@@ -1275,11 +1273,10 @@ confirmation.&lt;/p&gt;
 
 &lt;p&gt;Let&#8217;s try to set one of the pins manually:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;# cd /sys/class/gpio
-# echo 57 &amp;gt; export
-# echo out&amp;gt;gpio57/direction
-# echo 0 &amp;gt; gpio57/value 
-&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class="language-bash"&gt;&lt;span class="c"&gt;# cd /sys/class/gpio&lt;/span&gt;
+&lt;span class="c"&gt;# echo 57 &amp;gt; export&lt;/span&gt;
+&lt;span class="c"&gt;# echo out&amp;gt;gpio57/direction&lt;/span&gt;
+&lt;span class="c"&gt;# echo 0 &amp;gt; gpio57/value&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Upon setting &lt;code&gt;output&lt;/code&gt;, the LED lights up. Success!&lt;/p&gt;
 
@@ -1298,44 +1295,43 @@ blinks. And found it &lt;a href="http://netduinoplusfun.wordpress.com/2012/07/16
 bit, which was easy because it&#8217;s so well written. I added an argument
 for the GPIO pin to use, to try all 8 pins. This is what I ended up with:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;#!/bin/bash
+&lt;pre&gt;&lt;code class="language-bash"&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
 
-# blink_arg.bash -- must run as root!
-#       
-# Blink GPIO pin on and off
+&lt;span class="c"&gt;# blink_arg.bash -- must run as root!&lt;/span&gt;
+&lt;span class="c"&gt;#       &lt;/span&gt;
+&lt;span class="c"&gt;# Blink GPIO pin on and off&lt;/span&gt;
 
-LEDPIN=${1-57}
-OFF=1
-ON=0
-# Make sure we have root access
-if [ $EUID -ne 0 ]; then
-		echo "You must be root to run this. Try 'sudo $0'"
-		exit
-fi
+&lt;span class="nv"&gt;LEDPIN&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;1&lt;/span&gt;&lt;span class="p"&gt;-57&lt;/span&gt;&lt;span class="k"&gt;}&lt;/span&gt;
+&lt;span class="nv"&gt;OFF&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;1
+&lt;span class="nv"&gt;ON&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;0
+&lt;span class="c"&gt;# Make sure we have root access&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="nv"&gt;$EUID&lt;/span&gt; -ne 0 &lt;span class="o"&gt;]&lt;/span&gt;; &lt;span class="k"&gt;then&lt;/span&gt;
+&lt;span class="k"&gt;		&lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;"You must be root to run this. Try 'sudo $0'"&lt;/span&gt;
+		&lt;span class="nb"&gt;exit&lt;/span&gt;
+&lt;span class="k"&gt;fi&lt;/span&gt;
 
-# Clean up procedure--turn off the LED, unexport the GPIO, and exit
-cleanup()
-{
-		PIN=$1
-		echo $OFF &amp;gt; /sys/class/gpio/gpio$PIN/value      # turn off
-		echo $PIN &amp;gt; /sys/class/gpio/unexport
-		echo Interrupted.
-		exit
-}
+&lt;span class="c"&gt;# Clean up procedure--turn off the LED, unexport the GPIO, and exit&lt;/span&gt;
+cleanup&lt;span class="o"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;{&lt;/span&gt;
+		&lt;span class="nv"&gt;PIN&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nv"&gt;$1&lt;/span&gt;
+		&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="nv"&gt;$OFF&lt;/span&gt; &amp;gt; /sys/class/gpio/gpio&lt;span class="nv"&gt;$PIN&lt;/span&gt;/value      &lt;span class="c"&gt;# turn off&lt;/span&gt;
+		&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="nv"&gt;$PIN&lt;/span&gt; &amp;gt; /sys/class/gpio/unexport
+		&lt;span class="nb"&gt;echo &lt;/span&gt;Interrupted.
+		&lt;span class="nb"&gt;exit&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
 
-# Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL
-echo $LEDPIN &amp;gt; /sys/class/gpio/export
-echo out &amp;gt; /sys/class/gpio/gpio$LEDPIN/direction
-trap 'cleanup $LEDPIN' 1 2 15
+&lt;span class="c"&gt;# Set up--select the pin and direction. Catch Control-C SIGHUP SIGKILL&lt;/span&gt;
+&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="nv"&gt;$LEDPIN&lt;/span&gt; &amp;gt; /sys/class/gpio/export
+&lt;span class="nb"&gt;echo &lt;/span&gt;out &amp;gt; /sys/class/gpio/gpio&lt;span class="nv"&gt;$LEDPIN&lt;/span&gt;/direction
+&lt;span class="nb"&gt;trap&lt;/span&gt; &lt;span class="s1"&gt;'cleanup $LEDPIN'&lt;/span&gt; 1 2 15
 
-while true
-do
-		echo $ON &amp;gt; /sys/class/gpio/gpio$LEDPIN/value    # turn on
+&lt;span class="k"&gt;while &lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt;
+&lt;span class="k"&gt;do&lt;/span&gt;
+&lt;span class="k"&gt;		&lt;/span&gt;&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="nv"&gt;$ON&lt;/span&gt; &amp;gt; /sys/class/gpio/gpio&lt;span class="nv"&gt;$LEDPIN&lt;/span&gt;/value    &lt;span class="c"&gt;# turn on&lt;/span&gt;
 		sleep 1
-		echo $OFF &amp;gt; /sys/class/gpio/gpio$LEDPIN/value   # turn off
+		&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="nv"&gt;$OFF&lt;/span&gt; &amp;gt; /sys/class/gpio/gpio&lt;span class="nv"&gt;$LEDPIN&lt;/span&gt;/value   &lt;span class="c"&gt;# turn off&lt;/span&gt;
 		sleep 1
-done
-&lt;/code&gt;&lt;/pre&gt;
+&lt;span class="k"&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;And it works as expected. So now for some fun (we did not get all this
 linux power for nothing!). &lt;/p&gt;
